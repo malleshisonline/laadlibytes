@@ -41,9 +41,7 @@ export const authController = {
     res.clearCookie(REFRESH_COOKIE, { ...cookieOptions, maxAge: undefined });
     sendResponse(res, { message: 'Logged out successfully' });
   }),
-  showMessagerunning: asyncHandler(async (req, res) => {
-    sendResponse(res, { message: 'This is auth page' });
-  }),
+  
 };
 
 export default authController;

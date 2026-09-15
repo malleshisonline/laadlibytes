@@ -1,3 +1,5 @@
+this is the file for myself only to keep the things for reminder.
+
 # TODO — Deployment & Hosting (handle later, not now)
 
 Keep building in development. Come back to this file only when the backend + frontend are functionally complete and you're ready to go live.
@@ -47,3 +49,6 @@ Keep building in development. Come back to this file only when the backend + fro
 - [ ] Confirm MongoDB Atlas Data Explorer shows the new data
 - [ ] Test image upload end-to-end (Cloudinary)
 - [ ] Test from an actual phone/different network (not just your dev machine) to catch CORS/whitelist issues early
+
+- Write scripts/syncIndexes.js and run it after first deploy,
+  before the site goes public (autoIndex is off in production)
