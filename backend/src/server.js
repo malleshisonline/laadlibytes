@@ -34,7 +34,7 @@ async function shutdown(signal, exitCode = 0) {
 }
 
 process.on('SIGTERM', () => shutdown('SIGTERM'));
-process.on('SIGINT', () => shutdown('SIGINT'));
+process.on('SIGINT', () => shutdown('SIGINT')); 
 
 // An unhandled rejection or uncaught exception leaves the process in an unknown
 // state — log it and restart rather than serving from a corrupted one.

@@ -13,6 +13,7 @@ export const userService = {
     if (query.search) filter.$or = [
       { name: { $regex: query.search, $options: 'i' } },
       { email: { $regex: query.search, $options: 'i' } },
+      { phone: { $regex: query.search, $options: 'i' } },
     ];
 
     const [items, total] = await Promise.all([
