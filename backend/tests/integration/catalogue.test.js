@@ -69,6 +69,11 @@ describe('GET /categories', () => {
     expect(res.status).toBe(200);
     expect(res.body.data.map((category) => category.name)).toEqual(['Kids Wellness', 'Fruit Variant']);
     expect(res.body.data[0].slug).toBe('kids-wellness');
+    // Every catalogue response identifies a document with `id`. Asserting _id is absent is the
+    // half that matters: toMatchObject-style checks pass happily while _id leaks through.
+    expect(res.body.data[0].id).toBeDefined();
+    expect(res.body.data[0]._id).toBeUndefined();
+    expect(res.body.data[0].__v).toBeUndefined();
   });
 
   test('derives the slug from the name', async () => {
@@ -117,6 +122,21 @@ describe('GET /products', () => {
     expect(item.inStock).toBe(true);
     expect(item.discountPercent).toBe(25);
     expect(item.category).toMatchObject({ name: 'Fruit Variant', slug: 'fruit-variant' });
+    // The populated category is lean as well, so it needs the same normalisation.
+    expect(item.category.id).toBeDefined();
+    expect(item.category._id).toBeUndefined();
+  });
+
+  test('identifies the nested category the same way on list and on detail', async () => {
+    await createProduct();
+
+    const [listed] = (await request(app).get(api('/products'))).body.data;
+    const detail = (await request(app).get(api('/products/mango-alohas'))).body.data;
+
+    expect(detail.category.id).toBeDefined();
+    expect(detail.category._id).toBeUndefined();
+    expect(listed.category.id).toBe(detail.category.id);
+    expect(Object.keys(listed.category).sort()).toEqual(Object.keys(detail.category).sort());
   });
 
   test('filters by category slug', async () => {

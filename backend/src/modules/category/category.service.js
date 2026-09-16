@@ -14,7 +14,10 @@ export const categoryService = {
     const showAll = includeInactive && requester?.role === 'admin';
     const filter = showAll ? {} : { isActive: true };
 
-    return Category.find(filter).select('-__v').sort({ displayOrder: 1, name: 1 }).lean();
+    // Deliberately not .lean(): the toJSON transform has to run so these rows carry `id`
+    // rather than `_id`, matching every other catalogue response. Six documents, so the
+    // cost of hydrating them is irrelevant.
+    return Category.find(filter).select('-__v').sort({ displayOrder: 1, name: 1 });
   },
 
   async getById(id) {

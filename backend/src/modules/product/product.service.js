@@ -23,15 +23,24 @@ const looksLikeObjectId = (value) => OBJECT_ID_PATTERN.test(value);
 // A search term goes into a RegExp, so its metacharacters have to be neutralised first.
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+// The populated category comes back lean too, so it needs the same _id -> id treatment as
+// its parent. Left untouched when the field was never populated (a bare ObjectId has no _id).
+const toPublicCategory = (category) => {
+  if (!category?._id) return category;
+  const { _id, ...rest } = category;
+  return { id: _id, ...rest };
+};
+
 /**
  * .lean() skips the toJSON transform and the virtuals, so list rows are normalised by hand
- * to match the shape a full document serialises to.
+ * to match the shape a full document serialises to — `id` everywhere, never `_id`.
  */
 const toListItem = (product) => {
-  const { _id, mrp, price, stock, ...rest } = product;
+  const { _id, mrp, price, stock, category, ...rest } = product;
   return {
     ...rest,
     id: _id,
+    category: toPublicCategory(category),
     mrp,
     price,
     stock,
