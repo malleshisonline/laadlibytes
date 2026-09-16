@@ -1,0 +1,31 @@
+[
+  {
+    "sku": "FF-01",
+    "name": "Mango Alohas",
+    "category": "Fruit Variant",
+    "mrp": 150,
+    "price": 150,
+    "packSize": { "value": 100, "unit": "g" },
+    "description": "",
+    "ingredients": [
+      "Roasted Ragi Flour",
+      "Rolled Oats",
+      "Flax Seeds",
+      "Roasted Peanuts",
+      "Honey",
+      "Fructooligosaccharides (FOS)",
+      "Gum Acacia",
+      "Himalayan Pink Salt",
+      "Mango Powder",
+      "Mango Flavour"
+    ],
+    "allergenInfo": "Contains peanuts. Made in a facility that processes milk solids, wheat and soy. May contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [],
+    "taglines": [],
+    "images": [],
+    "stock": 0,
+    "isActive": true,
+    "isFeatured": false
+  }
+]
