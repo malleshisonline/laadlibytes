@@ -14,7 +14,9 @@ npm run dev          # nodemon, http://localhost:5000/api
 npm start            # production
 npm run seed         # upsert catalogue from scripts/data/*.json (idempotent)
 npm run seed -- --dry-run   # validate the seed files, write nothing
-npm run seed -- --fresh     # wipe products + categories first
+npm run seed -- --fresh     # wipe products + categories (and their Cloudinary images) first
+npm run seed -- --replace-images   # re-upload local images over existing ones
+npm run promote-admin -- <email|phone>   # give an existing account the admin role
 npm test             # jest (ESM) + supertest, NODE_ENV=test, --runInBand
 npm test -- tests/unit/foo.test.js     # single file
 npm test -- -t "rejects expired token" # single test by name
@@ -46,7 +48,21 @@ Then add one line to the `routes` array in `src/routes/index.js`. **Controllers 
 
 Implemented modules: `auth`, `user`, `otp`, `category` and `product`. `otp` has just a model and service (no routes) and is used by `auth`. `category` and `product` are the catalogue pair: `category.service.js` refuses to delete a category that still has products (409 `CATEGORY_NOT_EMPTY`), and `product.service.js` owns the sort whitelist, the id-or-slug detail lookup and the soft delete. The remaining module directories (`cart`, `order`, …) are still empty `.gitkeep` placeholders, and `order.model.js` is a zero-byte stub.
 
-External senders live in `src/integrations/` (`email/`, `sms/`), each choosing a driver from env; message templates live in `src/templates/`.
+External senders live in `src/integrations/` (`email/`, `sms/`), each choosing a driver from env; message templates live in `src/templates/`. Cloudinary lives in `src/integrations/storage/`.
+
+## Image uploads
+
+Admin create/update routes for products and categories accept JSON, or `multipart/form-data` with every non-file field as one JSON string (`productFields` / `categoryFields`) and the files in `images` (≤ 10) / `image` (1). Allowed formats are PNG, JPEG, WebP and AVIF. Limits and the file-signature check are in `src/utils/imageFileRules.js`, shared with the seeder; adding a format also means adding it to `CLOUDINARY_ALLOWED_IMAGE_FORMATS` in `cloudinaryImageStorage.js`. The route chain in `src/middlewares/cloudinaryUpload.middleware.js` runs in this order:
+
+1. `parseMultipartImageFiles` (multer, in memory)
+2. `rejectNonPngOrJpegFiles`
+3. `parseJsonFieldsFromMultipartBody`
+4. `validate`
+5. `deleteUploadedImagesWhenRequestFails`
+6. `upload…ToCloudinary`, which sets `req.uploadedCloudinaryImages`
+7. the controller, which passes the uploads to the service
+
+The failure cleanup deletes this request's uploads on `res` `finish` whenever the status is ≥ 400. Services delete replaced or removed files only **after** the save succeeds, via `deleteCloudinaryAssetsByPublicIds`, which logs failures and never throws. Callers never send image URLs: product `images` is the full final order of `{ publicId }` / `{ newImageFileIndex }` entries, and category `image` is `{ alt }` or `null`. Folders: `laadlibytes/<NODE_ENV>/products/<SKU>`, `laadlibytes/<NODE_ENV>/categories/<slug>`. Tests mock `src/integrations/storage/cloudinaryImageStorage.js`. See `tests/integration/catalogueImageUpload.test.js`.
 
 ## Conventions
 
@@ -56,7 +72,7 @@ External senders live in `src/integrations/` (`email/`, `sms/`), each choosing a
 
 **Validation** — `validate({ body, params, query })` replaces `req.body` and `req.params` with the parsed result. Express 5 makes `req.query` read-only, so parsed query params land on **`req.validatedQuery`** — read that, not `req.query`, in list handlers. Query strings are also stripped of Mongo operators at parse time by `sanitizedQueryParser` (registered with `app.set('query parser', ...)`), and `sanitizeRequest` does the same for body/params.
 
-**Config** — never read `process.env` directly. Import the frozen, zod-validated `env` from `src/config/env.js`; it loads `.env.<NODE_ENV>` then `.env`, and exits the process on invalid config. Adding a variable means adding it to the zod schema and to `.env.example`. Provider credentials are checked in the schema's `superRefine`: `EMAIL_PROVIDER=smtp` requires `SMTP_URL`/`EMAIL_FROM`, `SMS_PROVIDER=msg91` requires `MSG91_AUTH_KEY`/`MSG91_OTP_TEMPLATE_ID`, and `console` (logs codes instead of sending) is refused in production. `OTP_SECRET` is required.
+**Config** — never read `process.env` directly. Import the frozen, zod-validated `env` from `src/config/env.js`; it loads `.env.<NODE_ENV>` then `.env`, and exits the process on invalid config. Adding a variable means adding it to the zod schema and to `.env.example`. Provider credentials are checked in the schema's `superRefine`: `EMAIL_PROVIDER=smtp` requires `SMTP_URL`/`EMAIL_FROM`, `SMS_PROVIDER=msg91` requires `MSG91_AUTH_KEY`/`MSG91_OTP_TEMPLATE_ID`, and `console` (logs codes instead of sending) is refused in production. `OTP_SECRET` and `CLOUDINARY_URL` are required.
 
 **Logging** — `logger` from `src/config/logger.js` (winston; morgan bridged through `logger.stream`). Every request gets `req.id`, echoed as the `X-Request-Id` header and included in error responses and log lines. Console output and rate limiters are disabled when `NODE_ENV=test`.
 
@@ -94,7 +110,7 @@ Route guards from `src/middlewares/authenticate.js`: `authenticate` (required), 
 - **Catalogue shape:** 56 products, one pack size each, **no variants** — do not build a variant system. Delivery is free on every order with no minimum, so there is no shipping charge anywhere; the order module should have *no* `shippingCharge` field rather than one permanently set to `0`.
 - **Categories:** six, fixed names and fixed display order — Women Wellness, Peanut Chikki, Nuts n Seeds, Millets n Nuts, Kids Wellness, Fruit Variant. "Nuts n Seeds" and "Millets n Nuts" are deliberately separate; do not merge them. SKU prefixes derive from these names but drift once a category is renamed, so never parse a category out of an SKU.
 - **Payment (not yet built):** Razorpay with **UPI and QR only** — no cards, no netbanking, no wallets. Prices are stored as whole-rupee Numbers, so the payment module multiplies by 100 at the Razorpay boundary.
-- **Images (upload not yet built):** an **admin-only** Cloudinary upload endpoint is needed after launch so the client can attach images to new products himself. Customers never upload. Until then images are uploaded by hand in the Cloudinary dashboard and the URLs are pasted into `scripts/data/products.json`. `Product.images` is deliberately uncapped; `images[0]` is the front of pack, and ordering alone decides the primary.
+- **Images:** only admins upload (see *Image uploads*); customers never do. The initial catalogue load goes through the seeder, which uploads local files from `scripts/data/product-images/<SKU>/` and `category-images/<slug>.png`. `publicId` is required on every stored image. `Product.images` is deliberately uncapped; `images[0]` is the front of pack, and ordering alone decides the primary.
 - **Stock:** a plain `stock` number on the product, no inventory module — 56 SKUs, no warehouses, no reservations. `Product.isActive` is both the publish switch and the soft-delete target.
 
 ## Working rules

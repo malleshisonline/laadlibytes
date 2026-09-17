@@ -1,8 +1,11 @@
+import { deleteCloudinaryAssetsByPublicIds } from '../../integrations/storage/cloudinaryImageStorage.js';
 import { ApiError } from '../../utils/ApiError.js';
 import { slugify } from '../../utils/slug.js';
 import { Product } from '../product/product.model.js';
 
 import { Category } from './category.model.js';
+
+const buildCategoryImage = ({ url, publicId }, alt) => (alt === undefined ? { url, publicId } : { url, publicId, alt });
 
 /** Data access + business rules. Controllers stay free of Mongoose. */
 export const categoryService = {
@@ -13,10 +16,7 @@ export const categoryService = {
   async list({ includeInactive = false } = {}, requester = null) {
     const showAll = includeInactive && requester?.role === 'admin';
     const filter = showAll ? {} : { isActive: true };
-
-    // Deliberately not .lean(): the toJSON transform has to run so these rows carry `id`
-    // rather than `_id`, matching every other catalogue response. Six documents, so the
-    // cost of hydrating them is irrelevant.
+    
     return Category.find(filter).select('-__v').sort({ displayOrder: 1, name: 1 });
   },
 
@@ -33,23 +33,69 @@ export const categoryService = {
     return category;
   },
 
-  async create(payload) {
-    // An explicit slug is still normalised, so 'Fruit Variant' cannot sneak in as a slug.
-    const slug = slugify(payload.slug ?? payload.name);
-    return Category.create({ ...payload, slug });
+  /** Used by the upload middleware to pick the Cloudinary folder when a PATCH omits the slug. */
+  async getSlugById(id) {
+    const category = await Category.findById(id).select('slug').lean();
+    if (!category) throw ApiError.notFound('Category not found');
+    return category.slug;
   },
 
-  async update(id, payload) {
-    const patch = { ...payload };
+  /**
+   * `uploadedImage` is a file already on Cloudinary ({ url, publicId }). If this throws, the
+   * upload middleware deletes it again, so a failed create leaves nothing behind.
+   */
+  async create(payload, uploadedImage = undefined) {
+    const { image: requestedImage, ...fields } = payload;
+    // An explicit slug is still normalised, so 'Fruit Variant' cannot sneak in as a slug.
+    const slug = slugify(fields.slug ?? fields.name);
+
+    if (requestedImage && !uploadedImage) {
+      throw ApiError.badRequest('image.alt was sent without an image file', { code: 'MISSING_IMAGE_FILE' });
+    }
+    const image = uploadedImage ? buildCategoryImage(uploadedImage, requestedImage?.alt) : undefined;
+
+    return Category.create({ ...fields, slug, image });
+  },
+
+  /**
+   * A new file replaces the stored image; `image: null` removes it; `image: { alt }` alone edits
+   * the alt text. The old file is deleted from Cloudinary only after the save succeeds.
+   */
+  async update(id, payload, uploadedImage = undefined) {
+    if (Object.keys(payload).length === 0 && !uploadedImage) {
+      throw ApiError.badRequest('At least one field or an image file is required', { code: 'VALIDATION_ERROR' });
+    }
+
+    const category = await Category.findById(id);
+    if (!category) throw ApiError.notFound('Category not found');
+
+    const { image: requestedImage, ...patch } = payload;
     // A rename does not move the URL: the slug changes only when passed explicitly,
     // so links already in the wild keep resolving.
     if (patch.slug) patch.slug = slugify(patch.slug);
 
-    const category = await Category.findByIdAndUpdate(id, patch, {
-      returnDocument: 'after',
-      runValidators: true,
-    });
-    if (!category) throw ApiError.notFound('Category not found');
+    const storedImage = category.image ? category.image.toObject() : undefined;
+    let replacedPublicId;
+
+    if (uploadedImage) {
+      if (requestedImage === null) {
+        throw ApiError.badRequest('image cannot be null when an image file is sent', { code: 'VALIDATION_ERROR' });
+      }
+      patch.image = buildCategoryImage(uploadedImage, requestedImage?.alt ?? storedImage?.alt);
+      replacedPublicId = storedImage?.publicId;
+    } else if (requestedImage === null) {
+      patch.image = undefined;
+      replacedPublicId = storedImage?.publicId;
+    } else if (requestedImage) {
+      if (!storedImage) {
+        throw ApiError.badRequest('This category has no image to set alt text on', { code: 'MISSING_IMAGE_FILE' });
+      }
+      patch.image = buildCategoryImage(storedImage, requestedImage.alt ?? storedImage.alt);
+    }
+
+    category.set(patch);
+    await category.save();
+    await deleteCloudinaryAssetsByPublicIds([replacedPublicId]);
     return category;
   },
 
@@ -68,6 +114,7 @@ export const categoryService = {
     }
 
     await category.deleteOne();
+    await deleteCloudinaryAssetsByPublicIds([category.image?.publicId]);
     return category;
   },
 };

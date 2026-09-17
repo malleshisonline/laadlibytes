@@ -302,20 +302,37 @@ describe('admin product writes', () => {
     expect(res.body.code).toBe('DUPLICATE_KEY');
   });
 
-  test('accepts any number of images and keeps images[0] as the front', async () => {
-    const images = ['front', 'back', 'label', 'nutrition', 'extra'].map((kind) => ({
-      url: `https://res.cloudinary.com/demo/${kind}.jpg`,
-      alt: kind,
-    }));
-
+  test('refuses a raw image URL in JSON: images only arrive as uploaded files', async () => {
     const res = await request(app)
       .post(api('/products'))
       .set('Authorization', ADMIN())
-      .send(productPayload({ images }));
+      .send(productPayload({ images: [{ url: 'https://example.com/front.jpg', alt: 'front' }] }));
 
-    expect(res.status).toBe(201);
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe('VALIDATION_ERROR');
+    expect(await Product.countDocuments()).toBe(0);
+  });
+
+  test('reorders and re-labels stored images over plain JSON, keeping any number of them', async () => {
+    const storedImages = ['front', 'back', 'label', 'nutrition', 'extra'].map((kind) => ({
+      url: `https://res.cloudinary.com/demo/${kind}.jpg`,
+      publicId: `laadlibytes/test/products/FV-01/${kind}`,
+      alt: kind,
+    }));
+    const product = await createProduct({ images: storedImages });
+
+    const reversedOrder = [...storedImages].reverse().map(({ publicId }) => ({ publicId }));
+    reversedOrder[0].alt = 'new front';
+
+    const res = await request(app)
+      .patch(api(`/products/${product._id}`))
+      .set('Authorization', ADMIN())
+      .send({ images: reversedOrder });
+
+    expect(res.status).toBe(200);
     expect(res.body.data.images).toHaveLength(5);
-    expect(res.body.data.images[0].alt).toBe('front');
+    expect(res.body.data.images[0]).toMatchObject({ publicId: storedImages[4].publicId, alt: 'new front' });
+    expect(res.body.data.images[4].alt).toBe('front');
   });
 
   test('fills in description and shelf life later without wiping untouched array fields', async () => {

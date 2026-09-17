@@ -21,10 +21,25 @@ const slugField = z
   .max(140)
   .regex(/^[a-z0-9-]+$/, 'Slug may contain only lowercase letters, digits and hyphens');
 
-const imageField = z.object({
-  url: z.url('Image url must be a valid URL'),
-  publicId: z.string().trim().max(200).optional(),
-  alt: z.string().trim().max(160).optional(),
+const imageAltField = z.string().trim().max(160).optional();
+
+/**
+ * One slot in the final, ordered image list. A caller never sends a URL: an image is either one
+ * the product already has (by publicId) or the n-th file uploaded with this same request.
+ * Strict objects, so a legacy `{ url }` payload is refused instead of silently stripped.
+ */
+const existingProductImageReference = z.strictObject({
+  publicId: z.string().trim().min(1).max(200),
+  alt: imageAltField,
+});
+
+const newProductImageFileReference = z.strictObject({
+  newImageFileIndex: z.number().int().min(0),
+  alt: imageAltField,
+});
+
+const productImageListEntry = z.union([existingProductImageReference, newProductImageFileReference], {
+  error: 'Each image must be { publicId, alt? } or { newImageFileIndex, alt? }',
 });
 
 /**
@@ -55,8 +70,9 @@ const productShape = {
   shelfLife: z.string().trim().max(100).optional(),
   nutritionPoints: z.array(z.string().trim().min(1).max(200)).max(8).optional(),
   taglines: z.array(z.string().trim().min(1).max(160)).max(5).optional(),
-  // No .max(): the number of images per product is deliberately unbounded.
-  images: z.array(imageField).optional(),
+  // The complete final order when present; images[0] is the front. No .max(): unbounded by design.
+  // Omitted, the stored images stay as they are and uploaded files are appended.
+  images: z.array(productImageListEntry).optional(),
   stock: z.coerce.number().int().min(0).optional(),
   isActive: z.boolean().optional(),
   isFeatured: z.boolean().optional(),
@@ -64,10 +80,9 @@ const productShape = {
 
 export const createProductSchema = z.object(productShape);
 
-export const updateProductSchema = z
-  .object(productShape)
-  .partial()
-  .refine((data) => Object.keys(data).length > 0, { message: 'At least one field is required' });
+// No "at least one field" refine here: a multipart PATCH may carry only files, which this schema
+// cannot see. productService.update rejects a request with neither fields nor files.
+export const updateProductSchema = z.object(productShape).partial();
 
 export const listProductsQuerySchema = z
   .object({

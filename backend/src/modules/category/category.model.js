@@ -2,6 +2,26 @@ import mongoose from 'mongoose';
 
 import { slugify } from '../../utils/slug.js';
 
+// A subdocument rather than a plain nested path, so url and publicId can be required whenever an
+// image exists without making the image itself mandatory.
+const categoryImageSchema = new mongoose.Schema(
+  {
+    url: {
+      type: String,
+      required: [true, 'Image url is required'],
+      trim: true,
+    },
+    // Needed to delete the file from Cloudinary when the image is replaced or the category removed.
+    publicId: {
+      type: String,
+      required: [true, 'Image publicId is required'],
+      trim: true,
+    },
+    alt: { type: String, trim: true, maxlength: 160 },
+  },
+  { _id: false }
+);
+
 const categorySchema = new mongoose.Schema(
   {
     name: {
@@ -22,12 +42,10 @@ const categorySchema = new mongoose.Schema(
       trim: true,
       maxlength: 500,
     },
-    // Cloudinary banner. publicId is optional because images are uploaded by hand in the
-    // dashboard today, but it is stored when present so a future admin delete can call Cloudinary.
+    // Cloudinary banner, uploaded through the admin API or the seeder. Absent until one is uploaded.
     image: {
-      url: { type: String, trim: true },
-      publicId: { type: String, trim: true },
-      alt: { type: String, trim: true, maxlength: 160 },
+      type: categoryImageSchema,
+      default: undefined,
     },
     // The six categories have a client-mandated order that is not alphabetical.
     displayOrder: {

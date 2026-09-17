@@ -10,12 +10,13 @@ export const categoryController = {
   }),
 
   create: asyncHandler(async (req, res) => {
-    const category = await categoryService.create(req.body);
+    // The file was already uploaded by uploadCategoryImageToCloudinary; only its URL travels on.
+    const category = await categoryService.create(req.body, req.uploadedCloudinaryImages?.[0]);
     sendCreated(res, category, 'Category created successfully');
   }),
 
   update: asyncHandler(async (req, res) => {
-    const category = await categoryService.update(req.params.id, req.body);
+    const category = await categoryService.update(req.params.id, req.body, req.uploadedCloudinaryImages?.[0]);
     sendResponse(res, { message: 'Category updated successfully', data: category });
   }),
 

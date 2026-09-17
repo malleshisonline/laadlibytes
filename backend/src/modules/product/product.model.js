@@ -13,9 +13,13 @@ const imageSchema = new mongoose.Schema(
       required: [true, 'Image url is required'],
       trim: true,
     },
-    // Cloudinary public_id. Optional because the client uploads through the dashboard by hand,
-    // but stored when present so a future admin delete can call Cloudinary.
-    publicId: { type: String, trim: true },
+    // Cloudinary public_id. Required: every image arrives through the admin upload or the seeder,
+    // and without it a removed or replaced image could never be deleted from Cloudinary.
+    publicId: {
+      type: String,
+      required: [true, 'Image publicId is required'],
+      trim: true,
+    },
     alt: { type: String, trim: true, maxlength: 160 },
   },
   { _id: false }
@@ -82,8 +86,8 @@ const productSchema = new mongoose.Schema(
     shelfLife: { type: String, trim: true, maxlength: 100 },
     nutritionPoints: { type: [String], default: [] },
     taglines: { type: [String], default: [] },
-    // Deliberately uncapped: four per product today (front, back, label, nutrition),
-    // but more may be added later.
+    // Deliberately uncapped: four per product today (front, back and one or two more),
+    // but more may be added later. images[0] is the front of pack.
     images: { type: [imageSchema], default: [] },
     stock: { type: Number, default: 0, min: 0 },
     // Publish switch and soft-delete target: DELETE sets this false rather than removing the doc,

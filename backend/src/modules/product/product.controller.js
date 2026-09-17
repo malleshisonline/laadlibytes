@@ -15,12 +15,13 @@ export const productController = {
   }),
 
   create: asyncHandler(async (req, res) => {
-    const product = await productService.create(req.body);
+    // Files were already uploaded by uploadProductImagesToCloudinary; only their URLs travel on.
+    const product = await productService.create(req.body, req.uploadedCloudinaryImages);
     sendCreated(res, product, 'Product created successfully');
   }),
 
   update: asyncHandler(async (req, res) => {
-    const product = await productService.update(req.params.id, req.body);
+    const product = await productService.update(req.params.id, req.body, req.uploadedCloudinaryImages);
     sendResponse(res, { message: 'Product updated successfully', data: product });
   }),
 
