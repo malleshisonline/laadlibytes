@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+import { auditFields, stripUnpopulatedAuditRefs } from '../../utils/auditFields.js';
 import { slugify } from '../../utils/slug.js';
 
 export const PACK_UNITS = ['g', 'kg', 'ml', 'l', 'piece'];
@@ -94,6 +95,8 @@ const productSchema = new mongoose.Schema(
     // so future order lines never point at a missing product.
     isActive: { type: Boolean, default: true },
     isFeatured: { type: Boolean, default: false },
+    // createdBy / updatedBy: which admin last touched this row.
+    ...auditFields(),
   },
   {
     timestamps: true,
@@ -103,6 +106,7 @@ const productSchema = new mongoose.Schema(
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;
+        stripUnpopulatedAuditRefs(ret);
         return ret;
       },
     },

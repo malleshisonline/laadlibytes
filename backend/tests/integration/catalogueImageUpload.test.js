@@ -29,6 +29,8 @@ const { Product } = await import('../../src/modules/product/product.model.js');
 const { signAccessToken } = await import('../../src/utils/token.js');
 
 const api = (path) => `${env.API_PREFIX}${path}`;
+// Every route exercised here is an admin write, and those live under /admin.
+const adminApi = (path) => api(`/admin${path}`);
 const bearerTokenFor = (role) =>
   `Bearer ${signAccessToken({ sub: new mongoose.Types.ObjectId().toString(), role })}`;
 const ADMIN_AUTHORIZATION = () => bearerTokenFor('admin');
@@ -87,7 +89,7 @@ const createStoredProduct = (overrides = {}) =>
 
 const postProductMultipart = (fields) =>
   request(app)
-    .post(api('/products'))
+    .post(adminApi('/products'))
     .set('Authorization', ADMIN_AUTHORIZATION())
     .field('productFields', JSON.stringify(fields));
 
@@ -110,7 +112,7 @@ beforeEach(async () => {
   fruitCategory = await Category.create({ name: 'Fruit Variant', displayOrder: 6 });
 });
 
-describe('POST /products with image files', () => {
+describe('POST /admin/products with image files', () => {
   test('uploads every file into the SKU folder and saves them in the order sent', async () => {
     const res = await postProductMultipart(productFields())
       .attach('images', ...jpegAttachment('front.jpg'))
@@ -224,7 +226,7 @@ describe('POST /products with image files', () => {
 
   test('rejects productFields that are not JSON, and loose form fields', async () => {
     const brokenJson = await request(app)
-      .post(api('/products'))
+      .post(adminApi('/products'))
       .set('Authorization', ADMIN_AUTHORIZATION())
       .field('productFields', '{ not json')
       .attach('images', ...pngAttachment('front.png'));
@@ -253,7 +255,7 @@ describe('POST /products with image files', () => {
 
   test('never lets a customer upload', async () => {
     const res = await request(app)
-      .post(api('/products'))
+      .post(adminApi('/products'))
       .set('Authorization', bearerTokenFor('user'))
       .field('productFields', JSON.stringify(productFields()))
       .attach('images', ...pngAttachment('front.png'));
@@ -304,7 +306,7 @@ describe('POST /products with image files', () => {
   });
 
   test('still accepts a plain JSON create with no files', async () => {
-    const res = await request(app).post(api('/products')).set('Authorization', ADMIN_AUTHORIZATION()).send(productFields());
+    const res = await request(app).post(adminApi('/products')).set('Authorization', ADMIN_AUTHORIZATION()).send(productFields());
 
     expect(res.status).toBe(201);
     expect(res.body.data.images).toEqual([]);
@@ -312,12 +314,12 @@ describe('POST /products with image files', () => {
   });
 });
 
-describe('PATCH /products/:id with image files', () => {
+describe('PATCH /admin/products/:id with image files', () => {
   test('reorders, removes and adds in one request, deleting the removed file only after saving', async () => {
     const product = await createStoredProduct({ images: ['a', 'b', 'c'].map(storedImage) });
 
     const res = await request(app)
-      .patch(api(`/products/${product._id}`))
+      .patch(adminApi(`/products/${product._id}`))
       .set('Authorization', ADMIN_AUTHORIZATION())
       .field(
         'productFields',
@@ -339,7 +341,7 @@ describe('PATCH /products/:id with image files', () => {
     const product = await createStoredProduct({ images: [storedImage('a')] });
 
     const res = await request(app)
-      .patch(api(`/products/${product._id}`))
+      .patch(adminApi(`/products/${product._id}`))
       .set('Authorization', ADMIN_AUTHORIZATION())
       .attach('images', ...pngAttachment('extra.png'));
 
@@ -354,7 +356,7 @@ describe('PATCH /products/:id with image files', () => {
     const product = await createStoredProduct({ images: ['a', 'b'].map(storedImage) });
 
     const res = await request(app)
-      .patch(api(`/products/${product._id}`))
+      .patch(adminApi(`/products/${product._id}`))
       .set('Authorization', ADMIN_AUTHORIZATION())
       .send({ images: [{ publicId: `${PRODUCT_FOLDER}/b` }] });
 
@@ -367,7 +369,7 @@ describe('PATCH /products/:id with image files', () => {
     const product = await createStoredProduct({ images: [storedImage('a')] });
 
     const res = await request(app)
-      .patch(api(`/products/${product._id}`))
+      .patch(adminApi(`/products/${product._id}`))
       .set('Authorization', ADMIN_AUTHORIZATION())
       .field('productFields', JSON.stringify({ images: [{ publicId: 'someone-else/image' }, { newImageFileIndex: 0 }] }))
       .attach('images', ...pngAttachment('front.png'));
@@ -385,7 +387,7 @@ describe('PATCH /products/:id with image files', () => {
     const product = await createStoredProduct();
 
     const res = await request(app)
-      .patch(api(`/products/${product._id}`))
+      .patch(adminApi(`/products/${product._id}`))
       .set('Authorization', ADMIN_AUTHORIZATION())
       .send({ images: [{ newImageFileIndex: 0 }] });
 
@@ -395,7 +397,7 @@ describe('PATCH /products/:id with image files', () => {
 
   test('404s before uploading when the product does not exist', async () => {
     const res = await request(app)
-      .patch(api(`/products/${new mongoose.Types.ObjectId()}`))
+      .patch(adminApi(`/products/${new mongoose.Types.ObjectId()}`))
       .set('Authorization', ADMIN_AUTHORIZATION())
       .attach('images', ...pngAttachment('front.png'));
 
@@ -409,7 +411,7 @@ describe('category image', () => {
 
   test('creates a category with its image in the slug folder', async () => {
     const res = await request(app)
-      .post(api('/categories'))
+      .post(adminApi('/categories'))
       .set('Authorization', ADMIN_AUTHORIZATION())
       .field('categoryFields', JSON.stringify({ name: 'Kids Wellness', image: { alt: 'Kids banner' } }))
       .attach('image', ...pngAttachment('banner.png'));
@@ -422,7 +424,7 @@ describe('category image', () => {
 
   test('accepts only one file', async () => {
     const res = await request(app)
-      .post(api('/categories'))
+      .post(adminApi('/categories'))
       .set('Authorization', ADMIN_AUTHORIZATION())
       .field('categoryFields', JSON.stringify({ name: 'Kids Wellness' }))
       .attach('image', ...pngAttachment('one.png'))
@@ -440,7 +442,7 @@ describe('category image', () => {
     );
 
     const res = await request(app)
-      .patch(api(`/categories/${fruitCategory._id}`))
+      .patch(adminApi(`/categories/${fruitCategory._id}`))
       .set('Authorization', ADMIN_AUTHORIZATION())
       .attach('image', ...pngAttachment('new.png'));
 
@@ -459,7 +461,7 @@ describe('category image', () => {
     );
 
     const res = await request(app)
-      .patch(api(`/categories/${fruitCategory._id}`))
+      .patch(adminApi(`/categories/${fruitCategory._id}`))
       .set('Authorization', ADMIN_AUTHORIZATION())
       .send({ image: null });
 
@@ -470,7 +472,7 @@ describe('category image', () => {
 
   test('refuses a raw image URL in JSON', async () => {
     const res = await request(app)
-      .patch(api(`/categories/${fruitCategory._id}`))
+      .patch(adminApi(`/categories/${fruitCategory._id}`))
       .set('Authorization', ADMIN_AUTHORIZATION())
       .send({ image: { url: 'https://example.com/banner.png' } });
 
@@ -484,7 +486,7 @@ describe('category image', () => {
       { image: { url: 'https://res.cloudinary.com/x/old.png', publicId: 'old-banner' } }
     );
 
-    const res = await request(app).delete(api(`/categories/${fruitCategory._id}`)).set('Authorization', ADMIN_AUTHORIZATION());
+    const res = await request(app).delete(adminApi(`/categories/${fruitCategory._id}`)).set('Authorization', ADMIN_AUTHORIZATION());
 
     expect(res.status).toBe(204);
     expect(deletedPublicIds()).toEqual(['old-banner']);
@@ -492,7 +494,7 @@ describe('category image', () => {
 
   test('a duplicate category name deletes the uploaded file', async () => {
     const res = await request(app)
-      .post(api('/categories'))
+      .post(adminApi('/categories'))
       .set('Authorization', ADMIN_AUTHORIZATION())
       .field('categoryFields', JSON.stringify({ name: 'Fruit Variant', slug: 'fruit-variant-two' }))
       .attach('image', ...pngAttachment('banner.png'));

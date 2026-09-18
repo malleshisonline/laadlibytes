@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+import { auditFields, stripUnpopulatedAuditRefs } from '../../utils/auditFields.js';
 import { slugify } from '../../utils/slug.js';
 
 // A subdocument rather than a plain nested path, so url and publicId can be required whenever an
@@ -56,6 +57,8 @@ const categorySchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    // createdBy / updatedBy: which admin last touched this row.
+    ...auditFields(),
   },
   {
     timestamps: true,
@@ -65,6 +68,7 @@ const categorySchema = new mongoose.Schema(
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;
+        stripUnpopulatedAuditRefs(ret);
         return ret;
       },
     },

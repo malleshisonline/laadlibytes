@@ -9,14 +9,31 @@ export const categoryController = {
     sendResponse(res, { message: 'Categories fetched successfully', data: categories });
   }),
 
+  /** Admin list. Same service call; the schema defaults includeInactive to true. */
+  adminList: asyncHandler(async (req, res) => {
+    const categories = await categoryService.list(req.validatedQuery ?? {}, req.user);
+    sendResponse(res, { message: 'Categories fetched successfully', data: categories });
+  }),
+
+  /** Admin detail. There is no public equivalent: the storefront navigates by slug. */
+  adminGetById: asyncHandler(async (req, res) => {
+    const category = await categoryService.getById(req.params.id, { withAudit: true });
+    sendResponse(res, { message: 'Category fetched successfully', data: category });
+  }),
+
   create: asyncHandler(async (req, res) => {
     // The file was already uploaded by uploadCategoryImageToCloudinary; only its URL travels on.
-    const category = await categoryService.create(req.body, req.uploadedCloudinaryImages?.[0]);
+    const category = await categoryService.create(req.body, req.uploadedCloudinaryImages?.[0], req.user.id);
     sendCreated(res, category, 'Category created successfully');
   }),
 
   update: asyncHandler(async (req, res) => {
-    const category = await categoryService.update(req.params.id, req.body, req.uploadedCloudinaryImages?.[0]);
+    const category = await categoryService.update(
+      req.params.id,
+      req.body,
+      req.uploadedCloudinaryImages?.[0],
+      req.user.id
+    );
     sendResponse(res, { message: 'Category updated successfully', data: category });
   }),
 

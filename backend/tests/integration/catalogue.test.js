@@ -7,9 +7,12 @@ import app from '../../src/app.js';
 import { env } from '../../src/config/env.js';
 import { Category } from '../../src/modules/category/category.model.js';
 import { Product } from '../../src/modules/product/product.model.js';
+import { User } from '../../src/modules/user/user.model.js';
 import { signAccessToken } from '../../src/utils/token.js';
 
 const api = (path) => `${env.API_PREFIX}${path}`;
+// Everything an admin writes lives under /admin, gated once in admin.routes.js.
+const adminApi = (path) => api(`/admin${path}`);
 
 // authenticate only verifies the JWT and reads { sub, role }; it never loads the user, so a
 // signed token is enough and these tests stay about the catalogue rather than about auth.
@@ -55,7 +58,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  await Promise.all([Product.deleteMany({}), Category.deleteMany({})]);
+  await Promise.all([Product.deleteMany({}), Category.deleteMany({}), User.deleteMany({})]);
   [fruit, kids] = await Category.create([
     { name: 'Fruit Variant', displayOrder: 6 },
     { name: 'Kids Wellness', displayOrder: 5 },
@@ -253,17 +256,17 @@ describe('GET /products/:idOrSlug', () => {
 
 describe('admin product writes', () => {
   test('rejects anonymous and non-admin callers', async () => {
-    expect((await request(app).post(api('/products')).send(productPayload())).status).toBe(401);
+    expect((await request(app).post(adminApi('/products')).send(productPayload())).status).toBe(401);
 
     const asCustomer = await request(app)
-      .post(api('/products'))
+      .post(adminApi('/products'))
       .set('Authorization', CUSTOMER())
       .send(productPayload());
     expect(asCustomer.status).toBe(403);
   });
 
   test('creates a product, deriving the slug and defaulting price to MRP', async () => {
-    const res = await request(app).post(api('/products')).set('Authorization', ADMIN()).send(productPayload());
+    const res = await request(app).post(adminApi('/products')).set('Authorization', ADMIN()).send(productPayload());
 
     expect(res.status).toBe(201);
     expect(res.body.data).toMatchObject({ slug: 'mango-alohas', price: 150, mrp: 150, discountPercent: 0 });
@@ -272,7 +275,7 @@ describe('admin product writes', () => {
 
   test('refuses a price above MRP', async () => {
     const res = await request(app)
-      .post(api('/products'))
+      .post(adminApi('/products'))
       .set('Authorization', ADMIN())
       .send(productPayload({ price: 200 }));
 
@@ -282,7 +285,7 @@ describe('admin product writes', () => {
 
   test('refuses an unknown category', async () => {
     const res = await request(app)
-      .post(api('/products'))
+      .post(adminApi('/products'))
       .set('Authorization', ADMIN())
       .send(productPayload({ category: new mongoose.Types.ObjectId().toString() }));
 
@@ -294,7 +297,7 @@ describe('admin product writes', () => {
     await createProduct();
 
     const res = await request(app)
-      .post(api('/products'))
+      .post(adminApi('/products'))
       .set('Authorization', ADMIN())
       .send(productPayload({ name: 'Something Else' }));
 
@@ -304,7 +307,7 @@ describe('admin product writes', () => {
 
   test('refuses a raw image URL in JSON: images only arrive as uploaded files', async () => {
     const res = await request(app)
-      .post(api('/products'))
+      .post(adminApi('/products'))
       .set('Authorization', ADMIN())
       .send(productPayload({ images: [{ url: 'https://example.com/front.jpg', alt: 'front' }] }));
 
@@ -325,7 +328,7 @@ describe('admin product writes', () => {
     reversedOrder[0].alt = 'new front';
 
     const res = await request(app)
-      .patch(api(`/products/${product._id}`))
+      .patch(adminApi(`/products/${product._id}`))
       .set('Authorization', ADMIN())
       .send({ images: reversedOrder });
 
@@ -339,7 +342,7 @@ describe('admin product writes', () => {
     const product = await createProduct({ ingredients: ['Roasted Ragi Flour', 'Rolled Oats'] });
 
     const res = await request(app)
-      .patch(api(`/products/${product._id}`))
+      .patch(adminApi(`/products/${product._id}`))
       .set('Authorization', ADMIN())
       .send({ description: 'A mango millet bite.', shelfLife: '6 months from packaging' });
 
@@ -352,7 +355,7 @@ describe('admin product writes', () => {
   test('rejects an empty PATCH', async () => {
     const product = await createProduct();
 
-    const res = await request(app).patch(api(`/products/${product._id}`)).set('Authorization', ADMIN()).send({});
+    const res = await request(app).patch(adminApi(`/products/${product._id}`)).set('Authorization', ADMIN()).send({});
 
     expect(res.status).toBe(400);
     expect(res.body.code).toBe('VALIDATION_ERROR');
@@ -362,7 +365,7 @@ describe('admin product writes', () => {
     const product = await createProduct();
 
     const res = await request(app)
-      .patch(api(`/products/${product._id}`))
+      .patch(adminApi(`/products/${product._id}`))
       .set('Authorization', ADMIN())
       .send({ name: 'Mango Alohas Deluxe' });
 
@@ -373,7 +376,7 @@ describe('admin product writes', () => {
   test('DELETE soft-deletes, so the document survives for future order lines', async () => {
     const product = await createProduct();
 
-    const res = await request(app).delete(api(`/products/${product._id}`)).set('Authorization', ADMIN());
+    const res = await request(app).delete(adminApi(`/products/${product._id}`)).set('Authorization', ADMIN());
 
     expect(res.status).toBe(204);
     const stored = await Product.findById(product._id);
@@ -386,7 +389,7 @@ describe('admin category writes', () => {
   test('refuses to delete a category that still has products', async () => {
     await createProduct();
 
-    const res = await request(app).delete(api(`/categories/${fruit._id}`)).set('Authorization', ADMIN());
+    const res = await request(app).delete(adminApi(`/categories/${fruit._id}`)).set('Authorization', ADMIN());
 
     expect(res.status).toBe(409);
     expect(res.body.code).toBe('CATEGORY_NOT_EMPTY');
@@ -395,7 +398,7 @@ describe('admin category writes', () => {
   });
 
   test('deletes an empty category', async () => {
-    const res = await request(app).delete(api(`/categories/${kids._id}`)).set('Authorization', ADMIN());
+    const res = await request(app).delete(adminApi(`/categories/${kids._id}`)).set('Authorization', ADMIN());
 
     expect(res.status).toBe(204);
     expect(await Category.countDocuments()).toBe(1);
@@ -403,10 +406,157 @@ describe('admin category writes', () => {
 
   test('rejects a non-admin caller', async () => {
     const res = await request(app)
-      .post(api('/categories'))
+      .post(adminApi('/categories'))
       .set('Authorization', CUSTOMER())
       .send({ name: 'Sneaky Category' });
 
     expect(res.status).toBe(403);
+  });
+});
+
+describe('the /admin gate', () => {
+  // One guard covers the whole surface, so it is worth proving on a read as well as on a write,
+  // and on each sub-router — a missing router.use() here would open everything below it.
+  test.each([
+    ['/products'],
+    ['/categories'],
+    ['/users'],
+    ['/summary'],
+  ])('401s an anonymous caller on GET /admin%s', async (path) => {
+    expect((await request(app).get(adminApi(path))).status).toBe(401);
+  });
+
+  test.each([
+    ['/products'],
+    ['/categories'],
+    ['/users'],
+    ['/summary'],
+  ])('403s a signed-in customer on GET /admin%s', async (path) => {
+    const res = await request(app).get(adminApi(path)).set('Authorization', CUSTOMER());
+
+    expect(res.status).toBe(403);
+    expect(res.body.success).toBe(false);
+  });
+});
+
+describe('admin catalogue reads', () => {
+  test('GET /admin/products includes inactive rows without asking, unlike the storefront', async () => {
+    await createProduct({ sku: 'FV-01' });
+    await createProduct({ name: 'Retired', slug: 'retired', sku: 'FV-02', isActive: false });
+
+    const admin = await request(app).get(adminApi('/products')).set('Authorization', ADMIN());
+    expect(admin.status).toBe(200);
+    expect(admin.body.data).toHaveLength(2);
+
+    // The public list is unchanged: still published products only.
+    expect((await request(app).get(api('/products'))).body.data).toHaveLength(1);
+  });
+
+  test('GET /admin/products?includeInactive=false narrows back to the published rows', async () => {
+    await createProduct({ sku: 'FV-01' });
+    await createProduct({ name: 'Retired', slug: 'retired', sku: 'FV-02', isActive: false });
+
+    const res = await request(app).get(adminApi('/products?includeInactive=false')).set('Authorization', ADMIN());
+
+    expect(res.body.data).toHaveLength(1);
+  });
+
+  test('GET /admin/categories includes inactive rows; GET /admin/categories/:id resolves one', async () => {
+    await Category.updateOne({ _id: kids._id }, { isActive: false });
+
+    const list = await request(app).get(adminApi('/categories')).set('Authorization', ADMIN());
+    expect(list.body.data).toHaveLength(2);
+
+    const detail = await request(app).get(adminApi(`/categories/${kids._id}`)).set('Authorization', ADMIN());
+    expect(detail.status).toBe(200);
+    expect(detail.body.data).toMatchObject({ name: 'Kids Wellness', isActive: false });
+  });
+
+  test('GET /admin/products/:idOrSlug opens a soft-deleted product', async () => {
+    const product = await createProduct({ isActive: false });
+
+    const res = await request(app).get(adminApi(`/products/${product._id}`)).set('Authorization', ADMIN());
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.isActive).toBe(false);
+  });
+});
+
+describe('admin audit trail', () => {
+  test('records the acting admin, and keeps it off the storefront payload', async () => {
+    const admin = await User.create({
+      name: 'Catalogue Admin',
+      email: 'admin@laadlibytes.test',
+      password: 'a-long-enough-password',
+      role: 'admin',
+    });
+    const asAdmin = `Bearer ${signAccessToken({ sub: admin._id.toString(), role: 'admin' })}`;
+
+    const created = await request(app).post(adminApi('/products')).set('Authorization', asAdmin).send(productPayload());
+    expect(created.status).toBe(201);
+
+    // Stored, but select:false — so neither the create response nor the storefront carries it.
+    expect(created.body.data.createdBy).toBeUndefined();
+    const publicDetail = await request(app).get(api('/products/mango-alohas'));
+    expect(publicDetail.body.data.createdBy).toBeUndefined();
+
+    const adminDetail = await request(app).get(adminApi('/products/mango-alohas')).set('Authorization', asAdmin);
+    expect(adminDetail.body.data.createdBy).toMatchObject({ name: 'Catalogue Admin' });
+
+    // The password must not ride along on the populated admin.
+    expect(adminDetail.body.data.createdBy.password).toBeUndefined();
+  });
+
+  test('stamps updatedBy on a soft delete', async () => {
+    const product = await createProduct();
+    const adminId = new mongoose.Types.ObjectId().toString();
+    const asAdmin = `Bearer ${signAccessToken({ sub: adminId, role: 'admin' })}`;
+
+    await request(app).delete(adminApi(`/products/${product._id}`)).set('Authorization', asAdmin);
+
+    const stored = await Product.findById(product._id).select('+updatedBy');
+    expect(stored.isActive).toBe(false);
+    expect(stored.updatedBy.toString()).toBe(adminId);
+  });
+});
+
+describe('GET /admin/summary', () => {
+  test('counts the catalogue the way a dashboard home screen shows it', async () => {
+    await createProduct({ sku: 'FV-01', stock: 0 });
+    await createProduct({ name: 'Low', slug: 'low', sku: 'FV-02', stock: 3, isFeatured: true });
+    await createProduct({ name: 'Plenty', slug: 'plenty', sku: 'FV-03', stock: 500 });
+    await createProduct({ name: 'Retired', slug: 'retired', sku: 'FV-04', stock: 0, isActive: false });
+
+    const res = await request(app).get(adminApi('/summary')).set('Authorization', ADMIN());
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.products).toEqual({
+      total: 4,
+      active: 3,
+      inactive: 1,
+      featured: 1,
+      // The soft-deleted zero-stock product is not counted: nobody needs to act on it.
+      outOfStock: 1,
+      lowStock: 1,
+      lowStockThreshold: 10,
+    });
+    expect(res.body.data.categories).toEqual({ total: 2, active: 2, inactive: 0 });
+  });
+
+  test('honours a caller-supplied low-stock line', async () => {
+    await createProduct({ sku: 'FV-01', stock: 3 });
+    await createProduct({ name: 'Plenty', slug: 'plenty', sku: 'FV-02', stock: 500 });
+
+    const res = await request(app).get(adminApi('/summary?lowStockThreshold=1000')).set('Authorization', ADMIN());
+
+    expect(res.body.data.products.lowStock).toBe(2);
+    expect(res.body.data.products.lowStockThreshold).toBe(1000);
+  });
+
+  test('rejects a low-stock line outside the allowed range', async () => {
+    const res = await request(app).get(adminApi('/summary?lowStockThreshold=0')).set('Authorization', ADMIN());
+
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe('VALIDATION_ERROR');
   });
 });

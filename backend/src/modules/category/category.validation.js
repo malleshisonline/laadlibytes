@@ -38,3 +38,11 @@ export const listCategoriesQuerySchema = z.object({
   // Honoured for admins only; the service ignores it for everyone else.
   includeInactive: booleanQuerySchema.default(false),
 });
+
+/**
+ * The admin list. Inactive categories are in by default: an admin opening the catalogue is
+ * managing it, not shopping it. `?includeInactive=false` still narrows it to the published rows.
+ */
+export const adminListCategoriesQuerySchema = z.object({
+  includeInactive: booleanQuerySchema.default(true),
+});

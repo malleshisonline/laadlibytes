@@ -84,22 +84,45 @@ export const createProductSchema = z.object(productShape);
 // cannot see. productService.update rejects a request with neither fields nor files.
 export const updateProductSchema = z.object(productShape).partial();
 
+/**
+ * Every filter both the storefront list and the admin list accept. Kept as a shape rather than a
+ * finished schema because `.refine()` returns a ZodEffects, which cannot be `.extend()`ed — the
+ * two exported list schemas differ only in the default for `includeInactive`.
+ */
+const listProductsQueryShape = {
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+  // A category slug, not an id: the storefront URL already carries the slug.
+  category: z.string().trim().max(140).optional(),
+  search: z.string().trim().max(100).optional(),
+  minPrice: z.coerce.number().min(0).optional(),
+  maxPrice: z.coerce.number().min(0).optional(),
+  inStock: booleanQuerySchema.optional(),
+  featured: booleanQuerySchema.optional(),
+  sort: z.enum(PRODUCT_SORTS).default('newest'),
+};
+
+const priceRangeRefinement = [
+  (data) => data.minPrice === undefined || data.maxPrice === undefined || data.minPrice <= data.maxPrice,
+  { path: ['minPrice'], message: 'minPrice cannot be greater than maxPrice' },
+];
+
 export const listProductsQuerySchema = z
   .object({
-    page: z.coerce.number().int().min(1).default(1),
-    limit: z.coerce.number().int().min(1).max(100).default(20),
-    // A category slug, not an id: the storefront URL already carries the slug.
-    category: z.string().trim().max(140).optional(),
-    search: z.string().trim().max(100).optional(),
-    minPrice: z.coerce.number().min(0).optional(),
-    maxPrice: z.coerce.number().min(0).optional(),
-    inStock: booleanQuerySchema.optional(),
-    featured: booleanQuerySchema.optional(),
+    ...listProductsQueryShape,
     // Honoured for admins only; the service ignores it for everyone else.
     includeInactive: booleanQuerySchema.optional(),
-    sort: z.enum(PRODUCT_SORTS).default('newest'),
   })
-  .refine((data) => data.minPrice === undefined || data.maxPrice === undefined || data.minPrice <= data.maxPrice, {
-    path: ['minPrice'],
-    message: 'minPrice cannot be greater than maxPrice',
-  });
+  .refine(...priceRangeRefinement);
+
+/**
+ * The admin list. Same filters, but inactive products are in by default: an admin opening the
+ * catalogue is managing it, not shopping it. `?includeInactive=false` still narrows it to the
+ * published rows.
+ */
+export const adminListProductsQuerySchema = z
+  .object({
+    ...listProductsQueryShape,
+    includeInactive: booleanQuerySchema.default(true),
+  })
+  .refine(...priceRangeRefinement);

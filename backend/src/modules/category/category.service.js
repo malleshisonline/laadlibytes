@@ -20,8 +20,17 @@ export const categoryService = {
     return Category.find(filter).select('-__v').sort({ displayOrder: 1, name: 1 });
   },
 
-  async getById(id) {
-    const category = await Category.findById(id);
+  /**
+   * `withAudit` pulls in the select:false createdBy/updatedBy and resolves them to names —
+   * used by the admin detail route only, so the storefront payload never carries user ids.
+   */
+  async getById(id, { withAudit = false } = {}) {
+    const query = Category.findById(id);
+    if (withAudit) {
+      query.select('+createdBy +updatedBy').populate('createdBy updatedBy', 'name email phone');
+    }
+
+    const category = await query;
     if (!category) throw ApiError.notFound('Category not found');
     return category;
   },
@@ -44,7 +53,7 @@ export const categoryService = {
    * `uploadedImage` is a file already on Cloudinary ({ url, publicId }). If this throws, the
    * upload middleware deletes it again, so a failed create leaves nothing behind.
    */
-  async create(payload, uploadedImage = undefined) {
+  async create(payload, uploadedImage = undefined, actorId = undefined) {
     const { image: requestedImage, ...fields } = payload;
     // An explicit slug is still normalised, so 'Fruit Variant' cannot sneak in as a slug.
     const slug = slugify(fields.slug ?? fields.name);
@@ -54,14 +63,14 @@ export const categoryService = {
     }
     const image = uploadedImage ? buildCategoryImage(uploadedImage, requestedImage?.alt) : undefined;
 
-    return Category.create({ ...fields, slug, image });
+    return Category.create({ ...fields, slug, image, createdBy: actorId, updatedBy: actorId });
   },
 
   /**
    * A new file replaces the stored image; `image: null` removes it; `image: { alt }` alone edits
    * the alt text. The old file is deleted from Cloudinary only after the save succeeds.
    */
-  async update(id, payload, uploadedImage = undefined) {
+  async update(id, payload, uploadedImage = undefined, actorId = undefined) {
     if (Object.keys(payload).length === 0 && !uploadedImage) {
       throw ApiError.badRequest('At least one field or an image file is required', { code: 'VALIDATION_ERROR' });
     }
@@ -94,6 +103,7 @@ export const categoryService = {
     }
 
     category.set(patch);
+    if (actorId) category.set('updatedBy', actorId);
     await category.save();
     await deleteCloudinaryAssetsByPublicIds([replacedPublicId]);
     return category;

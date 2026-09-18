@@ -183,12 +183,20 @@ export const productService = {
   /**
    * Public detail. Accepts an id or a slug on one route, so the admin UI can open a
    * soft-deleted product by id without a second, colliding route.
+   *
+   * `withAudit` pulls in the select:false createdBy/updatedBy and resolves them to names —
+   * used by the admin detail route only, so the storefront payload never carries user ids.
    */
-  async getByIdOrSlug(idOrSlug, requester = null) {
+  async getByIdOrSlug(idOrSlug, requester = null, { withAudit = false } = {}) {
     const filter = looksLikeObjectId(idOrSlug) ? { _id: idOrSlug } : { slug: slugify(idOrSlug) };
     if (requester?.role !== 'admin') filter.isActive = true;
 
-    const product = await Product.findOne(filter).populate('category', 'name slug');
+    const query = Product.findOne(filter).populate('category', 'name slug');
+    if (withAudit) {
+      query.select('+createdBy +updatedBy').populate('createdBy updatedBy', 'name email phone');
+    }
+
+    const product = await query;
     if (!product) throw ApiError.notFound('Product not found');
     return product;
   },
@@ -204,7 +212,7 @@ export const productService = {
    * `uploadedImages` are files already on Cloudinary ([{ url, publicId }]). If this throws, the
    * upload middleware deletes them again, so a failed create leaves nothing behind.
    */
-  async create(payload, uploadedImages = []) {
+  async create(payload, uploadedImages = [], actorId = undefined) {
     await assertCategoryExists(payload.category);
 
     // Seeded equal to MRP, so a product is never accidentally born on discount.
@@ -216,7 +224,14 @@ export const productService = {
 
     const { finalImages } = resolveFinalProductImageList([], payload.images, uploadedImages);
 
-    const product = await Product.create({ ...payload, price, slug, images: finalImages });
+    const product = await Product.create({
+      ...payload,
+      price,
+      slug,
+      images: finalImages,
+      createdBy: actorId,
+      updatedBy: actorId,
+    });
     return product.populate('category', 'name slug');
   },
 
@@ -224,7 +239,7 @@ export const productService = {
    * Replaced or removed images are deleted from Cloudinary only after the save succeeds, so a
    * failed update never leaves the product pointing at a deleted file.
    */
-  async update(id, payload, uploadedImages = []) {
+  async update(id, payload, uploadedImages = [], actorId = undefined) {
     if (Object.keys(payload).length === 0 && uploadedImages.length === 0) {
       throw ApiError.badRequest('At least one field or image file is required', { code: 'VALIDATION_ERROR' });
     }
@@ -252,6 +267,7 @@ export const productService = {
     }
 
     product.set(patch);
+    if (actorId) product.set('updatedBy', actorId);
     await product.save();
     await deleteCloudinaryAssetsByPublicIds(removedPublicIds);
     return product.populate('category', 'name slug');
@@ -261,8 +277,9 @@ export const productService = {
    * Soft delete: order lines will reference products, so the document has to survive — and so
    * do its Cloudinary images, which the order history may still show.
    */
-  async remove(id) {
-    const product = await Product.findByIdAndUpdate(id, { isActive: false }, { returnDocument: 'after' });
+  async remove(id, actorId = undefined) {
+    const patch = actorId ? { isActive: false, updatedBy: actorId } : { isActive: false };
+    const product = await Product.findByIdAndUpdate(id, patch, { returnDocument: 'after' });
     if (!product) throw ApiError.notFound('Product not found');
     return product;
   },

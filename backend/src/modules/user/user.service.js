@@ -3,6 +3,20 @@ import { buildMeta, getPagination } from '../../utils/pagination.js';
 
 import { User } from './user.model.js';
 
+// The labels in USER_SORTS (user.validation.js), which is what a caller may actually send.
+// lastLoginAt is unset until a user first signs in, and Mongo sorts missing values lowest, so
+// 'last_login_desc' lists everyone who has signed in before anyone who never has.
+const USER_SORT_MAP = {
+  newest: { createdAt: -1 },
+  oldest: { createdAt: 1 },
+  name_asc: { name: 1 },
+  name_desc: { name: -1 },
+  email_asc: { email: 1 },
+  email_desc: { email: -1 },
+  last_login_desc: { lastLoginAt: -1 },
+  last_login_asc: { lastLoginAt: 1 },
+};
+
 /** Data access + business rules. Controllers stay free of Mongoose. */
 export const userService = {
   async list(query) {
@@ -17,7 +31,12 @@ export const userService = {
     ];
 
     const [items, total] = await Promise.all([
-      User.find(filter).select('-__v').sort(query.sort ?? '-createdAt').skip(skip).limit(limit).lean(),
+      User.find(filter)
+        .select('-__v')
+        .sort(USER_SORT_MAP[query.sort] ?? USER_SORT_MAP.newest)
+        .skip(skip)
+        .limit(limit)
+        .lean(),
       User.countDocuments(filter),
     ]);
 

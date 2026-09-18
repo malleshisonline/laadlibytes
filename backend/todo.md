@@ -52,3 +52,8 @@ Keep building in development. Come back to this file only when the backend + fro
 
 - Write scripts/syncIndexes.js and run it after first deploy,
   before the site goes public (autoIndex is off in production)
+
+## Open product decisions (not deployment)
+- [ ] Admin dashboard: sorting users by lastLoginAt puts never-logged-in users first on
+      ascending sort. Decide before building an "inactive users" view whether that is the
+      wanted behaviour or needs a separate filter.
