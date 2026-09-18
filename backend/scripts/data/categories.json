@@ -1,0 +1,8 @@
+[
+  { "name": "Women Wellness", "slug": "women-wellness", "displayOrder": 1, "description": "Millet snacks made with ingredients traditionally valued for women's daily nourishment. Wholesome, satisfying, and easy to carry through a busy day." },
+  { "name": "Peanut Chikki", "slug": "peanut-chikki", "displayOrder": 2, "description": "The classic peanut chikki, made the way it has always been made. Roasted peanuts, jaggery, and nothing unnecessary." },
+  { "name": "Nuts n Seeds", "slug": "nuts-n-seeds", "displayOrder": 3, "description": "Dense with almonds, cashews and seeds. A small piece that carries you between meals without reaching for anything fried." },
+  { "name": "Millets n Nuts", "slug": "millets-n-nuts", "displayOrder": 4, "description": "Ancient grains meeting everyday nuts. Ragi, oats and millets give the base its substance; the nuts give it the bite." },
+  { "name": "Kids Wellness", "slug": "kids-wellness", "displayOrder": 5, "description": "Snacks children reach for and parents feel comfortable giving. Sweetened with jaggery and honey rather than refined sugar." },
+  { "name": "Fruit Variant", "slug": "fruit-variant", "displayOrder": 6, "description": "Real fruit flavour folded into a millet base. Bright, fragrant, and a change from the usual." }
+]

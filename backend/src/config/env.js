@@ -44,6 +44,12 @@ const envSchema = z.object({
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(100),
 
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'http', 'debug']).default('info'),
+
+  // Admin image uploads. Copied as-is from the Cloudinary dashboard ("API environment variable").
+  CLOUDINARY_URL: z
+    .string({ error: 'CLOUDINARY_URL is required' })
+    .trim()
+    .regex(/^cloudinary:\/\/[^:@\s]+:[^@\s]+@[^/\s]+$/, 'CLOUDINARY_URL must look like cloudinary://<api_key>:<api_secret>@<cloud_name>'),
 }).superRefine((cfg, ctx) => {
   const requireFor = (provider, names) => {
     for (const name of names) {

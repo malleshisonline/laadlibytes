@@ -1,8 +1,12 @@
 import { z } from 'zod';
 
+import { objectIdSchema } from '../../utils/validators.js';
+
 import { USER_ROLES } from './user.model.js';
 
-export const objectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid id');
+// objectIdSchema now lives in utils/validators.js so every feature module can reach it
+// without importing from another feature. Re-exported so existing imports keep working.
+export { objectIdSchema };
 
 export const userIdParamSchema = z.object({ id: objectIdSchema });
 
