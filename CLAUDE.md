@@ -34,25 +34,26 @@ Tests live in `backend/tests/unit` and `backend/tests/integration`. `tests/setup
 
 ## Adding a feature module
 
-Each feature is one directory under `src/modules/<name>/` with up to five files:
+Each feature is one directory under `src/modules/<name>/` with up to six files:
 
 | File | Role |
 | --- | --- |
-| `<name>.routes.js` | Router; composes `authenticate` / `authorize(...)` / `validate({...})` per route |
+| `<name>.routes.js` | Public router; composes `optionalAuth` / `authenticate` / `validate({...})` per route |
+| `<name>.admin.routes.js` | Optional. Admin-only router, mounted under `/admin` — see *Admin* below |
 | `<name>.controller.js` | Exported object of `asyncHandler`-wrapped handlers; formats the response only |
 | `<name>.service.js` | All Mongoose access and business rules; throws `ApiError` |
 | `<name>.model.js` | Mongoose schema |
 | `<name>.validation.js` | Zod schemas |
 
-Then add one line to the `routes` array in `src/routes/index.js`. **Controllers never touch Mongoose** — see `src/modules/user/` for the reference implementation.
+Then add one line to the `routes` array in `src/routes/index.js` (public router), or one `router.use(...)` line in `src/modules/admin/admin.routes.js` (admin router). **Controllers never touch Mongoose** — see `src/modules/user/` for the reference implementation.
 
-Implemented modules: `auth`, `user`, `otp`, `category` and `product`. `otp` has just a model and service (no routes) and is used by `auth`. `category` and `product` are the catalogue pair: `category.service.js` refuses to delete a category that still has products (409 `CATEGORY_NOT_EMPTY`), and `product.service.js` owns the sort whitelist, the id-or-slug detail lookup and the soft delete. The remaining module directories (`cart`, `order`, …) are still empty `.gitkeep` placeholders, and `order.model.js` is a zero-byte stub.
+Implemented modules: `auth`, `user`, `otp`, `category`, `product` and `admin`. Two of them break the five-file shape deliberately: `otp` has just a model and service (no routes) and is used by `auth`; `admin` has no model, because an admin is a *role*, not an entity. `category` and `product` are the catalogue pair: `category.service.js` refuses to delete a category that still has products (409 `CATEGORY_NOT_EMPTY`), and `product.service.js` owns the sort whitelist, the id-or-slug detail lookup and the soft delete. The remaining module directories (`cart`, `order`, …) are still empty `.gitkeep` placeholders, and `order.model.js` is a zero-byte stub.
 
 External senders live in `src/integrations/` (`email/`, `sms/`), each choosing a driver from env; message templates live in `src/templates/`. Cloudinary lives in `src/integrations/storage/`.
 
 ## Image uploads
 
-Admin create/update routes for products and categories accept JSON, or `multipart/form-data` with every non-file field as one JSON string (`productFields` / `categoryFields`) and the files in `images` (≤ 10) / `image` (1). Allowed formats are PNG, JPEG, WebP and AVIF. Limits and the file-signature check are in `src/utils/imageFileRules.js`, shared with the seeder; adding a format also means adding it to `CLOUDINARY_ALLOWED_IMAGE_FORMATS` in `cloudinaryImageStorage.js`. The route chain in `src/middlewares/cloudinaryUpload.middleware.js` runs in this order:
+The create/update routes under `/admin/products` and `/admin/categories` accept JSON, or `multipart/form-data` with every non-file field as one JSON string (`productFields` / `categoryFields`) and the files in `images` (≤ 10) / `image` (1). The chain is composed in `product.admin.routes.js` / `category.admin.routes.js`. Allowed formats are PNG, JPEG, WebP and AVIF. Limits and the file-signature check are in `src/utils/imageFileRules.js`, shared with the seeder; adding a format also means adding it to `CLOUDINARY_ALLOWED_IMAGE_FORMATS` in `cloudinaryImageStorage.js`. The route chain in `src/middlewares/cloudinaryUpload.middleware.js` runs in this order:
 
 1. `parseMultipartImageFiles` (multer, in memory)
 2. `rejectNonPngOrJpegFiles`
@@ -101,7 +102,19 @@ OTP rules are constants in `otp.service.js`: 6 digits, 10 min expiry, 5 wrong at
 
 Route guards from `src/middlewares/authenticate.js`: `authenticate` (required), `optionalAuth` (attaches `req.user` if present), `authorize('admin')` (role gate, use after `authenticate`). `req.user` is `{ id, role }`.
 
+## Admin
 
+Admin is a **role**, not a resource: `src/modules/admin/` owns no model. It exists so the gate is applied once and so the admin surface is one reviewable list instead of being interleaved with the storefront reads.
+
+Everything an admin writes lives under **`/admin`**. `admin.routes.js` calls `router.use(authenticate, authorize('admin'))` once and then mounts each feature's `<name>.admin.routes.js`, so **no route under `/admin` repeats the guard** — adding one there is a redundancy, forgetting one elsewhere is a hole. Those routers reuse the feature's existing controller and service unchanged; only the mount point differs.
+
+- `/admin/products`, `/admin/categories` — full CRUD, plus list and detail reads whose `includeInactive` defaults to **true** (`adminListProductsQuerySchema` / `adminListCategoriesQuerySchema`). The public list schemas leave it optional and the services honour it for admins only, so `GET /products?includeInactive=true` with an admin token still works; the `/admin` route is just the better door.
+- `/admin/users` — list/get/update/delete; the list sort is whitelisted through `USER_SORTS` / `USER_SORT_MAP` like the product one. `GET /users/me` stays outside: that is any user reading their own account.
+- `GET /admin/summary` — dashboard counts. `DEFAULT_LOW_STOCK_THRESHOLD` is a constant in `admin.service.js`, overridable per request with `?lowStockThreshold=`.
+
+The first admin is made with `npm run promote-admin -- <email|phone>`; the role is read from the access token, so that account must sign in again afterwards.
+
+**Audit fields** — `createdBy` / `updatedBy` come from `auditFields()` in `src/utils/auditFields.js` and are on `Product` and `Category`. They are optional (the seeder writes the catalogue with no admin in scope) and `select: false`. Services take the actor as a trailing argument (`create(payload, uploads, actorId)`); controllers pass `req.user.id`. Both models call `stripUnpopulatedAuditRefs(ret)` in their `toJSON` transform, because `select: false` does not stop a document you just built in memory from carrying the value — same reason `user.model.js` also does `delete ret.password`. The helper keeps the field only once it has been **populated**, so the ids surface nowhere and the admin detail routes (`{ withAudit: true }`) return `{ id, name, … }`.
 
 ## Product decisions
 
