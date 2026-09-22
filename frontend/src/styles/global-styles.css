@@ -1,0 +1,21 @@
+/* Brand theme, taken from design-reference/finaLaadliBytesUI.png and the logo's own colours.
+   Imported by index.css after Tailwind, so each token also becomes a utility (bg-brand-navy, font-heading, …). */
+@theme {
+  --color-brand-navy: #0f3d78;
+  --color-brand-navy-dark: #042b5a;
+  --color-brand-gold: #b38c52;
+  --color-brand-cream: #fff8ec;
+  --color-brand-sky: #eaf3fb;
+  --color-brand-ink: #1f2937;
+
+  --font-heading: 'Merienda Variable', cursive;
+  --font-body: 'Nunito Variable', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-body);
+    color: var(--color-brand-ink);
+    background-color: var(--color-brand-cream);
+  }
+}
