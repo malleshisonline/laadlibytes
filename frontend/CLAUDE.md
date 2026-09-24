@@ -48,8 +48,8 @@ All colours are defined in `src/styles/global-styles.css` inside `@theme`. Use t
 | Token class | Hex | Use for |
 |---|---|---|
 | `navy-950` | `#00264A` | Deepest shade, rarely used |
-| `navy-900` | `#002F58` | Footer background |
-| `navy-800` | `#043B65` | **Primary colour**: headings, primary buttons, active menu item, active tab |
+| `navy-900` | `#002F58` | Darkest sections, bottom copyright bar |
+| `navy-800` | `#043B65` | **Primary colour**: headings, primary buttons, active menu item, active tab, and the footer background |
 | `navy-700` | `#145688` | Hover state of navy buttons, links |
 | `navy-600` | `#1D68A7` | Blue promo bands, focus outline |
 

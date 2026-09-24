@@ -36,6 +36,7 @@ function LoginPage() {
     setPendingAction('password')
     try {
       const session = await authApi.login({ identifier, password })
+      console.log(session);
       setSession(session)
       navigate(APP_ROUTES.HOME, { replace: true })
     } catch (requestError) {

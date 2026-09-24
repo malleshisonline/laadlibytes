@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from '../constants/apiEndpoints.js'
 
-import { httpClient } from './httpClient.js'
+import { httpClient, refreshAccessToken } from './httpClient.js'
 
 // An OTP "challenge" is what every send returns:
 // { verificationId, purpose, channel, destination, expiresInSeconds, resendAfterSeconds }.
@@ -23,6 +23,15 @@ export const authApi = {
 
   /** Sends a new code for the same challenge. Resolves to a challenge. */
   resendOtp: (verificationId) => httpClient.post(API_ENDPOINTS.AUTH.OTP_RESEND, { verificationId }),
+
+  /** Trades the refresh cookie for a new access token (and a rotated cookie). Resolves to the token. */
+  refresh: () => refreshAccessToken(),
+
+  /** Revokes this device's refresh token and clears the cookie. */
+  logout: () => httpClient.post(API_ENDPOINTS.AUTH.LOGOUT),
+
+  /** Resolves to the signed-in user. */
+  getMe: () => httpClient.get(API_ENDPOINTS.USERS.ME),
 }
 
 export default authApi

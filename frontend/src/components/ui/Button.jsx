@@ -1,6 +1,6 @@
 const VARIANT_CLASSES = {
-  primary: 'bg-brand-navy text-white shadow-md hover:bg-brand-navy-dark',
-  outline: 'border border-brand-navy bg-white text-brand-navy hover:bg-brand-sky',
+  primary: 'bg-navy-800 text-white shadow-md hover:bg-navy-700',
+  outline: 'border border-navy-800 bg-white text-navy-800 hover:bg-lightblue-100',
 }
 
 function Button({

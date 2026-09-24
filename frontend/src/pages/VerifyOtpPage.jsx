@@ -88,7 +88,7 @@ function VerifyOtpPage() {
     <>
       <AuthHeading title="Verify OTP">
         Enter the {OTP_LENGTH}-digit code sent to{' '}
-        <span className="font-semibold text-brand-navy-dark">{challenge.destination}</span>
+        <span className="font-semibold text-navy-800">{challenge.destination}</span>
       </AuthHeading>
 
       <FormAlert>{formError}</FormAlert>
@@ -114,7 +114,7 @@ function VerifyOtpPage() {
             setOtpError('')
           }}
           error={otpError}
-          className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-center text-2xl font-bold tracking-[0.5em] text-brand-navy-dark focus:border-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-navy/25"
+          className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-center text-2xl font-bold tracking-[0.5em] text-navy-800 focus:border-navy-800 focus:outline-none focus:ring-2 focus:ring-navy-800/25"
         />
 
         <Button type="submit" isLoading={isVerifying} loadingText="Verifying…" disabled={isResending}>
@@ -126,7 +126,7 @@ function VerifyOtpPage() {
         <Link
           to={APP_ROUTES.IDENTIFY}
           state={{ identifier }}
-          className="font-semibold text-brand-navy underline-offset-2 hover:underline"
+          className="font-semibold text-navy-800 underline-offset-2 hover:underline"
         >
           Use a different account
         </Link>
@@ -138,7 +138,7 @@ function VerifyOtpPage() {
             type="button"
             onClick={handleResend}
             disabled={isResending || isVerifying}
-            className="font-semibold text-brand-gold underline-offset-2 hover:underline disabled:opacity-60"
+            className="font-semibold text-caramel-500 underline-offset-2 hover:underline disabled:opacity-60"
           >
             {isResending ? 'Sending…' : 'Resend code'}
           </button>

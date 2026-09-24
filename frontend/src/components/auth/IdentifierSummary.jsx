@@ -6,11 +6,11 @@ import { APP_ROUTES } from '../../constants/appRoutepoints.js'
 function IdentifierSummary({ label, identifier }) {
   return (
     <>
-      {label} <span className="font-semibold text-brand-navy-dark">{identifier}</span>{' '}
+      {label} <span className="font-semibold text-navy-800">{identifier}</span>{' '}
       <Link
         to={APP_ROUTES.IDENTIFY}
         state={{ identifier }}
-        className="font-semibold text-brand-gold underline-offset-2 hover:underline"
+        className="font-semibold text-caramel-500 underline-offset-2 hover:underline"
       >
         Change
       </Link>

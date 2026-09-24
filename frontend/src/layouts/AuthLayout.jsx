@@ -2,6 +2,7 @@ import { Link, Outlet } from 'react-router'
 
 import logo from '../assets/brand/logo.svg'
 import mascot from '../assets/illustrations/mascot-waving-with-flute.avif'
+import GoldenDivider from '../components/common/GoldenDivider.jsx'
 import { APP_ROUTES } from '../constants/appRoutepoints.js'
 import { APP_SETTINGS } from '../constants/appSettings.js'
 
@@ -31,9 +32,11 @@ function AuthLayout() {
           </div>
         </div>
 
-        <p className="mt-4 max-w-104 text-center text-sm font-semibold text-brand-navy-dark">
-          Welcome to {APP_SETTINGS.SITE_NAME} — continue your journey with the goodness of Vrindavan.
-        </p>
+        {/* Brand tagline with the golden ornament */}
+        <div className="mt-4 w-full max-w-104 text-center">
+          <p className="font-display text-sm text-body md:text-base">Made with Devotion, Shared with Love</p>
+          <GoldenDivider className="mt-3 text-caramel-500" />
+        </div>
       </main>
 
       <footer className="border-t border-slate-200 px-4 py-4 text-center text-xs text-gray-500">

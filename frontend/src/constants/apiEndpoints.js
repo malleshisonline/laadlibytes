@@ -6,6 +6,14 @@ export const API_ENDPOINTS = {
     LOGIN_OTP: '/auth/login/otp',
     OTP_VERIFY: '/auth/otp/verify',
     OTP_RESEND: '/auth/otp/resend',
+    REFRESH: '/auth/refresh',
+    LOGOUT: '/auth/logout',
+  },
+  PRODUCTS: {
+    LIST: '/products',
+  },
+  USERS: {
+    ME: '/users/me',
   },
 }
 

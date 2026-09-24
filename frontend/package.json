@@ -13,8 +13,10 @@
     "@fontsource-variable/merienda": "^5.3.0",
     "@fontsource-variable/nunito": "^5.3.0",
     "@tailwindcss/vite": "^4.3.3",
+    "lucide-react": "^1.47.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "react-hot-toast": "^2.6.1",
     "react-router": "^7.18.4",
     "tailwindcss": "^4.3.3"
   },
