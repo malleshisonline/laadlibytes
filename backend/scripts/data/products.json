@@ -1,29 +1,2091 @@
 [
   {
-    "sku": "FF-01",
+    "sku": "FV-01",
     "name": "Mango Alohas",
     "category": "Fruit Variant",
     "mrp": 150,
     "price": 150,
-    "packSize": { "value": 100, "unit": "g" },
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
     "description": "",
     "ingredients": [
-      "Roasted Ragi Flour",
-      "Rolled Oats",
-      "Flax Seeds",
-      "Roasted Peanuts",
-      "Honey",
-      "Fructooligosaccharides (FOS)",
-      "Gum Acacia",
-      "Himalayan Pink Salt",
-      "Mango Powder",
-      "Mango Flavour"
+      "Whole Grains 40% (Roasted Ragi Flour, Rolled Oats)",
+      "Nuts & Seeds 30% (Flax Seeds, Roasted Peanut crushed)",
+      "Rest Ingredients 20% (Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt)",
+      "Fruit Powder & Flavours 10% (Mango Powder, Mango Flavour)"
     ],
-    "allergenInfo": "Contains peanuts. Made in a facility that processes milk solids, wheat and soy. May contain trace elements.",
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 438.0 kcal",
+      "Protein: 12.8g",
+      "Carbohydrate: 58.4g",
+      "Dietary Fiber: 9.2g",
+      "Total Fat: 18.2g (Saturated: 3.2g)",
+      "Total Sugar: 18.5g (Added: 14.2g)",
+      "Iron: 4.2mg",
+      "Calcium: 85.0mg"
+    ],
+    "taglines": [
+      "Aloha to guilt-free indulgence!",
+      "Mango magic in every millet bite.",
+      "Ragi-powered tropical escape."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "FV-02",
+    "name": "Apple Krnch",
+    "category": "Fruit Variant",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains 40% (Roasted Jowar Flour, Rolled Oats)",
+      "Nuts & Seeds 30% (Sunflower Seeds, Roasted Peanut crushed)",
+      "Rest Ingredients 20% (Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt)",
+      "Fruit Powder & Flavours 10% (Apple Powder, Apple Flavour)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 445.0 kcal",
+      "Protein: 13.1g",
+      "Carbohydrate: 57.2g",
+      "Dietary Fiber: 8.8g",
+      "Total Fat: 19.0g (Saturated: 3.4g)",
+      "Total Sugar: 17.8g (Added: 14.2g)",
+      "Iron: 3.8mg",
+      "Calcium: 78.0mg"
+    ],
+    "taglines": [
+      "Krunch into apple orchard bliss!",
+      "Jowar crunch, apple punch.",
+      "Daily energy, nature's way."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "FV-03",
+    "name": "Banana Bubble",
+    "category": "Fruit Variant",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains 40% (Roasted Bajra Flour, Rolled Oats)",
+      "Nuts & Seeds 30% (Pumpkin Seeds, Roasted Peanut crushed)",
+      "Rest Ingredients 20% (Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt)",
+      "Fruit Powder & Flavours 10% (Banana Powder, Banana Flavour)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 447.0 kcal",
+      "Protein: 15.2g",
+      "Carbohydrate: 55.0g",
+      "Dietary Fiber: 8.1g",
+      "Total Fat: 22.0g (Saturated: 4.0g)",
+      "Total Sugar: 19.5g (Added: 14.2g)",
+      "Iron: 4.6mg",
+      "Calcium: 87.0mg"
+    ],
+    "taglines": [
+      "Bubble up with banana power!",
+      "Millet bounce in every bite.",
+      "Energize your day, bananally."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "FV-04",
+    "name": "Strawberry Crush",
+    "category": "Fruit Variant",
+    "mrp": 170,
+    "price": 170,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains 40% (Roasted Foxtail Flour, Rolled Oats)",
+      "Nuts & Seeds 30% (Sesame Seeds, Roasted Peanut crushed)",
+      "Rest Ingredients 20% (Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt)",
+      "Fruit Powder & Flavours 10% (Strawberry Powder, Strawberry Flavour)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 435.0 kcal",
+      "Protein: 14.7g",
+      "Carbohydrate: 59.1g",
+      "Dietary Fiber: 8.9g",
+      "Total Fat: 17.5g (Saturated: 3.1g)",
+      "Total Sugar: 16.9g (Added: 14.2g)",
+      "Iron: 4.0mg",
+      "Calcium: 82.0mg"
+    ],
+    "taglines": [
+      "Crush cravings with strawberry zest!",
+      "Foxtail fun, berry yum.",
+      "Love at first healthy crush."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "FV-05",
+    "name": "Lime Light",
+    "category": "Fruit Variant",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains 40% (Roasted Jowar Flour, Rolled Oats)",
+      "Nuts & Seeds 30% (Chia Seeds, Roasted Peanut crushed)",
+      "Rest Ingredients 20% (Honey, Gum Acacia, Himalayan Pink Salt)",
+      "Fruit Powder & Flavours 10% (Lime Powder, Lime Flavour)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 440.0 kcal",
+      "Protein: 14.2g",
+      "Carbohydrate: 56.5g",
+      "Dietary Fiber: 10.2g",
+      "Total Fat: 20.1g (Saturated: 3.6g)",
+      "Total Sugar: 15.4g (Added: 14.2g)",
+      "Iron: 4.5mg",
+      "Calcium: 110.0mg"
+    ],
+    "taglines": [
+      "Lime-light your vitality!",
+      "Zingy chia-millet refresh.",
+      "Glow from within, lime edition."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "FV-06",
+    "name": "Grape Kick",
+    "category": "Fruit Variant",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains 40% (Roasted Bajra Flour, Rolled Oats)",
+      "Nuts & Seeds 30% (Sunflower Seeds, Roasted Peanut crushed)",
+      "Rest Ingredients 20% (Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt)",
+      "Fruit Powder & Flavours 10% (Grape Powder, Grape Flavour)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 448.0 kcal",
+      "Protein: 13.3g",
+      "Carbohydrate: 57.0g",
+      "Dietary Fiber: 8.7g",
+      "Total Fat: 19.3g (Saturated: 3.5g)",
+      "Total Sugar: 18.1g (Added: 14.2g)",
+      "Iron: 3.9mg",
+      "Calcium: 80.0mg"
+    ],
+    "taglines": [
+      "Grape kick for peak power!",
+      "Bajra blast, grape fast.",
+      "Fuel your win, naturally."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "FV-07",
+    "name": "Orange Squeeze",
+    "category": "Fruit Variant",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains 40% (Roasted Foxtail Flour, Rolled Oats)",
+      "Nuts & Seeds 30% (Roasted Peanut crushed)",
+      "Rest Ingredients 20% (Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt)",
+      "Fruit Powder & Flavours 10% (Orange Powder, Orange Flavour)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 452.0 kcal",
+      "Protein: 15.1g",
+      "Carbohydrate: 54.8g",
+      "Dietary Fiber: 7.8g",
+      "Total Fat: 22.4g (Saturated: 4.1g)",
+      "Total Sugar: 17.5g (Added: 14.2g)",
+      "Iron: 4.8mg",
+      "Calcium: 88.0mg"
+    ],
+    "taglines": [
+      "Squeeze the day with orange joy!",
+      "Millet squeeze, pure tease.",
+      "Vitamin burst in every bar."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "FV-08",
+    "name": "Berry Twist",
+    "category": "Fruit Variant",
+    "mrp": 220,
+    "price": 220,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains 40% (Roasted Jowar Flour, Rolled Oats)",
+      "Nuts & Seeds 30% (Roasted Peanut crushed)",
+      "Rest Ingredients 20% (Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt)",
+      "Fruit Powder & Flavours 10% (Cranberry Powder, Cranberry Flavour)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 450.0 kcal",
+      "Protein: 15.0g",
+      "Carbohydrate: 55.2g",
+      "Dietary Fiber: 7.9g",
+      "Total Fat: 22.2g (Saturated: 4.0g)",
+      "Total Sugar: 16.8g (Added: 14.2g)",
+      "Iron: 4.1mg",
+      "Calcium: 85.0mg"
+    ],
+    "taglines": [
+      "Twist into berry bliss!",
+      "Cranberry crunch revolution.",
+      "Superberry super snack."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "FV-09",
+    "name": "Fig Yum",
+    "category": "Fruit Variant",
+    "mrp": 180,
+    "price": 180,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains 40% (Roasted Jowar Flour, Rolled Oats)",
+      "Nuts & Seeds 30% (Roasted Peanut crushed)",
+      "Rest Ingredients 20% (Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt)",
+      "Fruit Powder & Flavours 10% (Fig Powder, Flavour)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 455.0 kcal",
+      "Protein: 14.8g",
+      "Carbohydrate: 55.8g",
+      "Dietary Fiber: 8.4g",
+      "Total Fat: 21.8g (Saturated: 3.9g)",
+      "Total Sugar: 20.1g (Added: 14.2g)",
+      "Iron: 4.3mg",
+      "Calcium: 90.0mg"
+    ],
+    "taglines": [
+      "Fig yum for divine yumminess!",
+      "Ancient figs, modern fit.",
+      "Indulge wisely, fig style."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "FV-10",
+    "name": "Apricot Bloom",
+    "category": "Fruit Variant",
+    "mrp": 220,
+    "price": 220,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains 40% (Roasted Bajra Flour, Rolled Oats)",
+      "Nuts & Seeds 30% (Roasted Peanut crushed)",
+      "Rest Ingredients 20% (Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt)",
+      "Fruit Powder & Flavours 10% (Apricot Powder, Flavour)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 447.0 kcal",
+      "Protein: 15.2g",
+      "Carbohydrate: 55.0g",
+      "Dietary Fiber: 8.1g",
+      "Total Fat: 22.0g (Saturated: 4.0g)",
+      "Total Sugar: 19.5g (Added: 14.2g)",
+      "Iron: 4.6mg",
+      "Calcium: 87.0mg"
+    ],
+    "taglines": [
+      "Bloom bright with apricot delight!",
+      "Bajra bloom, apricot boom.",
+      "Nourish & flourish."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "FV-11",
+    "name": "Snack-a-Guava",
+    "category": "Fruit Variant",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains 40% (Roasted Foxtail Flour, Rolled Oats)",
+      "Nuts & Seeds 30% (Roasted Peanut crushed)",
+      "Rest Ingredients 20% (Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt)",
+      "Fruit Powder & Flavours 10% (Guava Powder, Flavour)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 449.0 kcal",
+      "Protein: 15.1g",
+      "Carbohydrate: 55.1g",
+      "Dietary Fiber: 8.0g",
+      "Total Fat: 22.1g (Saturated: 4.0g)",
+      "Total Sugar: 18.0g (Added: 14.2g)",
+      "Iron: 4.2mg",
+      "Calcium: 86.0mg"
+    ],
+    "taglines": [
+      "Guava your snack game!",
+      "Snack-a-guava, crave no more.",
+      "Tropical twist daily."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "FV-12",
+    "name": "Palm n Pine",
+    "category": "Fruit Variant",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains 40% (Roasted Jowar Flour, Rolled Oats)",
+      "Nuts & Seeds 30% (Roasted Peanut crushed)",
+      "Rest Ingredients 20% (Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt)",
+      "Fruit Powder & Flavours 10% (Pineapple Powder, Coconut Powder)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 460.0 kcal",
+      "Protein: 14.5g",
+      "Carbohydrate: 56.2g",
+      "Dietary Fiber: 8.6g",
+      "Total Fat: 21.5g (Saturated: 4.5g)",
+      "Total Sugar: 19.8g (Added: 14.2g)",
+      "Iron: 4.0mg",
+      "Calcium: 83.0mg"
+    ],
+    "taglines": [
+      "Palm n pine paradise bite!",
+      "Coconut pineapple dream team.",
+      "Tropical millet getaway."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "KW-01",
+    "name": "Mind Vault",
+    "category": "Kids Wellness",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45.0%): Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
+      "Whole Grains (35.0%): Roasted Chana Dal Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs / Flavours / Crunchies (0.9%): Moringa Powder, Turmeric Powder, Tulsi Powder, Strawberry Nice"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 485.0 kcal",
+      "Protein: 18.5g",
+      "Carbohydrate: 46.0g",
+      "Dietary Fiber: 9.5g",
+      "Total Fat: 28.0g (Saturated: 4.5g)",
+      "Total Sugar: 6.8g (Added: 6.4g)",
+      "Iron: 4.8mg",
+      "Calcium: 120.0mg"
+    ],
+    "taglines": [
+      "Unlock the Power of Young Minds.",
+      "Smart Nutrition for Bright Futures.",
+      "Brain Fuel in Every Bite."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "KW-02",
+    "name": "Fresh Flux",
+    "category": "Kids Wellness",
+    "mrp": 170,
+    "price": 170,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45.0%): Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
+      "Whole Grains (35.0%): Roasted Moong Dal Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
+      "Flavour (0.4%): Chocolate"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 482.0 kcal",
+      "Protein: 18.8g",
+      "Carbohydrate: 46.5g",
+      "Dietary Fiber: 9.2g",
+      "Total Fat: 27.5g (Saturated: 4.4g)",
+      "Total Sugar: 6.8g (Added: 6.4g)",
+      "Iron: 4.5mg",
+      "Calcium: 115.0mg"
+    ],
+    "taglines": [
+      "Fresh Energy. Fresh Thinking.",
+      "Naturally Active, Naturally Happy.",
+      "Snack Fresh. Stay Fresh."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "KW-03",
+    "name": "Immuno Spark",
+    "category": "Kids Wellness",
+    "mrp": 170,
+    "price": 170,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (44.5%): Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
+      "Whole Grains (35.0%): Roasted Chickpea Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs / Flavours / Crunchies (0.9%): Moringa Powder, Turmeric Powder, Tulsi Powder, Strawberry Nice"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 482.0 kcal",
+      "Protein: 18.8g",
+      "Carbohydrate: 46.5g",
+      "Dietary Fiber: 9.4g",
+      "Total Fat: 27.0g (Saturated: 4.3g)",
+      "Total Sugar: 6.8g (Added: 6.4g)",
+      "Iron: 5.2mg",
+      "Calcium: 130.0mg"
+    ],
+    "taglines": [
+      "Spark Stronger Days.",
+      "Daily Defense in Every Bar.",
+      "Strong Kids Start Here."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "KW-04",
+    "name": "Brain Bender",
+    "category": "Kids Wellness",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (44.5%): Fennel Seeds, Flax Seeds, Peanuts Roasted & Crushed",
+      "Whole Grains (35.0%): Roasted Chana Dal Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
+      "Flavours (0.9%): Nutmeg Powder, Poppy Seeds, Vanilla Flavour"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 488.0 kcal",
+      "Protein: 18.0g",
+      "Carbohydrate: 45.5g",
+      "Dietary Fiber: 9.0g",
+      "Total Fat: 29.0g (Saturated: 4.6g)",
+      "Total Sugar: 6.8g (Added: 6.4g)",
+      "Iron: 4.2mg",
+      "Calcium: 110.0mg"
+    ],
+    "taglines": [
+      "Twist Your Brain into Action.",
+      "Crunch Smarter Every Day.",
+      "The Snack that Thinks Ahead."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "KW-05",
+    "name": "Belly Ballet",
+    "category": "Kids Wellness",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45.0%): Pumpkin Seeds, Fennel Seeds, Peanuts Roasted & Crushed",
+      "Whole Grains (35.0%): Roasted Amaranth Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt, Garden Mint Flavour (0.4%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 475.0 kcal",
+      "Protein: 17.5g",
+      "Carbohydrate: 47.0g",
+      "Dietary Fiber: 9.8g",
+      "Total Fat: 27.8g (Saturated: 4.4g)",
+      "Total Sugar: 13.5g (Added: 11.2g)",
+      "Iron: 4.9mg",
+      "Calcium: 125.0mg"
+    ],
+    "taglines": [
+      "Happy Belly, Happy Child.",
+      "Gentle Nutrition with Great Taste.",
+      "Dance Through the Day with Belly Ballet."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "KW-06",
+    "name": "ProFocus",
+    "category": "Kids Wellness",
+    "mrp": 170,
+    "price": 170,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45.0%): Watermelon Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
+      "Whole Grains (35.0%): Roasted Quinoa Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
+      "Flavour (0.4%): Rose Sweet"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 482.0 kcal",
+      "Protein: 18.2g",
+      "Carbohydrate: 46.5g",
+      "Dietary Fiber: 9.6g",
+      "Total Fat: 27.8g (Saturated: 4.4g)",
+      "Total Sugar: 12.5g (Added: 10.2g)",
+      "Iron: 5.0mg",
+      "Calcium: 118.0mg"
+    ],
+    "taglines": [
+      "Fuel Peak Performance.",
+      "Focus Beyond Limits.",
+      "Premium Nutrition for Young Achievers."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "KW-07",
+    "name": "Sundaze Joy",
+    "category": "Kids Wellness",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45.0%): Chia Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
+      "Whole Grains (35.0%): Roasted Buckwheat Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
+      "Flavour (0.4%): Vanilla"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 480.0 kcal",
+      "Protein: 18.0g",
+      "Carbohydrate: 46.8g",
+      "Dietary Fiber: 9.5g",
+      "Total Fat: 27.5g (Saturated: 4.4g)",
+      "Total Sugar: 13.5g (Added: 11.2g)",
+      "Iron: 4.7mg",
+      "Calcium: 116.0mg"
+    ],
+    "taglines": [
+      "Bring Joy to Every Bite.",
+      "Sunshine Packed with Nutrition.",
+      "The Happiest Healthy Snack."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "WW-01",
+    "name": "Moringa Magic",
+    "category": "Women Wellness",
+    "mrp": 140,
+    "price": 140,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (44.4%): Roasted Peanut Crushed, Sesame Seeds, Pumpkin Seeds, Flax Seeds, Chia Seeds",
+      "Whole Grains (35%): Roasted Ragi Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herb (1%): Moringa Leaf Powder"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 485.0 kcal",
+      "Protein: 18.5g",
+      "Carbohydrate: 41.3g",
+      "Dietary Fiber: 9.8g",
+      "Total Fat: not stated on pack (Saturated: 4.8g)",
+      "Total Sugar: 12.5g (Added: 8.0g)",
+      "Iron: 5.2mg",
+      "Calcium: 85.0mg"
+    ],
+    "taglines": [
+      "Power your day with Moringa Magic."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "WW-02",
+    "name": "Soulful Mellow",
+    "category": "Women Wellness",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (44.4%): Roasted Peanut Crushed, Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
+      "Whole Grains (35%): Roasted Ragi Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs & Flavours (1%): Nutmeg Powder, Chamomile Dry Powder"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 478.0 kcal",
+      "Protein: 18.2g",
+      "Carbohydrate: 42.1g",
+      "Dietary Fiber: 10.2g",
+      "Total Fat: 27.5g (Saturated: 4.5g)",
+      "Total Sugar: 12.5g (Added: 8.0g)",
+      "Iron: 4.8mg",
+      "Calcium: 92.0mg"
+    ],
+    "taglines": [
+      "Mellow moments, wholesome bites."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "WW-03",
+    "name": "Hormone Harmony",
+    "category": "Women Wellness",
+    "mrp": 160,
+    "price": 160,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (44%): Roasted Peanut Crushed, Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
+      "Whole Grains (35%): Roasted Jowar Flour, Roasted Oats",
+      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs & Flavours (1.4%): Cardamom Granules, Shatavari Powder"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 482.0 kcal",
+      "Protein: 18.0g",
+      "Carbohydrate: 41.8g",
+      "Dietary Fiber: 9.5g",
+      "Total Fat: 27.8g (Saturated: 4.7g)",
+      "Total Sugar: 12.5g (Added: 8.0g)",
+      "Iron: 4.5mg",
+      "Calcium: 78.0mg"
+    ],
+    "taglines": [
+      "Harmony in every nourishing bite."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "WW-04",
+    "name": "Good Gut",
+    "category": "Women Wellness",
+    "mrp": 140,
+    "price": 140,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (44%): Roasted Peanut Crushed, Fennel Seeds, Flax Seeds",
+      "Whole Grains (35%): Roasted Ragi Flour, Roasted Oats",
+      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs & Flavours (1.4%): Dried Amla pieces, Mint Powder, Triphala powder, Moringa Powder"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 475.0 kcal",
+      "Protein: 19.1g",
+      "Carbohydrate: 40.5g",
+      "Dietary Fiber: 11.5g",
+      "Total Fat: 27.0g (Saturated: 4.6g)",
+      "Total Sugar: 12.8g (Added: 8.0g)",
+      "Iron: 5.5mg",
+      "Calcium: 88.0mg"
+    ],
+    "taglines": [
+      "Good for your gut, great for your day."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "WW-05",
+    "name": "Immunity Trinity",
+    "category": "Women Wellness",
+    "mrp": 140,
+    "price": 140,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (44.8%): Roasted Peanut Crushed, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
+      "Whole Grains (35%): Roasted Jowar Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs & Flavours (0.6%): Turmeric Powder, Tulsi Powder, Moringa Powder"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 480.0 kcal",
+      "Protein: 18.8g",
+      "Carbohydrate: 41.0g",
+      "Dietary Fiber: 9.2g",
+      "Total Fat: 28.0g (Saturated: 4.9g)",
+      "Total Sugar: 12.3g (Added: 8.0g)",
+      "Iron: 4.5mg",
+      "Calcium: 82.0mg"
+    ],
+    "taglines": [
+      "Three cheers for daily immunity support."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "WW-06",
+    "name": "Grow Bone",
+    "category": "Women Wellness",
+    "mrp": 160,
+    "price": 160,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Seeds (44%): Roasted Peanut Crushed, Watermelon Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
+      "Whole Grains (35%): Roasted Ragi Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs & Flavours (1.4%): Amla Powder, Moringa Powder"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 477.0 kcal",
+      "Protein: 18.4g",
+      "Carbohydrate: 41.5g",
+      "Dietary Fiber: 10.8g",
+      "Total Fat: 27.6g (Saturated: 4.4g)",
+      "Total Sugar: 12.5g (Added: 8.0g)",
+      "Iron: 4.9mg",
+      "Calcium: 150.0mg"
+    ],
+    "taglines": [
+      "Build strength from the bite up."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "WW-07",
+    "name": "Radiance Flow",
+    "category": "Women Wellness",
+    "mrp": 140,
+    "price": 140,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (44.4%): Roasted Peanut Crushed, Chia Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
+      "Whole Grains (35%): Roasted Bajra Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs & Flavours (1.4%): Aloe Vera Powder, Moringa Powder"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 483.0 kcal",
+      "Protein: 18.3g",
+      "Carbohydrate: 41.2g",
+      "Dietary Fiber: 10.0g",
+      "Total Fat: 27.9g (Saturated: 4.7g)",
+      "Total Sugar: 12.5g (Added: 8.0g)",
+      "Iron: 5.1mg",
+      "Calcium: 90.0mg"
+    ],
+    "taglines": [
+      "Glow from within, crunch with confidence."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "MN-01",
+    "name": "Ragi Peanut Crunch",
+    "category": "Millets n Nuts",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains (40.0%): Roasted Ragi Flour",
+      "Nuts & Seeds (39.5%): Roasted Peanut crushed, Sunflower Seeds",
+      "Rest Ingredients (20.0%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 432.0 kcal",
+      "Protein: 14.8g",
+      "Carbohydrate: 51.2g",
+      "Dietary Fiber: 9.2g",
+      "Total Fat: 20.1g (Saturated: 3.2g)",
+      "Total Sugar: 8.2g (Added: 7.2g)",
+      "Iron: 4.8mg",
+      "Calcium: 185.0mg"
+    ],
+    "taglines": [
+      "Power from ragi, crunch from nuts.",
+      "A millet bar that feels wholesome and satisfying.",
+      "Your smart snack for active days."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "MN-02",
+    "name": "Ragi Almond Magic",
+    "category": "Millets n Nuts",
+    "mrp": 210,
+    "price": 210,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (44.0%): Roasted Almond Flakes, Roasted Peanut Crushed, Flax Seeds",
+      "Whole Grains (33.0%): Roasted Ragi Flour",
+      "Rest Ingredients (20.5%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 465.0 kcal",
+      "Protein: 16.2g",
+      "Carbohydrate: 45.8g",
+      "Dietary Fiber: 10.1g",
+      "Total Fat: 25.3g (Saturated: 3.8g)",
+      "Total Sugar: 8.9g (Added: 7.2g)",
+      "Iron: 5.2mg",
+      "Calcium: 162.0mg"
+    ],
+    "taglines": [
+      "Magic made from ragi and almonds.",
+      "A premium crunch for mindful snacking.",
+      "Fuel that tastes elegant."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "MN-03",
+    "name": "Jowar Peanut Munch",
+    "category": "Millets n Nuts",
+    "mrp": 140,
+    "price": 140,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains (40.0%): Roasted Jowar Flour",
+      "Nuts & Seeds (39.5%): Roasted Peanut crushed, Sesame Seeds",
+      "Rest Ingredients (20.0%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 428.0 kcal",
+      "Protein: 15.1g",
+      "Carbohydrate: 50.9g",
+      "Dietary Fiber: 8.9g",
+      "Total Fat: 19.8g (Saturated: 3.1g)",
+      "Total Sugar: 8.2g (Added: 7.2g)",
+      "Iron: 4.1mg",
+      "Calcium: 28.0mg"
+    ],
+    "taglines": [
+      "Jowar meets peanut in every bite.",
+      "Crunchy, familiar, and nourishing.",
+      "The millet munch made for busy routines."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "MN-04",
+    "name": "Jowar Almond Mojo",
+    "category": "Millets n Nuts",
+    "mrp": 210,
+    "price": 210,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (44.0%): Roasted Almond Flakes, Roasted Peanut Crushed, Pumpkin Seeds",
+      "Whole Grains (33.0%): Roasted Jowar Flour",
+      "Rest Ingredients (20.5%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 462.0 kcal",
+      "Protein: 16.5g",
+      "Carbohydrate: 44.7g",
+      "Dietary Fiber: 9.8g",
+      "Total Fat: 25.0g (Saturated: 3.7g)",
+      "Total Sugar: 8.9g (Added: 7.2g)",
+      "Iron: 4.5mg",
+      "Calcium: 45.0mg"
+    ],
+    "taglines": [
+      "Mojo powered by jowar and nuts.",
+      "A lively crunch with a wholesome core.",
+      "Snack smart, snack stylish."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "MN-05",
+    "name": "Bajra Peanut Punch",
+    "category": "Millets n Nuts",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains (40.0%): Roasted Bajra Flour",
+      "Nuts & Seeds (39.5%): Roasted Peanut crushed, Sunflower Seeds",
+      "Rest Ingredients (20.0%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 435.0 kcal",
+      "Protein: 14.5g",
+      "Carbohydrate: 52.1g",
+      "Dietary Fiber: 9.5g",
+      "Total Fat: 20.4g (Saturated: 3.3g)",
+      "Total Sugar: 8.2g (Added: 7.2g)",
+      "Iron: 5.1mg",
+      "Calcium: 42.0mg"
+    ],
+    "taglines": [
+      "Punch up your day with bajra.",
+      "Hearty crunch, steady energy.",
+      "A strong snack with millet goodness."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "MN-06",
+    "name": "Bajra Almond Charm",
+    "category": "Millets n Nuts",
+    "mrp": 210,
+    "price": 210,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (44.4%): Roasted Almond Flakes, Roasted Peanut Crushed, Chia Seeds, Sesame Seeds, Pumpkin Seeds",
+      "Flax Seeds, Sunflower Seeds",
+      "Whole Grains (35.0%): Roasted Bajra Flour, Roasted Ragi Flour, Roasted Rolled Oats",
+      "Rest Ingredients (20.5%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 468.0 kcal",
+      "Protein: 16.0g",
+      "Carbohydrate: 46.2g",
+      "Dietary Fiber: 10.4g",
+      "Total Fat: 25.7g (Saturated: 3.9g)",
+      "Total Sugar: 8.9g (Added: 7.2g)",
+      "Iron: 5.4mg",
+      "Calcium: 38.0mg"
+    ],
+    "taglines": [
+      "Charm in every crunchy layer.",
+      "Bajra with a premium nut-and-seed story.",
+      "Wholesome snacking with a touch of elegance."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "MN-07",
+    "name": "Foxtail Peanut Brunch",
+    "category": "Millets n Nuts",
+    "mrp": 160,
+    "price": 160,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains (40.0%): Roasted Foxtail Flour",
+      "Nuts & Seeds (39.5%): Roasted Peanut crushed, Watermelon Seeds",
+      "Rest Ingredients (20.0%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs & Flavours (0.5%): Flavour"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 430.0 kcal",
+      "Protein: 14.9g",
+      "Carbohydrate: 51.5g",
+      "Dietary Fiber: 9.0g",
+      "Total Fat: 20.0g (Saturated: 3.2g)",
+      "Total Sugar: 8.2g (Added: 7.2g)",
+      "Iron: 4.6mg",
+      "Calcium: 32.0mg"
+    ],
+    "taglines": [
+      "Brunch better with foxtail.",
+      "Light millet energy, bold peanut crunch.",
+      "A smarter snack between meals."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "MN-08",
+    "name": "Foxtail Almond Joy",
+    "category": "Millets n Nuts",
+    "mrp": 210,
+    "price": 210,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (44.0%): Roasted Almond Flakes, Roasted Peanut, Flax Seed",
+      "Whole Grains (35.0%): Roasted Foxtail Millet",
+      "Rest Ingredients (20.5%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 460.0 kcal",
+      "Protein: 16.3g",
+      "Carbohydrate: 45.1g",
+      "Dietary Fiber: 9.9g",
+      "Total Fat: 24.9g (Saturated: 3.8g)",
+      "Total Sugar: 8.9g (Added: 7.2g)",
+      "Iron: 5.0mg",
+      "Calcium: 48.0mg"
+    ],
+    "taglines": [
+      "Joy you can crunch into.",
+      "Foxtail, flax, and almond in perfect harmony.",
+      "Wholesome happiness in a bar."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "MN-09",
+    "name": "Ragi-Oats-Peanut Ballet",
+    "category": "Millets n Nuts",
+    "mrp": 160,
+    "price": 160,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Whole Grains (40.0%): Roasted Ragi Flour, Rolled Oats",
+      "Nuts & Seeds (40.0%): Roasted Peanut crushed, Sunflower Seeds",
+      "Rest Ingredients (19.5%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 440.0 kcal",
+      "Protein: 15.5g",
+      "Carbohydrate: 49.0g",
+      "Dietary Fiber: 9.7g",
+      "Total Fat: 22.0g (Saturated: 3.5g)",
+      "Total Sugar: 8.0g (Added: 7.2g)",
+      "Iron: 4.2mg",
+      "Calcium: 95.0mg"
+    ],
+    "taglines": [
+      "A ballet of ragi, oats, and peanuts.",
+      "Balance, crunch, and lasting energy.",
+      "The everyday bar with a complete feel."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "NS-01",
+    "name": "Cashew Candy",
+    "category": "Nuts n Seeds",
+    "mrp": 300,
+    "price": 300,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (57%): Cashew Flakes, Sunflower Seeds",
+      "Whole Grains (20%): Roasted Ragi Flour",
+      "Rest Ingredients (22%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Caramel Flavour (1%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 437.5 kcal",
+      "Protein: 12.2g",
+      "Carbohydrate: 46.0g",
+      "Dietary Fiber: 16.0g",
+      "Total Fat: 26.2g (Saturated: 4.1g)",
+      "Total Sugar: 11.4g (Added: 8.9g)",
+      "Iron: 4.5mg",
+      "Calcium: 45.0mg"
+    ],
+    "taglines": [
+      "Caramel bliss meets cashew power!",
+      "Gut-happy crunch in every bite.",
+      "Ragi magic for all-day vitality."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "NS-02",
+    "name": "Walnut Treat",
+    "category": "Nuts n Seeds",
+    "mrp": 340,
+    "price": 340,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (57%): Walnut, Pumpkin Seeds",
+      "Whole Grains (20%): Roasted Jowar Flour",
+      "Rest Ingredients (22%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Chocolate Flavour (1%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 478.6 kcal",
+      "Protein: 12.6g",
+      "Carbohydrate: 46.5g",
+      "Dietary Fiber: 16.3g",
+      "Total Fat: 35.8g (Saturated: 3.9g)",
+      "Total Sugar: 10.0g (Added: 8.7g)",
+      "Iron: 2.8mg",
+      "Calcium: 85.0mg"
+    ],
+    "taglines": [
+      "Chocolate dreams, walnut wisdom.",
+      "Omega-powered treat for sharp minds.",
+      "Jowar joy in every choco chunk."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "NS-03",
+    "name": "Nut Medley",
+    "category": "Nuts n Seeds",
+    "mrp": 280,
+    "price": 280,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (55%): Cashew Flakes, Almond Flakes, Peanut Crushed",
+      "Whole Grains (20%): Roasted Ragi Flour",
+      "Rest Ingredients (23%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Vanilla Flavour (2%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 430.0 kcal",
+      "Protein: 13.5g",
+      "Carbohydrate: 46.5g",
+      "Dietary Fiber: 17.7g",
+      "Total Fat: 26.5g (Saturated: 3.5g)",
+      "Total Sugar: 11.5g (Added: 1.0g)",
+      "Iron: 3.2mg",
+      "Calcium: 60.0mg"
+    ],
+    "taglines": [
+      "Three nuts, one happy medley!",
+      "Vanilla vibe with nutty power.",
+      "Skin-loving crunch daily."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "NS-04",
+    "name": "Almond Harvest",
+    "category": "Nuts n Seeds",
+    "mrp": 300,
+    "price": 300,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (58%): Almond Flakes, Pumpkin Seeds",
+      "Whole Grains (20%): Roasted Jowar Flour",
+      "Rest Ingredients (21%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Mango Flavour (1%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 448.4 kcal",
+      "Protein: 15.1g",
+      "Carbohydrate: 45.5g",
+      "Dietary Fiber: 19.3g",
+      "Total Fat: 29.5g (Saturated: 2.7g)",
+      "Total Sugar: 10.2g (Added: 8.9g)",
+      "Iron: 3.7mg",
+      "Calcium: 220.0mg"
+    ],
+    "taglines": [
+      "Mango harvest of almond strength.",
+      "Immunity boost in flaky delight.",
+      "Stable energy, zero crash."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "NS-05",
+    "name": "Pumpkin Almond Trail",
+    "category": "Nuts n Seeds",
+    "mrp": 250,
+    "price": 250,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (50%): Pumpkin Seeds, Almond Flakes",
+      "Whole Grains (25%): Roasted Bajra Flour",
+      "Rest Ingredients (23%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Ginger Powder (2%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 428.2 kcal",
+      "Protein: 15.6g",
+      "Carbohydrate: 47.0g",
+      "Dietary Fiber: 18.8g",
+      "Total Fat: 26.0g (Saturated: 3.4g)",
+      "Total Sugar: 10.1g (Added: 8.0g)",
+      "Iron: 4.1mg",
+      "Calcium: 180.0mg"
+    ],
+    "taglines": [
+      "Trail-ready pumpkin-almond fire.",
+      "Ginger zing for bold journeys.",
+      "Bajra fiber fuels your path."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "NS-06",
+    "name": "Seed Stick",
+    "category": "Nuts n Seeds",
+    "mrp": 170,
+    "price": 170,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (50%): Sunflower Seeds, Pumpkin Seeds, Flax Seeds, Chia Seeds",
+      "Whole Grains (25%): Rolled Oats",
+      "Rest Ingredients (20.5%): Fructooligosaccharides, Honey, Himalayan Pink Salt, Cardamom Powder (4.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 421.2 kcal",
+      "Protein: 13.0g",
+      "Carbohydrate: 46.5g",
+      "Dietary Fiber: 25.1g",
+      "Total Fat: 23.1g (Saturated: 2.3g)",
+      "Total Sugar: 8.4g (Added: 6.0g)",
+      "Iron: 5.2mg",
+      "Calcium: 120.0mg"
+    ],
+    "taglines": [
+      "Seed symphony with cardamom kiss.",
+      "Heart-hero stick for zen moments.",
+      "Chia-flax power, oats embrace."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "NS-07",
+    "name": "Raw Radiance",
+    "category": "Nuts n Seeds",
+    "mrp": 190,
+    "price": 190,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (50%): Sunflower Seeds, Pumpkin Seeds",
+      "Whole Grains (25%): Roasted Bajra Flour",
+      "Rest Ingredients (22.5%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Cinnamon Powder & Mint Flavour (2.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 434.6 kcal",
+      "Protein: 15.6g",
+      "Carbohydrate: 46.8g",
+      "Dietary Fiber: 18.7g",
+      "Total Fat: 26.4g (Saturated: 3.5g)",
+      "Total Sugar: 9.7g (Added: 7.5g)",
+      "Iron: 4.0mg",
+      "Calcium: 150.0mg"
+    ],
+    "taglines": [
+      "Radiate with raw seed magic.",
+      "Cinnamon cool for sugar balance.",
+      "Mint-fresh vitality burst."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "PC-01",
+    "name": "Chocolate Peanut Chikki",
+    "category": "Peanut Chikki",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45%): Peanuts Crushed",
+      "Whole Grains (25%): Rolled Oats, Ragi Flour",
+      "Rest Ingredients (28.5%): Honey, FOS, Roasted Bengal Gram Flour, Gum Acacia, Himalayan Pink Salt",
+      "Chocolate Flavour (1.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 425.23 kcal",
+      "Protein: 16.53g",
+      "Carbohydrate: 46.75g",
+      "Dietary Fiber: 17.51g",
+      "Total Fat: 23.94g (Saturated: 3.13g)",
+      "Total Sugar: 12.56g (Added: 9.85g)",
+      "Iron: 3.34mg",
+      "Calcium: 55.57mg"
+    ],
+    "taglines": [
+      "Chocolate crunch that fuels your day!",
+      "Peanut power meets cocoa bliss.",
+      "Guilt-free chikki revolution."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "PC-02",
+    "name": "Mango Peanut Chikki",
+    "category": "Peanut Chikki",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45%): Peanuts Crushed",
+      "Whole Grains (25%): Rolled Oats, Jowar Flour",
+      "Rest Ingredients (28.5%): Honey, FOS, Roasted Bengal Gram Flour, Gum Acacia, Himalayan Pink Salt",
+      "Mango Flavour (1.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 425.93 kcal",
+      "Protein: 16.35g",
+      "Carbohydrate: 48.23g",
+      "Dietary Fiber: 17.41g",
+      "Total Fat: 23.83g (Saturated: 3.11g)",
+      "Total Sugar: 12.85g (Added: 9.85g)",
+      "Iron: 3.4mg",
+      "Calcium: 53.94mg"
+    ],
+    "taglines": [
+      "Mango magic in every bite!",
+      "Sunny energy from peanuts.",
+      "Taste India's orchards."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "PC-03",
+    "name": "Rose Sweet Peanut Chikki",
+    "category": "Peanut Chikki",
+    "mrp": 160,
+    "price": 160,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45%): Peanuts Crushed",
+      "Whole Grains (25%): Rolled Oats, Bajra Flour",
+      "Rest Ingredients (28.5%): Honey, FOS, Roasted Bengal Gram Flour, Gum Acacia, Himalayan Pink Salt",
+      "Rose Sweet Flavour (1.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 428.23 kcal",
+      "Protein: 16.46g",
+      "Carbohydrate: 47.5g",
+      "Dietary Fiber: 17.84g",
+      "Total Fat: 24.01g (Saturated: 3.13g)",
+      "Total Sugar: 12.62g (Added: 9.85g)",
+      "Iron: 3.86mg",
+      "Calcium: 56.67mg"
+    ],
+    "taglines": [
+      "Rose-kissed sweetness, pure health.",
+      "Traditional twist, modern nutrition.",
+      "Blissful bite of wellness."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "PC-04",
+    "name": "Coffee Peanut Chikki",
+    "category": "Peanut Chikki",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45%): Peanuts Crushed",
+      "Whole Grains (25%): Rolled Oats, Foxtail Flour",
+      "Rest Ingredients (28.5%): Honey, FOS, Roasted Bengal Gram Flour, Gum Acacia, Himalayan Pink Salt",
+      "Coffee Flavour (1.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 425.23 kcal",
+      "Protein: 16.53g",
+      "Carbohydrate: 46.75g",
+      "Dietary Fiber: 17.51g",
+      "Total Fat: 23.94g (Saturated: 3.13g)",
+      "Total Sugar: 12.56g (Added: 9.85g)",
+      "Iron: 3.34mg",
+      "Calcium: 55.57mg"
+    ],
+    "taglines": [
+      "Coffee kick without the crash!",
+      "Brewed energy in chikki form.",
+      "Wake up to peanut power."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "PC-05",
+    "name": "Vanilla Peanut Chikki",
+    "category": "Peanut Chikki",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45%): Peanuts Crushed",
+      "Whole Grains (25%): Rolled Oats, Jowar Flour",
+      "Rest Ingredients (28.5%): Honey, FOS, Roasted Bengal Gram Flour, Gum Acacia, Himalayan Pink Salt",
+      "Vanilla Flavour (1.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 425.03 kcal",
+      "Protein: 16.34g",
+      "Carbohydrate: 48.01g",
+      "Dietary Fiber: 17.38g",
+      "Total Fat: 23.82g (Saturated: 3.11g)",
+      "Total Sugar: 12.64g (Added: 9.85g)",
+      "Iron: 3.4mg",
+      "Calcium: 53.77mg"
+    ],
+    "taglines": [
+      "Vanilla dreams, peanut reality.",
+      "Smooth, satisfying fuel.",
+      "Pure indulgence, zero guilt."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "PC-06",
+    "name": "Coconut Peanut Chikki",
+    "category": "Peanut Chikki",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45%): Peanuts Crushed",
+      "Whole Grains (25%): Rolled Oats, Ragi Flour",
+      "Rest Ingredients (28.5%): Honey, FOS, Roasted Bengal Gram Flour, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs & Flavours (1.5%): Coconut Flavour"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 425.73 kcal",
+      "Protein: 16.03g",
+      "Carbohydrate: 47.95g",
+      "Dietary Fiber: 17.86g",
+      "Total Fat: 23.64g (Saturated: 3.08g)",
+      "Total Sugar: 12.58g (Added: 9.85g)",
+      "Iron: 3.45mg",
+      "Calcium: 86.87mg"
+    ],
+    "taglines": [
+      "Coconut crunch heaven!",
+      "Island vibes in every bar.",
+      "Hydrate inside with peanuts."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "PC-07",
+    "name": "Lemon Peanut Chikki",
+    "category": "Peanut Chikki",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45%): Peanuts Crushed",
+      "Whole Grains (25%): Rolled Oats, Jowar Flour",
+      "Rest Ingredients (28.5%): Honey, FOS, Roasted Bengal Gram Flour, Gum Acacia, Himalayan Pink Salt",
+      "Lemon Flavour (1.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
     "shelfLife": "",
     "nutritionPoints": [],
-    "taglines": [],
-    "stock": 0,
+    "taglines": [
+      "Zesty lemon lift-off!",
+      "Tangy power snack.",
+      "Energize like sunshine."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "PC-08",
+    "name": "Masala Cumin Peanut Chikki",
+    "category": "Peanut Chikki",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45%): Peanuts Crushed",
+      "Whole Grains (25%): Rolled Oats, Jowar Flour",
+      "Rest Ingredients (28.5%): Honey, FOS, Roasted Bengal Gram Flour, Gum Acacia, Himalayan Pink Salt",
+      "Masala Cumin Flavour (1.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 425.03 kcal",
+      "Protein: 16.34g",
+      "Carbohydrate: 48.01g",
+      "Dietary Fiber: 17.38g",
+      "Total Fat: 23.82g (Saturated: 3.11g)",
+      "Total Sugar: 12.64g (Added: 9.85g)",
+      "Iron: 3.4mg",
+      "Calcium: 53.77mg"
+    ],
+    "taglines": [
+      "Masala magic, cumin kick!",
+      "Spicy snack salvation.",
+      "Desi health in every chew."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "PC-09",
+    "name": "Strawberry Peanut Chikki",
+    "category": "Peanut Chikki",
+    "mrp": 160,
+    "price": 160,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45%): Peanuts Crushed",
+      "Whole Grains (25%): Rolled Oats, Bajra Flour",
+      "Rest Ingredients (28.5%): Honey, FOS, Roasted Bengal Gram Flour, Gum Acacia, Himalayan Pink Salt",
+      "Strawberry Flavour (1.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 428.23 kcal",
+      "Protein: 16.46g",
+      "Carbohydrate: 47.5g",
+      "Dietary Fiber: 17.84g",
+      "Total Fat: 24.01g (Saturated: 3.13g)",
+      "Total Sugar: 12.62g (Added: 9.85g)",
+      "Iron: 3.86mg",
+      "Calcium: 56.67mg"
+    ],
+    "taglines": [
+      "Strawberry fields crunch!",
+      "Berry blast of nutrition.",
+      "Sweet strawberry strength."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "PC-10",
+    "name": "Garden Mint Peanut Chikki",
+    "category": "Peanut Chikki",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45%): Peanuts Crushed",
+      "Whole Grains (25%): Rolled Oats, Bajra Flour",
+      "Rest Ingredients (28.5%): Honey, FOS, Roasted Bengal Gram Flour, Gum Acacia, Himalayan Pink Salt",
+      "Garden Mint Flavour (1.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 428.23 kcal",
+      "Protein: 16.46g",
+      "Carbohydrate: 47.5g",
+      "Dietary Fiber: 17.84g",
+      "Total Fat: 24.01g (Saturated: 3.13g)",
+      "Total Sugar: 12.62g (Added: 9.85g)",
+      "Iron: 3.86mg",
+      "Calcium: 56.67mg"
+    ],
+    "taglines": [
+      "Minty fresh fuel!",
+      "Garden cool in chikki.",
+      "Breathe easy, snack smart."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "PC-11",
+    "name": "Butter Peanut Chikki",
+    "category": "Peanut Chikki",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45%): Peanuts Crushed",
+      "Whole Grains (25%): Rolled Oats, Jowar Flour",
+      "Rest Ingredients (28.5%): Honey, FOS, Roasted Bengal Gram Flour, Gum Acacia, Himalayan Pink Salt",
+      "Butter Flavour (1.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 425.03 kcal",
+      "Protein: 16.34g",
+      "Carbohydrate: 48.01g",
+      "Dietary Fiber: 17.38g",
+      "Total Fat: 23.82g (Saturated: 3.11g)",
+      "Total Sugar: 12.64g (Added: 9.85g)",
+      "Iron: 3.4mg",
+      "Calcium: 53.77mg"
+    ],
+    "taglines": [
+      "Butter bliss, health win!",
+      "Creamy peanut perfection.",
+      "Indulge without compromise."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "PC-12",
+    "name": "Milk Peanut Chikki",
+    "category": "Peanut Chikki",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45%): Peanuts Crushed",
+      "Whole Grains (25%): Rolled Oats, Jowar Flour",
+      "Rest Ingredients (28.5%): Honey, FOS, Roasted Bengal Gram Flour, Gum Acacia, Himalayan Pink Salt",
+      "Milk Flavour (1.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 425.03 kcal",
+      "Protein: 16.34g",
+      "Carbohydrate: 48.01g",
+      "Dietary Fiber: 17.38g",
+      "Total Fat: 23.82g (Saturated: 3.11g)",
+      "Total Sugar: 12.64g (Added: 9.85g)",
+      "Iron: 3.4mg",
+      "Calcium: 53.77mg"
+    ],
+    "taglines": [
+      "Milky smoothness, mighty peanuts.",
+      "Nourish like home.",
+      "Dairy dream snack."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "PC-13",
+    "name": "Jeera Soda Peanut Chikki",
+    "category": "Peanut Chikki",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (45%): Peanuts Crushed",
+      "Whole Grains (25%): Rolled Oats, Jowar Flour",
+      "Rest Ingredients (28.5%): Honey, FOS, Roasted Bengal Gram Flour, Gum Acacia, Himalayan Pink Salt",
+      "Jeera Soda Flavour (1.5%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 425.03 kcal",
+      "Protein: 16.34g",
+      "Carbohydrate: 48.01g",
+      "Dietary Fiber: 17.38g",
+      "Total Fat: 23.82g (Saturated: 3.11g)",
+      "Total Sugar: 12.64g (Added: 9.85g)",
+      "Iron: 3.4mg",
+      "Calcium: 53.77mg"
+    ],
+    "taglines": [
+      "Jeera fizz crunch!",
+      "Soda sparkle, real power.",
+      "Digestive delight bar."
+    ],
+    "stock": 50,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "PC-14",
+    "name": "No Flavour Peanut Chikki",
+    "category": "Peanut Chikki",
+    "mrp": 140,
+    "price": 140,
+    "packSize": {
+      "value": 100,
+      "unit": "g"
+    },
+    "description": "",
+    "ingredients": [
+      "Nuts & Seeds (46.5%): Peanuts Crushed",
+      "Whole Grains (25%): Rolled Oats, Jowar Flour",
+      "Rest Ingredients (28.5%): Honey, FOS, Roasted Bengal Gram Flour, Gum Acacia, Himalayan Pink Salt"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "",
+    "nutritionPoints": [
+      "Energy: 425.03 kcal",
+      "Protein: 16.34g",
+      "Carbohydrate: 48.01g",
+      "Dietary Fiber: 17.38g",
+      "Total Fat: 23.82g (Saturated: 3.11g)",
+      "Total Sugar: 12.64g (Added: 9.85g)",
+      "Iron: 3.4mg",
+      "Calcium: 53.77mg"
+    ],
+    "taglines": [
+      "Unflavored, unbeatable nutrition.",
+      "Pure peanut potency.",
+      "Clean chikki, true energy."
+    ],
+    "stock": 50,
     "isActive": true,
     "isFeatured": false
   }
