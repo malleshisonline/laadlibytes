@@ -15,10 +15,11 @@ const SORT_MAP = {
   name_desc: { name: -1 },
 };
 
+const LIST_EXCLUDED_FIELDS = '-__v -description -ingredients -allergenInfo -shelfLife -nutritionPoints';
+
 const OBJECT_ID_PATTERN = /^[0-9a-fA-F]{24}$/;
 
-// mongoose.isValidObjectId is too loose for this: it accepts any 12-character string, and
-// "mango-alohas" is exactly 12 characters, so a real slug would be treated as an id.
+
 const looksLikeObjectId = (value) => OBJECT_ID_PATTERN.test(value);
 
 // A search term goes into a RegExp, so its metacharacters have to be neutralised first.
@@ -168,7 +169,8 @@ export const productService = {
 
     const [items, total] = await Promise.all([
       Product.find(filter)
-        .select('-__v')
+        // A card needs none of the label copy; the detail route still returns all of it.
+        .select(LIST_EXCLUDED_FIELDS)
         .populate('category', 'name slug')
         .sort(SORT_MAP[query.sort] ?? SORT_MAP.newest)
         .skip(skip)

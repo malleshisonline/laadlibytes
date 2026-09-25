@@ -15,4 +15,4 @@ requests.http
 # Local photos the seeder uploads to Cloudinary; the database stores only their URLs.
 scripts/data/product-images/
 scripts/data/category-images/
-
+/scripts/data/Laadlibytes_Product_Data_Sheet.xlsx
