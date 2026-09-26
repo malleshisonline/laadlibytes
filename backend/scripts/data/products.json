@@ -9,7 +9,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Aloha to guilt-free indulgence! Mango magic in every millet bite. Ragi-powered tropical escape.",
     "ingredients": [
       "Whole Grains 40% (Roasted Ragi Flour, Rolled Oats)",
       "Nuts & Seeds 30% (Flax Seeds, Roasted Peanut crushed)",
@@ -17,7 +17,7 @@
       "Fruit Powder & Flavours 10% (Mango Powder, Mango Flavour)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 438.0 kcal",
       "Protein: 12.8g",
@@ -33,9 +33,9 @@
       "Mango magic in every millet bite.",
       "Ragi-powered tropical escape."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "FV-02",
@@ -47,7 +47,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Krunch into apple orchard bliss! Jowar crunch, apple punch. Daily energy, nature's way.",
     "ingredients": [
       "Whole Grains 40% (Roasted Jowar Flour, Rolled Oats)",
       "Nuts & Seeds 30% (Sunflower Seeds, Roasted Peanut crushed)",
@@ -55,7 +55,7 @@
       "Fruit Powder & Flavours 10% (Apple Powder, Apple Flavour)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 445.0 kcal",
       "Protein: 13.1g",
@@ -71,9 +71,9 @@
       "Jowar crunch, apple punch.",
       "Daily energy, nature's way."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "FV-03",
@@ -85,7 +85,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Bubble up with banana power! Millet bounce in every bite. Energize your day, bananally.",
     "ingredients": [
       "Whole Grains 40% (Roasted Bajra Flour, Rolled Oats)",
       "Nuts & Seeds 30% (Pumpkin Seeds, Roasted Peanut crushed)",
@@ -93,7 +93,7 @@
       "Fruit Powder & Flavours 10% (Banana Powder, Banana Flavour)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 447.0 kcal",
       "Protein: 15.2g",
@@ -109,9 +109,9 @@
       "Millet bounce in every bite.",
       "Energize your day, bananally."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "FV-04",
@@ -123,7 +123,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Crush cravings with strawberry zest! Foxtail fun, berry yum. Love at first healthy crush.",
     "ingredients": [
       "Whole Grains 40% (Roasted Foxtail Flour, Rolled Oats)",
       "Nuts & Seeds 30% (Sesame Seeds, Roasted Peanut crushed)",
@@ -131,7 +131,7 @@
       "Fruit Powder & Flavours 10% (Strawberry Powder, Strawberry Flavour)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 435.0 kcal",
       "Protein: 14.7g",
@@ -147,9 +147,9 @@
       "Foxtail fun, berry yum.",
       "Love at first healthy crush."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "FV-05",
@@ -161,7 +161,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Lime-light your vitality! Zingy chia-millet refresh. Glow from within, lime edition.",
     "ingredients": [
       "Whole Grains 40% (Roasted Jowar Flour, Rolled Oats)",
       "Nuts & Seeds 30% (Chia Seeds, Roasted Peanut crushed)",
@@ -169,7 +169,7 @@
       "Fruit Powder & Flavours 10% (Lime Powder, Lime Flavour)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 440.0 kcal",
       "Protein: 14.2g",
@@ -185,9 +185,9 @@
       "Zingy chia-millet refresh.",
       "Glow from within, lime edition."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "FV-06",
@@ -199,7 +199,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Grape kick for peak power! Bajra blast, grape fast. Fuel your win, naturally.",
     "ingredients": [
       "Whole Grains 40% (Roasted Bajra Flour, Rolled Oats)",
       "Nuts & Seeds 30% (Sunflower Seeds, Roasted Peanut crushed)",
@@ -207,7 +207,7 @@
       "Fruit Powder & Flavours 10% (Grape Powder, Grape Flavour)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 448.0 kcal",
       "Protein: 13.3g",
@@ -223,9 +223,9 @@
       "Bajra blast, grape fast.",
       "Fuel your win, naturally."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "FV-07",
@@ -237,7 +237,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Squeeze the day with orange joy! Millet squeeze, pure tease. Vitamin burst in every bar.",
     "ingredients": [
       "Whole Grains 40% (Roasted Foxtail Flour, Rolled Oats)",
       "Nuts & Seeds 30% (Roasted Peanut crushed)",
@@ -245,7 +245,7 @@
       "Fruit Powder & Flavours 10% (Orange Powder, Orange Flavour)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 452.0 kcal",
       "Protein: 15.1g",
@@ -261,9 +261,9 @@
       "Millet squeeze, pure tease.",
       "Vitamin burst in every bar."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "FV-08",
@@ -275,7 +275,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Twist into berry bliss! Cranberry crunch revolution. Superberry super snack.",
     "ingredients": [
       "Whole Grains 40% (Roasted Jowar Flour, Rolled Oats)",
       "Nuts & Seeds 30% (Roasted Peanut crushed)",
@@ -283,7 +283,7 @@
       "Fruit Powder & Flavours 10% (Cranberry Powder, Cranberry Flavour)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 450.0 kcal",
       "Protein: 15.0g",
@@ -299,9 +299,9 @@
       "Cranberry crunch revolution.",
       "Superberry super snack."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "FV-09",
@@ -313,7 +313,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Fig yum for divine yumminess! Ancient figs, modern fit. Indulge wisely, fig style.",
     "ingredients": [
       "Whole Grains 40% (Roasted Jowar Flour, Rolled Oats)",
       "Nuts & Seeds 30% (Roasted Peanut crushed)",
@@ -321,7 +321,7 @@
       "Fruit Powder & Flavours 10% (Fig Powder, Flavour)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 455.0 kcal",
       "Protein: 14.8g",
@@ -337,9 +337,9 @@
       "Ancient figs, modern fit.",
       "Indulge wisely, fig style."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "FV-10",
@@ -351,7 +351,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Bloom bright with apricot delight! Bajra bloom, apricot boom. Nourish & flourish.",
     "ingredients": [
       "Whole Grains 40% (Roasted Bajra Flour, Rolled Oats)",
       "Nuts & Seeds 30% (Roasted Peanut crushed)",
@@ -359,7 +359,7 @@
       "Fruit Powder & Flavours 10% (Apricot Powder, Flavour)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 447.0 kcal",
       "Protein: 15.2g",
@@ -375,9 +375,9 @@
       "Bajra bloom, apricot boom.",
       "Nourish & flourish."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "FV-11",
@@ -389,7 +389,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Guava your snack game! Snack-a-guava, crave no more. Tropical twist daily.",
     "ingredients": [
       "Whole Grains 40% (Roasted Foxtail Flour, Rolled Oats)",
       "Nuts & Seeds 30% (Roasted Peanut crushed)",
@@ -397,7 +397,7 @@
       "Fruit Powder & Flavours 10% (Guava Powder, Flavour)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 449.0 kcal",
       "Protein: 15.1g",
@@ -413,9 +413,9 @@
       "Snack-a-guava, crave no more.",
       "Tropical twist daily."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "FV-12",
@@ -427,7 +427,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Palm n pine paradise bite! Coconut pineapple dream team. Tropical millet getaway.",
     "ingredients": [
       "Whole Grains 40% (Roasted Jowar Flour, Rolled Oats)",
       "Nuts & Seeds 30% (Roasted Peanut crushed)",
@@ -435,7 +435,7 @@
       "Fruit Powder & Flavours 10% (Pineapple Powder, Coconut Powder)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 460.0 kcal",
       "Protein: 14.5g",
@@ -451,9 +451,9 @@
       "Coconut pineapple dream team.",
       "Tropical millet getaway."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "KW-01",
@@ -465,7 +465,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Unlock the Power of Young Minds. Smart Nutrition for Bright Futures. Brain Fuel in Every Bite.",
     "ingredients": [
       "Nuts & Seeds (45.0%): Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
       "Whole Grains (35.0%): Roasted Chana Dal Flour, Roasted Rolled Oats",
@@ -473,7 +473,7 @@
       "Ayurvedic Herbs / Flavours / Crunchies (0.9%): Moringa Powder, Turmeric Powder, Tulsi Powder, Strawberry Nice"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 485.0 kcal",
       "Protein: 18.5g",
@@ -489,7 +489,7 @@
       "Smart Nutrition for Bright Futures.",
       "Brain Fuel in Every Bite."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -503,7 +503,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Fresh Energy. Fresh Thinking. Naturally Active, Naturally Happy. Snack Fresh. Stay Fresh.",
     "ingredients": [
       "Nuts & Seeds (45.0%): Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
       "Whole Grains (35.0%): Roasted Moong Dal Flour, Roasted Rolled Oats",
@@ -511,7 +511,7 @@
       "Flavour (0.4%): Chocolate"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 482.0 kcal",
       "Protein: 18.8g",
@@ -527,7 +527,7 @@
       "Naturally Active, Naturally Happy.",
       "Snack Fresh. Stay Fresh."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -541,7 +541,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Spark Stronger Days. Daily Defense in Every Bar. Strong Kids Start Here.",
     "ingredients": [
       "Nuts & Seeds (44.5%): Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
       "Whole Grains (35.0%): Roasted Chickpea Flour, Roasted Rolled Oats",
@@ -549,7 +549,7 @@
       "Ayurvedic Herbs / Flavours / Crunchies (0.9%): Moringa Powder, Turmeric Powder, Tulsi Powder, Strawberry Nice"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 482.0 kcal",
       "Protein: 18.8g",
@@ -565,7 +565,7 @@
       "Daily Defense in Every Bar.",
       "Strong Kids Start Here."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -579,7 +579,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Twist Your Brain into Action. Crunch Smarter Every Day. The Snack that Thinks Ahead.",
     "ingredients": [
       "Nuts & Seeds (44.5%): Fennel Seeds, Flax Seeds, Peanuts Roasted & Crushed",
       "Whole Grains (35.0%): Roasted Chana Dal Flour, Roasted Rolled Oats",
@@ -587,7 +587,7 @@
       "Flavours (0.9%): Nutmeg Powder, Poppy Seeds, Vanilla Flavour"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 488.0 kcal",
       "Protein: 18.0g",
@@ -603,7 +603,7 @@
       "Crunch Smarter Every Day.",
       "The Snack that Thinks Ahead."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -617,14 +617,14 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Happy Belly, Happy Child. Gentle Nutrition with Great Taste. Dance Through the Day with Belly Ballet.",
     "ingredients": [
       "Nuts & Seeds (45.0%): Pumpkin Seeds, Fennel Seeds, Peanuts Roasted & Crushed",
       "Whole Grains (35.0%): Roasted Amaranth Flour, Roasted Rolled Oats",
       "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt, Garden Mint Flavour (0.4%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 475.0 kcal",
       "Protein: 17.5g",
@@ -640,7 +640,7 @@
       "Gentle Nutrition with Great Taste.",
       "Dance Through the Day with Belly Ballet."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -654,7 +654,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Fuel Peak Performance. Focus Beyond Limits. Premium Nutrition for Young Achievers.",
     "ingredients": [
       "Nuts & Seeds (45.0%): Watermelon Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
       "Whole Grains (35.0%): Roasted Quinoa Flour, Roasted Rolled Oats",
@@ -662,7 +662,7 @@
       "Flavour (0.4%): Rose Sweet"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 482.0 kcal",
       "Protein: 18.2g",
@@ -678,7 +678,7 @@
       "Focus Beyond Limits.",
       "Premium Nutrition for Young Achievers."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -692,7 +692,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Bring Joy to Every Bite. Sunshine Packed with Nutrition. The Happiest Healthy Snack.",
     "ingredients": [
       "Nuts & Seeds (45.0%): Chia Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
       "Whole Grains (35.0%): Roasted Buckwheat Flour, Roasted Rolled Oats",
@@ -700,7 +700,7 @@
       "Flavour (0.4%): Vanilla"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 480.0 kcal",
       "Protein: 18.0g",
@@ -716,7 +716,7 @@
       "Sunshine Packed with Nutrition.",
       "The Happiest Healthy Snack."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -730,7 +730,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Power your day with Moringa Magic.",
     "ingredients": [
       "Nuts & Seeds (44.4%): Roasted Peanut Crushed, Sesame Seeds, Pumpkin Seeds, Flax Seeds, Chia Seeds",
       "Whole Grains (35%): Roasted Ragi Flour, Roasted Rolled Oats",
@@ -738,7 +738,7 @@
       "Ayurvedic Herb (1%): Moringa Leaf Powder"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 485.0 kcal",
       "Protein: 18.5g",
@@ -752,7 +752,7 @@
     "taglines": [
       "Power your day with Moringa Magic."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -766,7 +766,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Mellow moments, wholesome bites.",
     "ingredients": [
       "Nuts & Seeds (44.4%): Roasted Peanut Crushed, Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
       "Whole Grains (35%): Roasted Ragi Flour, Roasted Rolled Oats",
@@ -774,7 +774,7 @@
       "Ayurvedic Herbs & Flavours (1%): Nutmeg Powder, Chamomile Dry Powder"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 478.0 kcal",
       "Protein: 18.2g",
@@ -788,7 +788,7 @@
     "taglines": [
       "Mellow moments, wholesome bites."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -802,7 +802,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Harmony in every nourishing bite.",
     "ingredients": [
       "Nuts & Seeds (44%): Roasted Peanut Crushed, Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
       "Whole Grains (35%): Roasted Jowar Flour, Roasted Oats",
@@ -810,7 +810,7 @@
       "Ayurvedic Herbs & Flavours (1.4%): Cardamom Granules, Shatavari Powder"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 482.0 kcal",
       "Protein: 18.0g",
@@ -824,7 +824,7 @@
     "taglines": [
       "Harmony in every nourishing bite."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -838,7 +838,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Good for your gut, great for your day.",
     "ingredients": [
       "Nuts & Seeds (44%): Roasted Peanut Crushed, Fennel Seeds, Flax Seeds",
       "Whole Grains (35%): Roasted Ragi Flour, Roasted Oats",
@@ -846,7 +846,7 @@
       "Ayurvedic Herbs & Flavours (1.4%): Dried Amla pieces, Mint Powder, Triphala powder, Moringa Powder"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 475.0 kcal",
       "Protein: 19.1g",
@@ -860,7 +860,7 @@
     "taglines": [
       "Good for your gut, great for your day."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -874,7 +874,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Three cheers for daily immunity support.",
     "ingredients": [
       "Nuts & Seeds (44.8%): Roasted Peanut Crushed, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
       "Whole Grains (35%): Roasted Jowar Flour, Roasted Rolled Oats",
@@ -882,7 +882,7 @@
       "Ayurvedic Herbs & Flavours (0.6%): Turmeric Powder, Tulsi Powder, Moringa Powder"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 480.0 kcal",
       "Protein: 18.8g",
@@ -896,7 +896,7 @@
     "taglines": [
       "Three cheers for daily immunity support."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -910,7 +910,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Build strength from the bite up.",
     "ingredients": [
       "Seeds (44%): Roasted Peanut Crushed, Watermelon Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
       "Whole Grains (35%): Roasted Ragi Flour, Roasted Rolled Oats",
@@ -918,7 +918,7 @@
       "Ayurvedic Herbs & Flavours (1.4%): Amla Powder, Moringa Powder"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 477.0 kcal",
       "Protein: 18.4g",
@@ -932,7 +932,7 @@
     "taglines": [
       "Build strength from the bite up."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -946,7 +946,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Glow from within, crunch with confidence.",
     "ingredients": [
       "Nuts & Seeds (44.4%): Roasted Peanut Crushed, Chia Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
       "Whole Grains (35%): Roasted Bajra Flour, Roasted Rolled Oats",
@@ -954,7 +954,7 @@
       "Ayurvedic Herbs & Flavours (1.4%): Aloe Vera Powder, Moringa Powder"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 483.0 kcal",
       "Protein: 18.3g",
@@ -968,7 +968,7 @@
     "taglines": [
       "Glow from within, crunch with confidence."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -982,14 +982,14 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Power from ragi, crunch from nuts. A millet bar that feels wholesome and satisfying. Your smart snack for active days.",
     "ingredients": [
       "Whole Grains (40.0%): Roasted Ragi Flour",
       "Nuts & Seeds (39.5%): Roasted Peanut crushed, Sunflower Seeds",
       "Rest Ingredients (20.0%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 432.0 kcal",
       "Protein: 14.8g",
@@ -1005,9 +1005,9 @@
       "A millet bar that feels wholesome and satisfying.",
       "Your smart snack for active days."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "MN-02",
@@ -1019,14 +1019,14 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Magic made from ragi and almonds. A premium crunch for mindful snacking. Fuel that tastes elegant.",
     "ingredients": [
       "Nuts & Seeds (44.0%): Roasted Almond Flakes, Roasted Peanut Crushed, Flax Seeds",
       "Whole Grains (33.0%): Roasted Ragi Flour",
       "Rest Ingredients (20.5%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 465.0 kcal",
       "Protein: 16.2g",
@@ -1042,9 +1042,9 @@
       "A premium crunch for mindful snacking.",
       "Fuel that tastes elegant."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "MN-03",
@@ -1056,14 +1056,14 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Jowar meets peanut in every bite. Crunchy, familiar, and nourishing. The millet munch made for busy routines.",
     "ingredients": [
       "Whole Grains (40.0%): Roasted Jowar Flour",
       "Nuts & Seeds (39.5%): Roasted Peanut crushed, Sesame Seeds",
       "Rest Ingredients (20.0%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 428.0 kcal",
       "Protein: 15.1g",
@@ -1079,9 +1079,9 @@
       "Crunchy, familiar, and nourishing.",
       "The millet munch made for busy routines."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "MN-04",
@@ -1093,14 +1093,14 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Mojo powered by jowar and nuts. A lively crunch with a wholesome core. Snack smart, snack stylish.",
     "ingredients": [
       "Nuts & Seeds (44.0%): Roasted Almond Flakes, Roasted Peanut Crushed, Pumpkin Seeds",
       "Whole Grains (33.0%): Roasted Jowar Flour",
       "Rest Ingredients (20.5%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 462.0 kcal",
       "Protein: 16.5g",
@@ -1116,9 +1116,9 @@
       "A lively crunch with a wholesome core.",
       "Snack smart, snack stylish."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "MN-05",
@@ -1130,14 +1130,14 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Punch up your day with bajra. Hearty crunch, steady energy. A strong snack with millet goodness.",
     "ingredients": [
       "Whole Grains (40.0%): Roasted Bajra Flour",
       "Nuts & Seeds (39.5%): Roasted Peanut crushed, Sunflower Seeds",
       "Rest Ingredients (20.0%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 435.0 kcal",
       "Protein: 14.5g",
@@ -1153,9 +1153,9 @@
       "Hearty crunch, steady energy.",
       "A strong snack with millet goodness."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "MN-06",
@@ -1167,7 +1167,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Charm in every crunchy layer. Bajra with a premium nut-and-seed story. Wholesome snacking with a touch of elegance.",
     "ingredients": [
       "Nuts & Seeds (44.4%): Roasted Almond Flakes, Roasted Peanut Crushed, Chia Seeds, Sesame Seeds, Pumpkin Seeds",
       "Flax Seeds, Sunflower Seeds",
@@ -1175,7 +1175,7 @@
       "Rest Ingredients (20.5%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 468.0 kcal",
       "Protein: 16.0g",
@@ -1191,9 +1191,9 @@
       "Bajra with a premium nut-and-seed story.",
       "Wholesome snacking with a touch of elegance."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "MN-07",
@@ -1205,7 +1205,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Brunch better with foxtail. Light millet energy, bold peanut crunch. A smarter snack between meals.",
     "ingredients": [
       "Whole Grains (40.0%): Roasted Foxtail Flour",
       "Nuts & Seeds (39.5%): Roasted Peanut crushed, Watermelon Seeds",
@@ -1213,7 +1213,7 @@
       "Ayurvedic Herbs & Flavours (0.5%): Flavour"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 430.0 kcal",
       "Protein: 14.9g",
@@ -1229,9 +1229,9 @@
       "Light millet energy, bold peanut crunch.",
       "A smarter snack between meals."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "MN-08",
@@ -1243,14 +1243,14 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Joy you can crunch into. Foxtail, flax, and almond in perfect harmony. Wholesome happiness in a bar.",
     "ingredients": [
       "Nuts & Seeds (44.0%): Roasted Almond Flakes, Roasted Peanut, Flax Seed",
       "Whole Grains (35.0%): Roasted Foxtail Millet",
       "Rest Ingredients (20.5%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 460.0 kcal",
       "Protein: 16.3g",
@@ -1266,9 +1266,9 @@
       "Foxtail, flax, and almond in perfect harmony.",
       "Wholesome happiness in a bar."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "MN-09",
@@ -1280,14 +1280,14 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "A ballet of ragi, oats, and peanuts. Balance, crunch, and lasting energy. The everyday bar with a complete feel.",
     "ingredients": [
       "Whole Grains (40.0%): Roasted Ragi Flour, Rolled Oats",
       "Nuts & Seeds (40.0%): Roasted Peanut crushed, Sunflower Seeds",
       "Rest Ingredients (19.5%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt, Flavour (0.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 440.0 kcal",
       "Protein: 15.5g",
@@ -1303,9 +1303,9 @@
       "Balance, crunch, and lasting energy.",
       "The everyday bar with a complete feel."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "NS-01",
@@ -1317,14 +1317,14 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Caramel bliss meets cashew power! Gut-happy crunch in every bite. Ragi magic for all-day vitality.",
     "ingredients": [
       "Nuts & Seeds (57%): Cashew Flakes, Sunflower Seeds",
       "Whole Grains (20%): Roasted Ragi Flour",
       "Rest Ingredients (22%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Caramel Flavour (1%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 437.5 kcal",
       "Protein: 12.2g",
@@ -1340,9 +1340,9 @@
       "Gut-happy crunch in every bite.",
       "Ragi magic for all-day vitality."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "NS-02",
@@ -1354,14 +1354,14 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Chocolate dreams, walnut wisdom. Omega-powered treat for sharp minds. Jowar joy in every choco chunk.",
     "ingredients": [
       "Nuts & Seeds (57%): Walnut, Pumpkin Seeds",
       "Whole Grains (20%): Roasted Jowar Flour",
       "Rest Ingredients (22%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Chocolate Flavour (1%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 478.6 kcal",
       "Protein: 12.6g",
@@ -1377,9 +1377,9 @@
       "Omega-powered treat for sharp minds.",
       "Jowar joy in every choco chunk."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "NS-03",
@@ -1391,14 +1391,14 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Three nuts, one happy medley! Vanilla vibe with nutty power. Skin-loving crunch daily.",
     "ingredients": [
       "Nuts & Seeds (55%): Cashew Flakes, Almond Flakes, Peanut Crushed",
       "Whole Grains (20%): Roasted Ragi Flour",
       "Rest Ingredients (23%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Vanilla Flavour (2%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 430.0 kcal",
       "Protein: 13.5g",
@@ -1414,9 +1414,9 @@
       "Vanilla vibe with nutty power.",
       "Skin-loving crunch daily."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "NS-04",
@@ -1428,14 +1428,14 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Mango harvest of almond strength. Immunity boost in flaky delight. Stable energy, zero crash.",
     "ingredients": [
       "Nuts & Seeds (58%): Almond Flakes, Pumpkin Seeds",
       "Whole Grains (20%): Roasted Jowar Flour",
       "Rest Ingredients (21%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Mango Flavour (1%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 448.4 kcal",
       "Protein: 15.1g",
@@ -1451,9 +1451,9 @@
       "Immunity boost in flaky delight.",
       "Stable energy, zero crash."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "NS-05",
@@ -1465,14 +1465,14 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Trail-ready pumpkin-almond fire. Ginger zing for bold journeys. Bajra fiber fuels your path.",
     "ingredients": [
       "Nuts & Seeds (50%): Pumpkin Seeds, Almond Flakes",
       "Whole Grains (25%): Roasted Bajra Flour",
       "Rest Ingredients (23%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Ginger Powder (2%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 428.2 kcal",
       "Protein: 15.6g",
@@ -1488,9 +1488,9 @@
       "Ginger zing for bold journeys.",
       "Bajra fiber fuels your path."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "NS-06",
@@ -1502,14 +1502,14 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Seed symphony with cardamom kiss. Heart-hero stick for zen moments. Chia-flax power, oats embrace.",
     "ingredients": [
       "Nuts & Seeds (50%): Sunflower Seeds, Pumpkin Seeds, Flax Seeds, Chia Seeds",
       "Whole Grains (25%): Rolled Oats",
       "Rest Ingredients (20.5%): Fructooligosaccharides, Honey, Himalayan Pink Salt, Cardamom Powder (4.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 421.2 kcal",
       "Protein: 13.0g",
@@ -1525,9 +1525,9 @@
       "Heart-hero stick for zen moments.",
       "Chia-flax power, oats embrace."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "NS-07",
@@ -1539,7 +1539,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Radiate with raw seed magic. Cinnamon cool for sugar balance. Mint-fresh vitality burst.",
     "ingredients": [
       "Nuts & Seeds (50%): Sunflower Seeds, Pumpkin Seeds",
       "Whole Grains (25%): Roasted Bajra Flour",
@@ -1547,7 +1547,7 @@
       "Cinnamon Powder & Mint Flavour (2.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 434.6 kcal",
       "Protein: 15.6g",
@@ -1563,9 +1563,9 @@
       "Cinnamon cool for sugar balance.",
       "Mint-fresh vitality burst."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "PC-01",
@@ -1577,7 +1577,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Chocolate crunch that fuels your day! Peanut power meets cocoa bliss. Guilt-free chikki revolution.",
     "ingredients": [
       "Nuts & Seeds (45%): Peanuts Crushed",
       "Whole Grains (25%): Rolled Oats, Ragi Flour",
@@ -1585,7 +1585,7 @@
       "Chocolate Flavour (1.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 425.23 kcal",
       "Protein: 16.53g",
@@ -1601,7 +1601,7 @@
       "Peanut power meets cocoa bliss.",
       "Guilt-free chikki revolution."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -1615,7 +1615,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Mango magic in every bite! Sunny energy from peanuts. Taste India's orchards.",
     "ingredients": [
       "Nuts & Seeds (45%): Peanuts Crushed",
       "Whole Grains (25%): Rolled Oats, Jowar Flour",
@@ -1623,7 +1623,7 @@
       "Mango Flavour (1.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 425.93 kcal",
       "Protein: 16.35g",
@@ -1639,7 +1639,7 @@
       "Sunny energy from peanuts.",
       "Taste India's orchards."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -1653,7 +1653,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Rose-kissed sweetness, pure health. Traditional twist, modern nutrition. Blissful bite of wellness.",
     "ingredients": [
       "Nuts & Seeds (45%): Peanuts Crushed",
       "Whole Grains (25%): Rolled Oats, Bajra Flour",
@@ -1661,7 +1661,7 @@
       "Rose Sweet Flavour (1.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 428.23 kcal",
       "Protein: 16.46g",
@@ -1677,7 +1677,7 @@
       "Traditional twist, modern nutrition.",
       "Blissful bite of wellness."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -1691,7 +1691,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Coffee kick without the crash! Brewed energy in chikki form. Wake up to peanut power.",
     "ingredients": [
       "Nuts & Seeds (45%): Peanuts Crushed",
       "Whole Grains (25%): Rolled Oats, Foxtail Flour",
@@ -1699,7 +1699,7 @@
       "Coffee Flavour (1.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 425.23 kcal",
       "Protein: 16.53g",
@@ -1715,7 +1715,7 @@
       "Brewed energy in chikki form.",
       "Wake up to peanut power."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -1729,7 +1729,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Vanilla dreams, peanut reality. Smooth, satisfying fuel. Pure indulgence, zero guilt.",
     "ingredients": [
       "Nuts & Seeds (45%): Peanuts Crushed",
       "Whole Grains (25%): Rolled Oats, Jowar Flour",
@@ -1737,7 +1737,7 @@
       "Vanilla Flavour (1.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 425.03 kcal",
       "Protein: 16.34g",
@@ -1753,7 +1753,7 @@
       "Smooth, satisfying fuel.",
       "Pure indulgence, zero guilt."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -1767,7 +1767,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Coconut crunch heaven! Island vibes in every bar. Hydrate inside with peanuts.",
     "ingredients": [
       "Nuts & Seeds (45%): Peanuts Crushed",
       "Whole Grains (25%): Rolled Oats, Ragi Flour",
@@ -1775,7 +1775,7 @@
       "Ayurvedic Herbs & Flavours (1.5%): Coconut Flavour"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 425.73 kcal",
       "Protein: 16.03g",
@@ -1791,7 +1791,7 @@
       "Island vibes in every bar.",
       "Hydrate inside with peanuts."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -1805,7 +1805,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Zesty lemon lift-off! Tangy power snack. Energize like sunshine.",
     "ingredients": [
       "Nuts & Seeds (45%): Peanuts Crushed",
       "Whole Grains (25%): Rolled Oats, Jowar Flour",
@@ -1813,14 +1813,14 @@
       "Lemon Flavour (1.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [],
     "taglines": [
       "Zesty lemon lift-off!",
       "Tangy power snack.",
       "Energize like sunshine."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -1834,7 +1834,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Masala magic, cumin kick! Spicy snack salvation. Desi health in every chew.",
     "ingredients": [
       "Nuts & Seeds (45%): Peanuts Crushed",
       "Whole Grains (25%): Rolled Oats, Jowar Flour",
@@ -1842,7 +1842,7 @@
       "Masala Cumin Flavour (1.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 425.03 kcal",
       "Protein: 16.34g",
@@ -1858,7 +1858,7 @@
       "Spicy snack salvation.",
       "Desi health in every chew."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -1872,7 +1872,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Strawberry fields crunch! Berry blast of nutrition. Sweet strawberry strength.",
     "ingredients": [
       "Nuts & Seeds (45%): Peanuts Crushed",
       "Whole Grains (25%): Rolled Oats, Bajra Flour",
@@ -1880,7 +1880,7 @@
       "Strawberry Flavour (1.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 428.23 kcal",
       "Protein: 16.46g",
@@ -1896,7 +1896,7 @@
       "Berry blast of nutrition.",
       "Sweet strawberry strength."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -1910,7 +1910,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Minty fresh fuel! Garden cool in chikki. Breathe easy, snack smart.",
     "ingredients": [
       "Nuts & Seeds (45%): Peanuts Crushed",
       "Whole Grains (25%): Rolled Oats, Bajra Flour",
@@ -1918,7 +1918,7 @@
       "Garden Mint Flavour (1.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 428.23 kcal",
       "Protein: 16.46g",
@@ -1934,7 +1934,7 @@
       "Garden cool in chikki.",
       "Breathe easy, snack smart."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -1948,7 +1948,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Butter bliss, health win! Creamy peanut perfection. Indulge without compromise.",
     "ingredients": [
       "Nuts & Seeds (45%): Peanuts Crushed",
       "Whole Grains (25%): Rolled Oats, Jowar Flour",
@@ -1956,7 +1956,7 @@
       "Butter Flavour (1.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 425.03 kcal",
       "Protein: 16.34g",
@@ -1972,7 +1972,7 @@
       "Creamy peanut perfection.",
       "Indulge without compromise."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -1986,7 +1986,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Milky smoothness, mighty peanuts. Nourish like home. Dairy dream snack.",
     "ingredients": [
       "Nuts & Seeds (45%): Peanuts Crushed",
       "Whole Grains (25%): Rolled Oats, Jowar Flour",
@@ -1994,7 +1994,7 @@
       "Milk Flavour (1.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 425.03 kcal",
       "Protein: 16.34g",
@@ -2010,7 +2010,7 @@
       "Nourish like home.",
       "Dairy dream snack."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -2024,7 +2024,7 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Jeera fizz crunch! Soda sparkle, real power. Digestive delight bar.",
     "ingredients": [
       "Nuts & Seeds (45%): Peanuts Crushed",
       "Whole Grains (25%): Rolled Oats, Jowar Flour",
@@ -2032,7 +2032,7 @@
       "Jeera Soda Flavour (1.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 425.03 kcal",
       "Protein: 16.34g",
@@ -2048,7 +2048,7 @@
       "Soda sparkle, real power.",
       "Digestive delight bar."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   },
@@ -2062,14 +2062,14 @@
       "value": 100,
       "unit": "g"
     },
-    "description": "",
+    "description": "Unflavored, unbeatable nutrition. Pure peanut potency. Clean chikki, true energy.",
     "ingredients": [
       "Nuts & Seeds (46.5%): Peanuts Crushed",
       "Whole Grains (25%): Rolled Oats, Jowar Flour",
       "Rest Ingredients (28.5%): Honey, FOS, Roasted Bengal Gram Flour, Gum Acacia, Himalayan Pink Salt"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "",
+    "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
       "Energy: 425.03 kcal",
       "Protein: 16.34g",
@@ -2085,7 +2085,7 @@
       "Pure peanut potency.",
       "Clean chikki, true energy."
     ],
-    "stock": 50,
+    "stock": 80,
     "isActive": true,
     "isFeatured": false
   }
