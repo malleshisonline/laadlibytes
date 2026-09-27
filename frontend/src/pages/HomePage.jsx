@@ -3,6 +3,7 @@ import BhogCollectionSection from "../components/home/BhogCollectionSection.jsx"
 import WhyChooseUsSection from "../components/home/WhyChooseUsSection.jsx"
 import BhogShowcaseSection from "../components/home/BhogShowcaseSection.jsx"
 import TasteOfVrindavanSection from "../components/home/TasteOfVrindavanSection.jsx"
+import TopRatedSection from "../components/home/TopRatedSection.jsx"
 
 function HomePage() {
   return (
@@ -10,6 +11,7 @@ function HomePage() {
       <HeaderSection />
       <BhogCollectionSection />
       <BhogShowcaseSection />
+      <TopRatedSection />
       <TasteOfVrindavanSection />
       <WhyChooseUsSection />
     </div>)
