@@ -60,12 +60,26 @@ async function send(path, { method, body }) {
   }
 }
 
+// Name of the cross-tab lock that serialises refreshes (Web Locks API).
+const REFRESH_LOCK_NAME = 'laadli-auth-refresh'
+
+/**
+ * Runs `task` while holding a lock shared by every tab of this site. Opening the browser can restore several
+ * tabs at once; without the lock they would all present the same refresh cookie, the first would rotate it, and
+ * the rest would get 401 and sign the user out. With it, each tab waits and then presents the rotated cookie.
+ */
+function withRefreshLock(task) {
+  if (typeof navigator === 'undefined' || !navigator.locks) return task()
+  return navigator.locks.request(REFRESH_LOCK_NAME, task)
+}
+
 /**
  * Trades the refresh cookie for a new access token. Concurrent callers share one request: the backend
  * rotates the refresh token on every call, so a second parallel refresh would present a revoked token.
+ * Across tabs the same guarantee comes from withRefreshLock.
  */
 export function refreshAccessToken() {
-  refreshInFlight ??= request(API_ENDPOINTS.AUTH.REFRESH, { method: 'POST', body: {} })
+  refreshInFlight ??= withRefreshLock(() => request(API_ENDPOINTS.AUTH.REFRESH, { method: 'POST', body: {} }))
     .then((data) => {
       setAccessToken(data.accessToken)
       return data.accessToken

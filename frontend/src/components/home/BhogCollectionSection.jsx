@@ -3,12 +3,13 @@ import { Link } from 'react-router'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { productApi } from '../../api/productApi.js'
+import bhogLabel from '../../assets/illustrations/56bhoglabel.avif'
 
 const PLACEHOLDER_COUNT = 6
 
 
 const CARD_WIDTH_CLASSES =
-  'w-[calc((100%-1rem)/2)] shrink-0 snap-start sm:w-[calc((100%-2rem)/3)] md:w-[calc((100%-4.5rem)/4)] lg:w-[calc((100%-7.5rem)/6)]'
+  'w-[calc((100%-1rem)/2)] shrink-0 snap-start sm:w-[calc((100%-2rem)/3)] md:w-[calc((100%-4.5rem)/4)] lg:w-[calc((100%-6rem)/5)]'
 
 const CARD_SURFACE_CLASSES =
   'rounded-2xl border border-lightblue-200 bg-linear-to-b from-blush-50 via-white to-lightblue-50 shadow-sm'
@@ -23,7 +24,7 @@ function BhogCard({ product }) {
   return (
     <Link
       to={`/products/${product.slug}`}
-      className={`group block h-full p-3 transition hover:-translate-y-0.5 hover:shadow-md ${CARD_SURFACE_CLASSES}`}
+      className={`group block h-full p-3 transition lg:p-4 hover:-translate-y-0.5 hover:shadow-md ${CARD_SURFACE_CLASSES}`}
     >
       <div className='flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-radial from-cream-100 via-blush-50 to-transparent to-70%'>
         {image && (
@@ -38,16 +39,16 @@ function BhogCard({ product }) {
           />
         )}
       </div>
-      <p className='mt-3 line-clamp-2 text-center text-sm font-bold text-navy-800'>{product.name}</p>
+      <p className='mt-3 line-clamp-2 text-center text-sm font-bold text-navy-800 lg:mt-4 lg:text-base'>{product.name}</p>
     </Link>
   )
 }
 
 function PlaceholderCard() {
   return (
-    <div className={`p-3 ${CARD_SURFACE_CLASSES}`}>
+    <div className={`p-3 lg:p-4 ${CARD_SURFACE_CLASSES}`}>
       <div className='aspect-square animate-pulse rounded-xl bg-cream-100' />
-      <div className='mx-auto mt-3 h-4 w-3/4 animate-pulse rounded bg-cream-100' />
+      <div className='mx-auto mt-3 h-4 w-3/4 animate-pulse rounded bg-cream-100 lg:mt-4 lg:h-5' />
     </div>
   )
 }
@@ -81,7 +82,8 @@ function BhogCollectionSection() {
 
   const syncPagesWithScroll = useCallback(() => {
     const track = trackRef.current
-    if (!track) return
+    // A track with no width yet (mid-layout or hidden) would divide by zero and make pageCount Infinity.
+    if (!track || track.clientWidth === 0) return
 
     const maxScroll = track.scrollWidth - track.clientWidth
     const count = maxScroll <= 2 ? 1 : Math.ceil((maxScroll - 2) / track.clientWidth) + 1
@@ -120,13 +122,24 @@ function BhogCollectionSection() {
       aria-labelledby='bhog-collection-heading'
       className='relative overflow-hidden rounded-t-3xl bg-white py-12 md:py-16'
     >
-      
       <div
         aria-hidden='true'
         className='pointer-events-none absolute inset-x-0 top-0 h-40 bg-linear-to-b from-lightblue-200 via-lightblue-100/60 to-transparent md:h-56'
       />
 
-      <div className='relative z-10 mx-auto max-w-7xl px-4 sm:px-6'>
+      {/* Capped at 1280px up to lg; from xl the carousel spans the screen with side padding, so the cards grow. */}
+      <div className='relative z-10 mx-auto max-w-7xl px-4 sm:px-6 xl:max-w-none xl:px-10 2xl:px-16'>
+        {/* 56 Bhog plaque: its own element above the heading, sitting on the light-blue glow. */}
+        <img
+          src={bhogLabel}
+          alt='Inspired by 56 Bhog, Reimagined for Today'
+          width='1774'
+          height='887'
+          loading='eager'
+          decoding='async'
+          className='mx-auto mb-4 block h-auto w-64 drop-shadow-lg select-none sm:w-80 md:mb-6 md:w-96 lg:w-md'
+        />
+
         <header className='px-10 text-center sm:px-16'>
           <h2 id='bhog-collection-heading' className='text-2xl font-semibold text-navy-800 md:text-3xl'>
             56 Bhog – A Divine Collection
@@ -172,23 +185,6 @@ function BhogCollectionSection() {
             <ChevronRight size={20} strokeWidth={1.75} aria-hidden='true' />
           </button>
         </div>
-
-        {pageCount > 1 && (
-          <div className='mt-6 flex items-center justify-center gap-2'>
-            {Array.from({ length: pageCount }, (_, page) => (
-              <button
-                key={page}
-                type='button'
-                aria-label={`Go to page ${page + 1}`}
-                aria-current={page === currentPage}
-                onClick={() => scrollToPage(page)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  page === currentPage ? 'w-5 bg-navy-800' : 'w-2 bg-navy-800/25 hover:bg-navy-800/50'
-                }`}
-              />
-            ))}
-          </div>
-        )}
       </div>
     </section>
   )

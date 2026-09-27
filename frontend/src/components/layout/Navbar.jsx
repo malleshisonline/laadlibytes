@@ -20,17 +20,17 @@ const MENU_ITEMS = [
 
 // Shared look for the round search / account / cart icon targets (44 × 44 px).
 const ICON_BUTTON_CLASSES =
-  'relative inline-flex size-11 items-center justify-center rounded-full text-navy-800 transition hover:bg-lightblue-100'
+  'relative inline-flex size-11 xl:size-14 items-center justify-center rounded-full text-navy-800 transition hover:bg-lightblue-100'
 
 // Amazon-style account pill: icon plus "Hello, …" label; the label hides below sm so the bar fits at 360px.
 const ACCOUNT_BUTTON_CLASSES =
-  'inline-flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-full px-3 text-sm text-navy-800 transition hover:bg-lightblue-100'
-const ACCOUNT_LABEL_CLASSES = 'hidden max-w-28 truncate sm:inline'
+  'inline-flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-full px-3 text-sm text-navy-800 transition hover:bg-lightblue-100 lg:text-base'
+const ACCOUNT_LABEL_CLASSES = 'hidden max-w-28 truncate sm:inline xl:text-xl'
 
 const ICON_PROPS ={ size: 20, strokeWidth: 1.75, 'aria-hidden': true }
 
 function desktopLinkClasses({ isActive }) {
-  const base = 'border-b-2 py-1 text-sm text-navy-800 transition'
+  const base = 'border-b-2 py-1  xl:text-xl text-navy-800 transition'
   return isActive
     ? `${base} border-navy-800 font-semibold`
     : `${base} border-transparent hover:text-caramel-500`
