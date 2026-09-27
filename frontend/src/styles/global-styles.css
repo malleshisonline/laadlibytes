@@ -26,6 +26,8 @@
   /* Soft blush: the pink half of the pink-and-blue glow behind the Home 56 Bhog section and its cards */
   --color-blush-50: #fdf3f6;
   --color-blush-100: #f9e1e9;
+  /* Deeper blush for the pink watercolour glow behind products on the navy 56 Bhog band */
+  --color-blush-200: #f2c4d3;
 
   /* Nature accents */
   --color-leaf-600: #4f7a3a;
