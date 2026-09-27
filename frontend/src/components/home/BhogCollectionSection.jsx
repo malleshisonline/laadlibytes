@@ -4,6 +4,10 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { productApi } from '../../api/productApi.js'
 import bhogLabel from '../../assets/illustrations/56bhoglabel.avif'
+import fluteLeft from '../../assets/backgrounds/fluteone.avif'
+import fluteRight from '../../assets/illustrations/flutetwo.avif'
+
+import BestSellersSection from './BestSellersSection.jsx'
 
 const PLACEHOLDER_COUNT = 6
 
@@ -14,6 +18,12 @@ const CARD_WIDTH_CLASSES =
 const CARD_SURFACE_CLASSES =
   'rounded-2xl border border-lightblue-200 bg-linear-to-b from-blush-50 via-white to-lightblue-50 shadow-sm'
 
+
+// Decorative flutes at the left and right corners of the 56 Bhog plaque row, level with the plaque. Each is
+// rotated 20° towards horizontal (the artwork is drawn at about 30°). top-[58%] makes up for the flute sitting in
+// the upper half of its image once rotated. Hidden on phones, where there is no room beside the plaque.
+const FLUTE_CLASSES =
+  'pointer-events-none absolute top-[58%] hidden -translate-y-1/2 select-none drop-shadow-md sm:block sm:w-36 md:w-44 lg:w-64 xl:w-80 2xl:w-96'
 
 const ARROW_CLASSES =
   'absolute top-[38%] z-10 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-lightblue-200 bg-white text-navy-800 shadow-md transition hover:bg-lightblue-100 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-white md:size-10'
@@ -35,7 +45,8 @@ function BhogCard({ product }) {
             height='400'
             loading='lazy'
             decoding='async'
-            className='h-full w-full object-contain p-2 transition duration-300 group-hover:scale-105'
+            // mix-blend-multiply: the product JPGs have a white background; this lets it take on the card's colour.
+            className='h-full w-full object-contain p-2 mix-blend-multiply transition duration-300 group-hover:scale-105'
           />
         )}
       </div>
@@ -130,15 +141,36 @@ function BhogCollectionSection() {
       {/* Capped at 1280px up to lg; from xl the carousel spans the screen with side padding, so the cards grow. */}
       <div className='relative z-10 mx-auto max-w-7xl px-4 sm:px-6 xl:max-w-none xl:px-10 2xl:px-16'>
         {/* 56 Bhog plaque: its own element above the heading, sitting on the light-blue glow. */}
-        <img
-          src={bhogLabel}
-          alt='Inspired by 56 Bhog, Reimagined for Today'
-          width='1774'
-          height='887'
-          loading='eager'
-          decoding='async'
-          className='mx-auto mb-4 block h-auto w-64 drop-shadow-lg select-none sm:w-80 md:mb-6 md:w-96 lg:w-md'
-        />
+        {/* Full-width row, so the flutes sit at its corners while the plaque stays centred above them. */}
+        <div className='relative mb-4 md:mb-6'>
+          <img
+            src={fluteLeft}
+            alt=''
+            aria-hidden='true'
+            width='1774'
+            height='887'
+            decoding='async'
+            className={`${FLUTE_CLASSES} left-0 rotate-20`}
+          />
+          <img
+            src={bhogLabel}
+            alt='Inspired by 56 Bhog, Reimagined for Today'
+            width='1774'
+            height='887'
+            loading='eager'
+            decoding='async'
+            className='relative z-10 mx-auto block h-auto w-64 drop-shadow-lg select-none sm:w-80 md:w-96 lg:w-md'
+          />
+          <img
+            src={fluteRight}
+            alt=''
+            aria-hidden='true'
+            width='1774'
+            height='887'
+            decoding='async'
+            className={`${FLUTE_CLASSES} right-0 -rotate-20`}
+          />
+        </div>
 
         <header className='px-10 text-center sm:px-16'>
           <h2 id='bhog-collection-heading' className='text-2xl font-semibold text-navy-800 md:text-3xl'>
@@ -185,6 +217,9 @@ function BhogCollectionSection() {
             <ChevronRight size={20} strokeWidth={1.75} aria-hidden='true' />
           </button>
         </div>
+
+        {/* Best sellers share this section's white background and width, as in the Home design. */}
+        <BestSellersSection />
       </div>
     </section>
   )
