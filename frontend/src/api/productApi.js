@@ -27,6 +27,9 @@ export const productApi = {
     const { data, meta } = await httpClient.getWithMeta(`${API_ENDPOINTS.PRODUCTS.LIST}${toQueryString(query)}`)
     return { products: data ?? [], meta }
   },
+
+  /** One published product by slug. Rejects with status 404 when there is no such product. */
+  getBySlug: (slug) => httpClient.get(API_ENDPOINTS.PRODUCTS.DETAIL(slug)),
 }
 
 export default productApi

@@ -11,6 +11,8 @@ export const API_ENDPOINTS = {
   },
   PRODUCTS: {
     LIST: '/products',
+    // One product by slug (or id).
+    DETAIL: (idOrSlug) => `/products/${encodeURIComponent(idOrSlug)}`,
   },
   CATEGORIES: {
     LIST: '/categories',

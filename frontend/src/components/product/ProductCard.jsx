@@ -1,8 +1,8 @@
 import { Link } from 'react-router'
 import { Check, ShoppingCart } from 'lucide-react'
 
-// Prices are whole rupees, so no paise: ₹1,240.
-const priceFormatter = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
+import { productDetailsPath } from '../../constants/appRoutepoints.js'
+import { formatPackSize, formatPrice } from '../../utils/productFormatters.js'
 
 // Outer shell is a 1px gradient frame: soft cream/blue at rest, gold-to-navy on hover (Tailwind v4 animates the
 // gradient stops). The card lifts and casts a warm shadow. Motion only when the user allows it.
@@ -16,11 +16,6 @@ const BUTTON_BASE_CLASSES =
   'group/button relative mt-2.5 flex h-9 w-full items-center justify-between overflow-hidden rounded-full pr-1 pl-3.5 text-xs font-semibold shadow-sm transition duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600 sm:text-sm'
 
 const BUTTON_BUBBLE_CLASSES = 'relative grid size-7 shrink-0 place-items-center rounded-full transition duration-500'
-
-function formatPackSize(packSize) {
-  if (!packSize?.value || !packSize?.unit) return null
-  return `${packSize.value} ${packSize.unit}`
-}
 
 function AddToCartButton({ product, onAddToCart, isAdded }) {
   if (!product.inStock) {
@@ -90,7 +85,7 @@ function ProductCard({ product, onAddToCart, isAdded = false }) {
     <article className={CARD_FRAME_CLASSES}>
       <div className={CARD_BODY_CLASSES}>
         <Link
-          to={`/products/${product.slug}`}
+          to={productDetailsPath(product.slug)}
           className='block rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600'
         >
           {/* Image stage: the pack floats over a round offering plate (thali) and its shadow. */}
@@ -151,11 +146,11 @@ function ProductCard({ product, onAddToCart, isAdded = false }) {
         {/* mt-auto pins price and button to the bottom, so buttons line up across cards. */}
         <div className='mt-auto px-0.5'>
           <p className='mt-1 flex items-center gap-x-1.5'>
-            <span className='text-base font-extrabold text-navy-800'>{priceFormatter.format(product.price)}</span>
+            <span className='text-base font-extrabold text-navy-800'>{formatPrice(product.price)}</span>
             {showMrp && (
               <span className='text-xs text-muted line-through'>
                 <span className='sr-only'>MRP </span>
-                {priceFormatter.format(product.mrp)}
+                {formatPrice(product.mrp)}
               </span>
             )}
             {packSize && (

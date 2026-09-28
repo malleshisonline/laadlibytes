@@ -101,6 +101,21 @@
   h4 {
     font-family: var(--font-display);
   }
+
+  /* Tailwind v4 dropped the pointer cursor on buttons; bring it back site-wide. Disabled ones show "not allowed".
+     A cursor-* class on an element (e.g. cursor-zoom-in on the product photo) still wins, since utilities come
+     after this base layer. */
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  select:not(:disabled),
+  summary {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  select:disabled {
+    cursor: not-allowed;
+  }
 }
 
 @layer components {
