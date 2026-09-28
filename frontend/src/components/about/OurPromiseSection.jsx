@@ -7,7 +7,7 @@ function OurPromiseSection() {
   return (
     <section
       aria-labelledby='our-promise-heading'
-      className='relative mx-1 overflow-hidden rounded-3xl border border-lightblue-300 bg-lightblue-50'
+      className='relative mx-1 overflow-hidden rounded-3xl border border-lightblue-300 bg-lightblue-50 mt-[-5vh]'
     >
       <img
         src={promiseBackground}

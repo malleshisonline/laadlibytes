@@ -12,6 +12,9 @@ export const API_ENDPOINTS = {
   PRODUCTS: {
     LIST: '/products',
   },
+  CATEGORIES: {
+    LIST: '/categories',
+  },
   USERS: {
     ME: '/users/me',
   },

@@ -6,17 +6,10 @@ import { Menu, Search, ShoppingCart, User, X } from 'lucide-react'
 import logo from '../../assets/brand/logo.svg'
 import { APP_ROUTES } from '../../constants/appRoutepoints.js'
 import { APP_SETTINGS } from '../../constants/appSettings.js'
+import { NAVIGATION_MENU_ITEMS } from '../../content/navigationMenuItems.js'
 import { useAuth } from '../../hooks/useAuth.js'
 
-// Menu links in the order shown in the design.
-const MENU_ITEMS = [
-  { label: 'Home', path: '/' },
-  { label: 'About', path: '/about' },
-  { label: 'Shop', path: '/shop' },
-  { label: 'Categories', path: '/categories' },
-  { label: '56 Bhog', path: '/56-bhog' },
-  { label: 'Contact', path: '/contact' },
-]
+import { DesktopShopMenuItem, MobileShopMenuItem } from './ShopMegaMenu.jsx'
 
 // Shared look for the round search / account / cart icon targets (44 × 44 px).
 const ICON_BUTTON_CLASSES =
@@ -100,11 +93,15 @@ function Navbar() {
         {/* Centre: menu (desktop only) */}
         <nav aria-label="Main menu" className="hidden lg:block">
           <ul className="flex items-center gap-8">
-            {MENU_ITEMS.map((item) => (
-              <li key={item.path}>
-                <NavLink to={item.path} end={item.path === '/'} className={desktopLinkClasses}>
-                  {item.label}
-                </NavLink>
+            {NAVIGATION_MENU_ITEMS.map((item) => (
+              <li key={item.label}>
+                {item.hasShopMenu ? (
+                  <DesktopShopMenuItem item={item} linkClassName={desktopLinkClasses} />
+                ) : (
+                  <NavLink to={item.path} end={item.path === '/'} className={desktopLinkClasses}>
+                    {item.label}
+                  </NavLink>
+                )}
               </li>
             ))}
           </ul>
@@ -226,18 +223,26 @@ function Navbar() {
 
       {/* Mobile menu: opens below the bar inside the same card, closes when a link is tapped. */}
       {isMobileMenuOpen && (
-        <nav id="mobile-menu" aria-label="Mobile menu" className="border-t border-caramel-500/40 lg:hidden">
+        <nav id="mobile-menu" aria-label="Mobile menu" className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t border-caramel-500/40 lg:hidden">
           <ul className="space-y-1 px-4 py-3 sm:px-6">
-            {MENU_ITEMS.map((item) => (
-              <li key={item.path}>
-                <NavLink
-                  to={item.path}
-                  end={item.path === '/'}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={mobileLinkClasses}
-                >
-                  {item.label}
-                </NavLink>
+            {NAVIGATION_MENU_ITEMS.map((item) => (
+              <li key={item.label}>
+                {item.hasShopMenu ? (
+                  <MobileShopMenuItem
+                    item={item}
+                    linkClassName={mobileLinkClasses}
+                    onNavigate={() => setIsMobileMenuOpen(false)}
+                  />
+                ) : (
+                  <NavLink
+                    to={item.path}
+                    end={item.path === '/'}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={mobileLinkClasses}
+                  >
+                    {item.label}
+                  </NavLink>
+                )}
               </li>
             ))}
           </ul>
