@@ -1,8 +1,9 @@
 /**
- * Illustrated page banner (frontend/CLAUDE.md §7): a watercolour scene with a centred title and subtitle.
+ * Illustrated page banner (frontend/CLAUDE.md §7): a watercolour scene with a centred title and subtitle, plus
+ * any `children` the page adds on top.
  * Pulled up under the rounded navbar like the Home hero, so the scene shows in its bottom corners.
  */
-function PageHeroSection({ title, subtitle, backgroundImage, imageWidth = 1916, imageHeight = 821 }) {
+function PageHeroSection({ title, subtitle, backgroundImage, imageWidth = 1916, imageHeight = 821, children }) {
   return (
     // Short banner strip (about 3.2:1 from md, as in the design), not the full-height Home hero.
     <section className='relative -mt-4 flex min-h-52 items-start justify-center overflow-hidden sm:min-h-60 md:aspect-16/5 md:min-h-0'>
@@ -27,6 +28,9 @@ function PageHeroSection({ title, subtitle, backgroundImage, imageWidth = 1916, 
           </p>
         )}
       </div>
+
+      {/* Optional page-specific extras (a divider, a mascot, decorations), positioned by the caller. */}
+      {children}
     </section>
   )
 }

@@ -91,11 +91,11 @@ export function refreshAccessToken() {
 }
 
 /**
- * Sends a JSON request and returns the response's `data`. Throws ApiRequestError on failure. A 401 on
- * a normal endpoint means the access token expired: refresh once and retry, and only if the refresh
- * fails is the session over.
+ * Sends a JSON request and returns the response's `data` (or `{ data, meta }` with `withMeta`, for paginated
+ * lists). Throws ApiRequestError on failure. A 401 on a normal endpoint means the access token expired: refresh
+ * once and retry, and only if the refresh fails is the session over.
  */
-export async function request(path, { method = 'GET', body } = {}) {
+export async function request(path, { method = 'GET', body, withMeta = false } = {}) {
   let response = await send(path, { method, body })
 
   if (response.status === 401 && !NO_REFRESH_PATHS.includes(path)) {
@@ -123,11 +123,12 @@ export async function request(path, { method = 'GET', body } = {}) {
     })
   }
 
-  return payload.data
+  return withMeta ? { data: payload.data, meta: payload.meta } : payload.data
 }
 
 export const httpClient = {
   get: (path) => request(path),
+  getWithMeta: (path) => request(path, { withMeta: true }),
   post: (path, body) => request(path, { method: 'POST', body }),
 }
 

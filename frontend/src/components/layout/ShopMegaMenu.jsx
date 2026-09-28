@@ -7,16 +7,11 @@ import jasmineCorner from '../../assets/footer/footerflower.avif'
 import giftHamper from '../../assets/illustrations/product_hamper.avif'
 import { categoryProductsPath } from '../../content/navigationMenuItems.js'
 import { useCategories } from '../../hooks/useCategories.js'
+import { cloudinaryImageUrl } from '../../utils/cloudinaryImage.js'
 import GoldenDivider from '../common/GoldenDivider.jsx'
 
 // How long the dropdown waits before closing once the pointer leaves, so crossing the gap doesn't shut it.
 const CLOSE_DELAY_MS = 150
-
-/** Asks Cloudinary for a small cropped thumbnail instead of the full banner. Other URLs pass through. */
-function thumbnailUrl(url, width, height) {
-  if (!url?.includes('res.cloudinary.com') || !url.includes('/upload/')) return url
-  return url.replace('/upload/', `/upload/c_fill,w_${width},h_${height},f_auto,q_auto/`)
-}
 
 /**
  * Category photo in a cream frame (rectangular, like the product cards), or the category's first letter in
@@ -26,7 +21,7 @@ function CategoryPicture({ category, width, height, className }) {
   if (category.image?.url) {
     return (
       <img
-        src={thumbnailUrl(category.image.url, width * 2, height * 2)}
+        src={cloudinaryImageUrl(category.image.url, width * 2, height * 2)}
         alt=''
         width={width}
         height={height}
@@ -152,10 +147,6 @@ function ShopMegaMenuPanel({ id, isOpen, categories, isLoading, hasError, onNavi
   )
 }
 
-/**
- * Desktop "Shop" menu item. It is a button, not a link: hovering or clicking opens the category dropdown, and
- * only a category navigates. Escape, leaving it with the pointer or with focus, or picking a category closes it.
- */
 export function DesktopShopMenuItem({ item, linkClassName }) {
   const panelId = useId()
   const { categories, isLoading, hasError } = useCategories()
@@ -181,8 +172,7 @@ export function DesktopShopMenuItem({ item, linkClassName }) {
     setIsOpen(false)
   }
 
-  // A mouse has already opened the dropdown by hovering, so its click keeps it open rather than toggling it
-  // shut. Touch and keyboard (Enter / Space) toggle.
+
   function handleToggleClick() {
     if (pointerTypeRef.current === 'mouse') open()
     else if (isOpen) close()

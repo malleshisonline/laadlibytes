@@ -7,6 +7,7 @@ import AboutPage from './pages/AboutPage.jsx'
 import HomePage from './pages/HomePage.jsx'
 import IdentifyPage from './pages/IdentifyPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
+import ProductsPage from './pages/ProductsPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
 import VerifyOtpPage from './pages/VerifyOtpPage.jsx'
 
@@ -17,6 +18,7 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path={APP_ROUTES.HOME} element={<HomePage />} />
         <Route path={APP_ROUTES.ABOUT} element={<AboutPage />} />
+        <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
       </Route>
 
       {/* Sign-in flow: no navbar or footer. */}
