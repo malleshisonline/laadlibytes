@@ -51,6 +51,19 @@
      lands exactly where it started. */
   --animate-marquee: marquee 60s linear infinite;
 
+  /* Gentle bob with a slight sway (animate-float), for mascots beside text. */
+  --animate-float: float 4s ease-in-out infinite;
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-2deg);
+    }
+    50% {
+      transform: translateY(-10px) rotate(2deg);
+    }
+  }
+
   @keyframes marquee {
     from {
       transform: translateX(0);
