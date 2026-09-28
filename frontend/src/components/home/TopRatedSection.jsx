@@ -9,7 +9,7 @@ import GoldenDivider from '../common/GoldenDivider.jsx'
 // The whole catalogue is 56 products; 100 is the API's page-size maximum.
 const PRODUCT_LIMIT = 100
 
-// Cards on screen at once (2 × 2 on phones and tablets, one row of 4 from lg).
+// Cards on screen at once (2 × 2 on phones, one row of 4 from sm).
 const SLOT_COUNT = 4
 
 // Every SWAP_INTERVAL_MS one slot swaps to the next product; the old card takes LEAVE_MS to fade out first.
@@ -22,39 +22,9 @@ const priceFormatter = new Intl.NumberFormat('en-IN', { style: 'currency', curre
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 
-// One half of the front-of-pack image. `isolate` + an opaque cream fill keep the multiply blend (which hides the
-// JPG's white background) from letting the back image show through the front at rest.
-function FrontHalf({ image, alt, side }) {
-  const clipClasses = side === 'left' ? '[clip-path:inset(0_50%_0_0)]' : '[clip-path:inset(0_0_0_50%)]'
-  const motionClasses =
-    side === 'left'
-      ? 'motion-safe:group-hover:-translate-x-1/2 motion-safe:group-hover:-rotate-6'
-      : 'motion-safe:group-hover:translate-x-1/2 motion-safe:group-hover:rotate-6'
-
-  return (
-    <div
-      aria-hidden={side === 'right' ? 'true' : undefined}
-      className={`absolute inset-0 isolate bg-cream-50 transition duration-700 ease-out group-hover:opacity-0 ${clipClasses} ${motionClasses}`}
-    >
-      <img
-        src={image.url}
-        alt={side === 'left' ? alt : ''}
-        width='400'
-        height='400'
-        loading='lazy'
-        decoding='async'
-        className='h-full w-full object-contain p-4 mix-blend-multiply'
-      />
-    </div>
-  )
-}
-
-/**
- * On hover the front of the pack splits down the middle, each half sliding apart, revealing the back of the pack
- * (images[1]) underneath. Products without a back image zoom instead.
- */
+/** Top Rated card: front-of-pack image that zooms in on hover and back out when the pointer leaves. */
 function TopRatedCard({ product }) {
-  const [front, back] = product.images ?? []
+  const front = product.images?.[0]
 
   return (
     <Link
@@ -62,37 +32,17 @@ function TopRatedCard({ product }) {
       className='group flex h-full flex-col rounded-2xl border border-cream-200 bg-surface p-3 shadow-sm transition duration-500 hover:border-caramel-500/60 hover:shadow-xl hover:shadow-caramel-500/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600 motion-safe:hover:-translate-y-1 lg:p-4'
     >
       <div className='relative aspect-square overflow-hidden rounded-xl bg-cream-50'>
-        {back && (
-          <div className='absolute inset-0 isolate bg-cream-50'>
-            <img
-              src={back.url}
-              alt={`${product.name}, back of pack`}
-              width='400'
-              height='400'
-              loading='lazy'
-              decoding='async'
-              className='h-full w-full scale-95 object-contain p-4 mix-blend-multiply transition duration-700 ease-out group-hover:scale-100'
-            />
-          </div>
+        {front && (
+          <img
+            src={front.url}
+            alt={front.alt || product.name}
+            width='400'
+            height='400'
+            loading='lazy'
+            decoding='async'
+            className='h-full w-full object-contain p-3 mix-blend-multiply lg:p-4 transition duration-700 ease-out motion-safe:group-hover:scale-110'
+          />
         )}
-
-        {front &&
-          (back ? (
-            <>
-              <FrontHalf image={front} alt={front.alt || product.name} side='left' />
-              <FrontHalf image={front} alt={front.alt || product.name} side='right' />
-            </>
-          ) : (
-            <img
-              src={front.url}
-              alt={front.alt || product.name}
-              width='400'
-              height='400'
-              loading='lazy'
-              decoding='async'
-              className='h-full w-full object-contain p-4 mix-blend-multiply transition duration-700 ease-out motion-safe:group-hover:scale-110'
-            />
-          ))}
 
         <span className='absolute top-2 left-2 z-10 inline-flex items-center gap-1 rounded-full bg-caramel-700 px-2 py-0.5 text-[0.625rem] font-bold tracking-wide text-white uppercase shadow-sm'>
           <Star size={10} strokeWidth={2} aria-hidden='true' className='fill-white' />
@@ -209,7 +159,8 @@ function TopRatedSection() {
       onFocus={pause}
       onBlur={resume}
     >
-      <div className='mx-auto max-w-7xl px-4 sm:px-6 xl:max-w-none xl:px-10 2xl:px-16'>
+      {/* Up to md, capped at 1024px so the cards stay compact; from lg, the original full-width layout. */}
+      <div className='mx-auto max-w-5xl px-4 sm:px-6 lg:max-w-7xl xl:max-w-none xl:px-10 2xl:px-16'>
         <header className='text-center'>
           <p className='flex justify-center gap-1 text-caramel-500' aria-hidden='true'>
             {Array.from({ length: 5 }, (_, index) => (
@@ -224,7 +175,8 @@ function TopRatedSection() {
         </header>
 
         {/* aria-live stays off: announcing every automatic swap would be noisy for screen-reader users. */}
-        <ul className='mt-8 grid grid-cols-2 gap-4 md:mt-10 md:gap-6 lg:grid-cols-4'>
+        {/* 2 per row on phones; all 4 in one row from sm, so tablets don't get an oversized 2 × 2 grid. */}
+        <ul className='mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 md:mt-10 lg:gap-6'>
           {status === 'loading'
             ? Array.from({ length: SLOT_COUNT }, (_, index) => (
                 <li key={index}>

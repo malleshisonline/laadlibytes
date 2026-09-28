@@ -46,6 +46,19 @@
 
   --font-display: 'Merienda Variable', cursive;
   --font-sans: 'Nunito Variable', ui-sans-serif, system-ui, sans-serif;
+
+  /* Endless sideways scroll (animate-marquee). The track holds its items twice, so moving it by half its width
+     lands exactly where it started. */
+  --animate-marquee: marquee 60s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
 }
 
 @layer base {
