@@ -12,3 +12,4 @@ process.env.MONGO_URI ??= 'mongodb://127.0.0.1:27017/laadlibytes-test';
 process.env.CLOUDINARY_URL ??= 'cloudinary://test_api_key:test_api_secret@test-cloud';
 process.env.EMAIL_PROVIDER = 'console';
 process.env.SMS_PROVIDER = 'console';
+process.env.ENQUIRY_NOTIFY_EMAIL = 'orders@laadlibytes.test';

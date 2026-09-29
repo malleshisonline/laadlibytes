@@ -32,6 +32,12 @@ const envSchema = z.object({
   EMAIL_PROVIDER: z.enum(['console', 'smtp']).default('console'),
   SMTP_URL: z.string().trim().optional(),
   EMAIL_FROM: z.string().trim().optional(),
+  // Where Contact Us messages are emailed. Unset: they are still saved, just not emailed.
+  // A blank line copied from .env.example counts as unset.
+  ENQUIRY_NOTIFY_EMAIL: z.preprocess(
+    (value) => (typeof value === 'string' ? value.trim() || undefined : value),
+    z.email().optional()
+  ),
 
   SMS_PROVIDER: z.enum(['console', 'msg91']).default('console'),
   MSG91_AUTH_KEY: z.string().trim().optional(),

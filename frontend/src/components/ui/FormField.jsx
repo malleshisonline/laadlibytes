@@ -1,5 +1,8 @@
-/** Label + input + inline error, wired together for screen readers. Extra props go to the <input>. */
-function FormField({ id, label, error, ...inputProps }) {
+/**
+ * Label + input + inline error, wired together for screen readers. Extra props go to the <input>.
+ * Pass `as="textarea"` for a multi-line field.
+ */
+function FormField({ id, label, error, as: Control = 'input', ...inputProps }) {
   const errorId = `${id}-error`
 
   return (
@@ -7,7 +10,7 @@ function FormField({ id, label, error, ...inputProps }) {
       <label htmlFor={id} className="mb-1.5 block text-sm font-semibold text-navy-800">
         {label}
       </label>
-      <input
+      <Control
         id={id}
         name={id}
         aria-invalid={Boolean(error)}

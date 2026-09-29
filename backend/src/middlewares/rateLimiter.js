@@ -41,6 +41,14 @@ export const otpSendLimiter = rateLimit({
   handler: (_req, _res, next) => next(ApiError.tooMany('Too many code requests, please try again later')),
 });
 
+/** Contact Us messages. Every request counts: each one emails the shop and the sender. */
+export const enquiryLimiter = rateLimit({
+  ...baseOptions,
+  windowMs: 60 * 60 * 1000,
+  limit: 5,
+  handler: (_req, _res, next) => next(ApiError.tooMany('Too many messages, please try again later')),
+});
+
 /** Code guesses across challenges. Per-code attempt limits live in otp.service. */
 export const otpVerifyLimiter = rateLimit({
   ...baseOptions,

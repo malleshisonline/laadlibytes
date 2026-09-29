@@ -3,6 +3,7 @@ import { Router } from 'express';
 import adminRoutes from '../modules/admin/admin.routes.js';
 import authRoutes from '../modules/auth/auth.routes.js';
 import categoryRoutes from '../modules/category/category.routes.js';
+import enquiryRoutes from '../modules/enquiry/enquiry.routes.js';
 import productRoutes from '../modules/product/product.routes.js';
 import userRoutes from '../modules/user/user.routes.js';
 
@@ -19,6 +20,7 @@ const routes = [
   { path: '/admin', router: adminRoutes },
   { path: '/auth', router: authRoutes },
   { path: '/categories', router: categoryRoutes },
+  { path: '/enquiries', router: enquiryRoutes },
   { path: '/products', router: productRoutes },
   { path: '/users', router: userRoutes },
 ];

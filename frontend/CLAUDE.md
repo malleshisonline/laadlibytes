@@ -343,7 +343,7 @@ Minimum touch target on mobile: 44 × 44 px for buttons and icons.
 | Checkout | `/checkout` | **Not built** | Build UI only when instructed |
 | Track Order | `/track-order` | **Not built** | Build UI only when instructed |
 | FAQ | `/faq` | None (static content) | Ready |
-| Contact Us | `/contact` | **No contact API** | Confirm how messages should be sent |
+| Contact Us | `/contact` | `POST /enquiries` | Ready. Saved, emailed to `ENQUIRY_NOTIFY_EMAIL`, auto-reply to the sender. Admin inbox API is `/admin/enquiries`; its UI waits for the admin panel |
 | Admin pages | `/admin/...` | Admin APIs | Ready; design not provided, use the same tokens with a simple sidebar layout |
 
 ---

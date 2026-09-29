@@ -1,4 +1,5 @@
 import { Category } from '../category/category.model.js';
+import { Enquiry } from '../enquiry/enquiry.model.js';
 import { Product } from '../product/product.model.js';
 import { User } from '../user/user.model.js';
 
@@ -25,6 +26,8 @@ export const adminService = {
       activeCategories,
       totalUsers,
       adminUsers,
+      totalEnquiries,
+      newEnquiries,
     ] = await Promise.all([
       Product.countDocuments({}),
       Product.countDocuments({ isActive: true }),
@@ -35,6 +38,8 @@ export const adminService = {
       Category.countDocuments({ isActive: true }),
       User.countDocuments({}),
       User.countDocuments({ role: 'admin' }),
+      Enquiry.countDocuments({}),
+      Enquiry.countDocuments({ status: 'new' }),
     ]);
 
     return {
@@ -57,6 +62,10 @@ export const adminService = {
         total: totalUsers,
         admins: adminUsers,
         customers: totalUsers - adminUsers,
+      },
+      enquiries: {
+        total: totalEnquiries,
+        new: newEnquiries,
       },
     };
   },

@@ -20,6 +20,9 @@ export const API_ENDPOINTS = {
   USERS: {
     ME: '/users/me',
   },
+  ENQUIRIES: {
+    CREATE: '/enquiries',
+  },
 }
 
 export default API_ENDPOINTS

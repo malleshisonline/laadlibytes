@@ -4,6 +4,7 @@ import { APP_ROUTES } from './constants/appRoutepoints.js'
 import AuthLayout from './layouts/AuthLayout.jsx'
 import MainLayout from './layouts/MainLayout.jsx'
 import AboutPage from './pages/AboutPage.jsx'
+import ContactPage from './pages/ContactPage.jsx'
 import HomePage from './pages/HomePage.jsx'
 import IdentifyPage from './pages/IdentifyPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
@@ -19,6 +20,7 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path={APP_ROUTES.HOME} element={<HomePage />} />
         <Route path={APP_ROUTES.ABOUT} element={<AboutPage />} />
+        <Route path={APP_ROUTES.CONTACT} element={<ContactPage />} />
         <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
         <Route path={APP_ROUTES.PRODUCT_DETAILS} element={<ProductDetailsPage />} />
       </Route>

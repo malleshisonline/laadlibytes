@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { authenticate, authorize } from '../../middlewares/authenticate.js';
 import { validate } from '../../middlewares/validate.js';
 import categoryAdminRoutes from '../category/category.admin.routes.js';
+import enquiryAdminRoutes from '../enquiry/enquiry.admin.routes.js';
 import productAdminRoutes from '../product/product.admin.routes.js';
 import userAdminRoutes from '../user/user.admin.routes.js';
 
@@ -28,5 +29,6 @@ router.get('/summary', validate({ query: adminSummaryQuerySchema }), adminContro
 router.use('/products', productAdminRoutes);
 router.use('/categories', categoryAdminRoutes);
 router.use('/users', userAdminRoutes);
+router.use('/enquiries', enquiryAdminRoutes);
 
 export default router;
