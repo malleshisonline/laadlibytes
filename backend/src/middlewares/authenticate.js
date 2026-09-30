@@ -35,6 +35,24 @@ export const optionalAuth = (req, _res, next) => {
   return next();
 };
 
+/**
+ * Like optionalAuth, but a token that is present and fails (usually expired) is a 401 instead of being
+ * ignored. For routes whose answer depends on who is asking, such as the cart: ignoring an expired
+ * token would quietly serve a signed-in user the guest cart, whereas the 401 makes the client refresh and retry.
+ */
+export const optionalAuthStrict = (req, _res, next) => {
+  const token = extractToken(req);
+  if (!token) return next();
+
+  try {
+    const payload = verifyAccessToken(token);
+    req.user = { id: payload.sub, role: payload.role };
+    return next();
+  } catch (err) {
+    return next(err); // errorHandler maps JWT errors to 401
+  }
+};
+
 /** Role gate. Use after authenticate: authorize('admin') */
 export const authorize =
   (...roles) =>

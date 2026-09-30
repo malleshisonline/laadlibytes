@@ -100,8 +100,6 @@ function ProductDetailsPage() {
     }
   }
 
-  // Placeholder until the cart module exists: only the button's "Added" feedback. `quantity` goes to the cart then.
-  const addToCart = () => handleAddToCart(product)
 
   if (status === 'loading') {
     return (
@@ -147,6 +145,7 @@ function ProductDetailsPage() {
   const images = product.images ?? []
   // Never above what can be bought now (stock can be lower than a quantity picked earlier).
   const safeQuantity = Math.max(1, Math.min(quantity, maxQuantityFor(product) || 1))
+  const addToCart = () => handleAddToCart(product, safeQuantity)
 
   return (
     <div className='bg-linear-to-b from-cream-50 via-surface to-surface'>

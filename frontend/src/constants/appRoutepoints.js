@@ -8,6 +8,7 @@ export const APP_ROUTES = {
   VERIFY_OTP: '/verify-otp',
   PRODUCTS: '/products',
   PRODUCT_DETAILS: '/products/:slug',
+  CART: '/cart',
 };
 
 /** Link to one product's details page. */

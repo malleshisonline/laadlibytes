@@ -7,13 +7,16 @@ import '@fontsource-variable/nunito'
 import './index.css'
 import App from './App.jsx'
 import AuthProvider from './context/AuthProvider.jsx'
+import CartProvider from './context/CartProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <App />
-        <Toaster position="top-center" />
+        <CartProvider>
+          <App />
+          <Toaster position="top-center" />
+        </CartProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>,

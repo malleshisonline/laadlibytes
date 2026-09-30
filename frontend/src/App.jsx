@@ -4,6 +4,7 @@ import { APP_ROUTES } from './constants/appRoutepoints.js'
 import AuthLayout from './layouts/AuthLayout.jsx'
 import MainLayout from './layouts/MainLayout.jsx'
 import AboutPage from './pages/AboutPage.jsx'
+import CartPage from './pages/CartPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
 import HomePage from './pages/HomePage.jsx'
 import IdentifyPage from './pages/IdentifyPage.jsx'
@@ -23,6 +24,7 @@ function App() {
         <Route path={APP_ROUTES.CONTACT} element={<ContactPage />} />
         <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
         <Route path={APP_ROUTES.PRODUCT_DETAILS} element={<ProductDetailsPage />} />
+        <Route path={APP_ROUTES.CART} element={<CartPage />} />
       </Route>
 
       {/* Sign-in flow: no navbar or footer. */}

@@ -1,6 +1,9 @@
 import { env } from '../../config/env.js';
+import { logger } from '../../config/logger.js';
 import { sendCreated, sendResponse } from '../../utils/ApiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
+import { clearCartCookie, readGuestToken } from '../../utils/cartCookie.js';
+import { cartService } from '../cart/cart.service.js';
 
 import { authService } from './auth.service.js';
 
@@ -18,6 +21,22 @@ const cookieOptions = {
 
 const setSessionCookie = (res, refreshToken) => res.cookie(REFRESH_COOKIE, refreshToken, cookieOptions);
 
+/**
+ * Moves what the shopper added as a guest into their account cart. Best-effort: a failure is logged
+ * and the sign-in still succeeds; the guest cookie is kept then, so the next sign-in can try again.
+ */
+async function mergeGuestCart(req, res, userId) {
+  const guestToken = readGuestToken(req);
+  if (!guestToken) return;
+
+  try {
+    await cartService.mergeGuestCartIntoUser(guestToken, userId);
+    clearCartCookie(res);
+  } catch (err) {
+    logger.error('Guest cart merge failed', { requestId: req.id, userId, error: err.message });
+  }
+}
+
 export const authController = {
   identify: asyncHandler(async (req, res) => {
     const result = await authService.identify(req.body.identifier);
@@ -32,6 +51,7 @@ export const authController = {
   login: asyncHandler(async (req, res) => {
     const { user, accessToken, refreshToken } = await authService.login(req.body);
     setSessionCookie(res, refreshToken);
+    await mergeGuestCart(req, res, user.id);
     sendResponse(res, { message: 'Logged in successfully', data: { user, accessToken } });
   }),
 
@@ -43,6 +63,7 @@ export const authController = {
   verifyOtp: asyncHandler(async (req, res) => {
     const { purpose, user, accessToken, refreshToken } = await authService.verifyOtp(req.body);
     setSessionCookie(res, refreshToken);
+    await mergeGuestCart(req, res, user.id);
 
     if (purpose === 'register') {
       sendCreated(res, { user, accessToken }, 'Account created successfully');

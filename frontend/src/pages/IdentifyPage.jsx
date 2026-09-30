@@ -29,7 +29,7 @@ function IdentifyPage() {
       const result = await authApi.identify(trimmedIdentifier)
       const nextRoute = result.exists ? APP_ROUTES.LOGIN : APP_ROUTES.REGISTER
       // Pass what the user typed, not the normalized value, so "Change" shows it back unaltered.
-      navigate(nextRoute, { state: { identifier: trimmedIdentifier } })
+      navigate(nextRoute, { state: { identifier: trimmedIdentifier, returnTo: location.state?.returnTo } })
     } catch (requestError) {
       setError(requestError.fieldErrors?.identifier || requestError.message)
       setIsSubmitting(false)

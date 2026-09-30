@@ -81,7 +81,7 @@ function RegisterPage() {
     setIsSubmitting(true)
     try {
       const challenge = await authApi.register({ identifier, ...form, name: form.name.trim() })
-      navigate(APP_ROUTES.VERIFY_OTP, { state: { identifier, challenge } })
+      navigate(APP_ROUTES.VERIFY_OTP, { state: { identifier, challenge, returnTo: location.state?.returnTo } })
     } catch (requestError) {
       const { identifier: identifierError, ...otherFieldErrors } = requestError.fieldErrors ?? {}
       setFieldErrors(otherFieldErrors)

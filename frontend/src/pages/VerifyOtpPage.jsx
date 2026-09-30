@@ -8,6 +8,7 @@ import FormAlert from '../components/ui/FormAlert.jsx'
 import FormField from '../components/ui/FormField.jsx'
 import { APP_ROUTES } from '../constants/appRoutepoints.js'
 import { useAuth } from '../hooks/useAuth.js'
+import { returnPathFrom } from '../utils/returnPath.js'
 
 const OTP_LENGTH = 6
 
@@ -56,7 +57,7 @@ function VerifyOtpPage() {
     try {
       const session = await authApi.verifyOtp({ verificationId: challenge.verificationId, otp })
       setSession(session)
-      navigate(APP_ROUTES.HOME, { replace: true })
+      navigate(returnPathFrom(location.state), { replace: true })
     } catch (requestError) {
       setOtpError(requestError.fieldErrors?.otp ?? '')
       setFormError(requestError.fieldErrors?.otp ? '' : requestError.message)

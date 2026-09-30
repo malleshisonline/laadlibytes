@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { ArrowRight } from 'lucide-react'
 
 import { productApi } from '../../api/productApi.js'
 import APP_ROUTES from '../../constants/appRoutepoints.js'
+import { useAddToCartFeedback } from '../../hooks/useAddToCartFeedback.js'
 import ProductCard from '../product/ProductCard.jsx'
 
 // Every featured product goes into the row. 100 is the API's page-size maximum.
@@ -11,9 +12,6 @@ const BEST_SELLER_LIMIT = 100
 
 // Skeleton cards while the list loads: one full page on desktop.
 const PLACEHOLDER_COUNT = 5
-
-// How long a card's button shows "Added" before returning to "Add to Cart".
-const ADDED_FEEDBACK_MS = 1500
 
 // Same per-view widths as the 56 Bhog carousel above: 2 / 3 / 4 / 5 cards.
 const CARD_WIDTH_CLASSES =
@@ -38,8 +36,7 @@ function PlaceholderCard() {
 function BestSellersSection() {
   const [products, setProducts] = useState([])
   const [status, setStatus] = useState('loading') // 'loading' | 'ready' | 'hidden'
-  const [addedProductIds, setAddedProductIds] = useState(() => new Set())
-  const feedbackTimersRef = useRef(new Map())
+  const { handleAddToCart, isAdded } = useAddToCartFeedback()
 
   useEffect(() => {
     let isCancelled = false
@@ -58,32 +55,6 @@ function BestSellersSection() {
     return () => {
       isCancelled = true
     }
-  }, [])
-
-  // Clear any pending "Added" timers when the section unmounts.
-  useEffect(() => {
-    const timers = feedbackTimersRef.current
-    return () => timers.forEach((timer) => clearTimeout(timer))
-  }, [])
-
-  // Placeholder until the cart module exists: only the button's "Added" confirmation, nothing is stored.
-  // Replace this handler with the real cart action; ProductCard needs no change.
-  const handleAddToCart = useCallback((product) => {
-    const timers = feedbackTimersRef.current
-    clearTimeout(timers.get(product.id))
-
-    setAddedProductIds((current) => new Set(current).add(product.id))
-    timers.set(
-      product.id,
-      setTimeout(() => {
-        timers.delete(product.id)
-        setAddedProductIds((current) => {
-          const next = new Set(current)
-          next.delete(product.id)
-          return next
-        })
-      }, ADDED_FEEDBACK_MS),
-    )
   }, [])
 
   if (status === 'hidden') return null
@@ -111,7 +82,7 @@ function BestSellersSection() {
                   <ProductCard
                     product={product}
                     onAddToCart={handleAddToCart}
-                    isAdded={addedProductIds.has(product.id)}
+                    isAdded={isAdded(product.id)}
                   />
                 </li>
               ))}

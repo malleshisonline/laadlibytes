@@ -130,6 +130,8 @@ export const httpClient = {
   get: (path) => request(path),
   getWithMeta: (path) => request(path, { withMeta: true }),
   post: (path, body) => request(path, { method: 'POST', body }),
+  patch: (path, body) => request(path, { method: 'PATCH', body }),
+  delete: (path) => request(path, { method: 'DELETE' }),
 }
 
 export default httpClient

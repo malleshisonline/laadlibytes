@@ -14,6 +14,11 @@ export const API_ENDPOINTS = {
     // One product by slug (or id).
     DETAIL: (idOrSlug) => `/products/${encodeURIComponent(idOrSlug)}`,
   },
+  CART: {
+    ROOT: '/cart',
+    ITEMS: '/cart/items',
+    ITEM: (productId) => `/cart/items/${encodeURIComponent(productId)}`,
+  },
   CATEGORIES: {
     LIST: '/categories',
   },

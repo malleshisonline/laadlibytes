@@ -9,6 +9,7 @@ import FormAlert from '../components/ui/FormAlert.jsx'
 import FormField from '../components/ui/FormField.jsx'
 import { APP_ROUTES } from '../constants/appRoutepoints.js'
 import { useAuth } from '../hooks/useAuth.js'
+import { returnPathFrom } from '../utils/returnPath.js'
 
 // An existing account signs in with its password, or asks for a one-time code instead.
 function LoginPage() {
@@ -38,7 +39,7 @@ function LoginPage() {
       const session = await authApi.login({ identifier, password })
       console.log(session);
       setSession(session)
-      navigate(APP_ROUTES.HOME, { replace: true })
+      navigate(returnPathFrom(location.state), { replace: true })
     } catch (requestError) {
       setPasswordError(requestError.fieldErrors?.password ?? '')
       setFormError(requestError.fieldErrors?.password ? '' : requestError.message)
@@ -52,7 +53,7 @@ function LoginPage() {
     setPendingAction('otp')
     try {
       const challenge = await authApi.requestLoginOtp(identifier)
-      navigate(APP_ROUTES.VERIFY_OTP, { state: { identifier, challenge } })
+      navigate(APP_ROUTES.VERIFY_OTP, { state: { identifier, challenge, returnTo: location.state?.returnTo } })
     } catch (requestError) {
       setFormError(requestError.message)
       setPendingAction(null)

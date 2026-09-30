@@ -8,6 +8,7 @@ import { APP_ROUTES } from '../../constants/appRoutepoints.js'
 import { APP_SETTINGS } from '../../constants/appSettings.js'
 import { NAVIGATION_MENU_ITEMS } from '../../content/navigationMenuItems.js'
 import { useAuth } from '../../hooks/useAuth.js'
+import { useCart } from '../../hooks/useCart.js'
 
 import { DesktopShopMenuItem, MobileShopMenuItem } from './ShopMegaMenu.jsx'
 
@@ -37,6 +38,7 @@ function mobileLinkClasses({ isActive }) {
 function Navbar() {
   const navigate = useNavigate()
   const { user, isRestoringSession, logout } = useAuth()
+  const { itemCount } = useCart()
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false)
@@ -202,10 +204,20 @@ function Navbar() {
             </Link>
           )}
 
-          {/* No cart yet, so the badge is shown without a number. */}
-          <Link to="/cart" aria-label="Cart" className={ICON_BUTTON_CLASSES}>
+          <Link
+            to={APP_ROUTES.CART}
+            aria-label={itemCount ? `Cart, ${itemCount} ${itemCount === 1 ? 'item' : 'items'}` : 'Cart'}
+            className={ICON_BUTTON_CLASSES}
+          >
             <ShoppingCart {...ICON_PROPS} />
-            <span aria-hidden="true" className="absolute top-2 right-2 size-2.5 rounded-full bg-caramel-500" />
+            {itemCount > 0 && (
+              <span
+                aria-hidden="true"
+                className="absolute top-1 right-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-caramel-500 px-1 text-xs leading-none font-bold text-white xl:top-2 xl:right-1.5"
+              >
+                {itemCount > 99 ? '99+' : itemCount}
+              </span>
+            )}
           </Link>
 
           <button

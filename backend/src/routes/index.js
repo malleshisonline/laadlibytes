@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import adminRoutes from '../modules/admin/admin.routes.js';
 import authRoutes from '../modules/auth/auth.routes.js';
+import cartRoutes from '../modules/cart/cart.routes.js';
 import categoryRoutes from '../modules/category/category.routes.js';
 import enquiryRoutes from '../modules/enquiry/enquiry.routes.js';
 import productRoutes from '../modules/product/product.routes.js';
@@ -19,6 +20,7 @@ const routes = [
   // below are the public storefront plus each user's own account.
   { path: '/admin', router: adminRoutes },
   { path: '/auth', router: authRoutes },
+  { path: '/cart', router: cartRoutes },
   { path: '/categories', router: categoryRoutes },
   { path: '/enquiries', router: enquiryRoutes },
   { path: '/products', router: productRoutes },

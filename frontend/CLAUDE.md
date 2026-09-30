@@ -339,7 +339,7 @@ Minimum touch target on mobile: 44 × 44 px for buttons and icons.
 | 56 Bhog | `/56-bhog` | Products (filtered) or static | Confirm with manager |
 | Login / Signup | `/login`, `/register`, `/verify-otp` | Auth APIs | Ready. The design shows **Continue with Google** and **Forgot password**; the backend has no API for these yet. Do not build them until confirmed. |
 | My Account | `/account` | `GET /users/me` | Ready |
-| Cart | `/cart` | **Not built** | Build UI only when instructed |
+| Cart | `/cart` | `GET/DELETE /cart`, `POST /cart/items`, `PATCH/DELETE /cart/items/:productId` | Ready. State lives in `CartProvider` (`useCart`); guests have a cart via a cookie, merged on sign-in. No coupons (client decision), so no `ApplyCouponBox`. Checkout button is a placeholder until the order module |
 | Checkout | `/checkout` | **Not built** | Build UI only when instructed |
 | Track Order | `/track-order` | **Not built** | Build UI only when instructed |
 | FAQ | `/faq` | None (static content) | Ready |
