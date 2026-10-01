@@ -46,6 +46,9 @@ function AuthProvider({ children }) {
     }
   }, [clearSession])
 
+  /** Replaces the signed-in user after a profile change, e.g. so the navbar shows the new name. */
+  const updateUser = useCallback((updatedUser) => setUser(updatedUser), [])
+
   // Refresh token rejected mid-session (expired or revoked): only then is the user signed out.
   useEffect(() => {
     onSessionExpired(clearSession)
@@ -95,8 +98,8 @@ function AuthProvider({ children }) {
   }, [])
 
   const value = useMemo(
-    () => ({ user, isRestoringSession, setSession, clearSession, logout }),
-    [user, isRestoringSession, setSession, clearSession, logout],
+    () => ({ user, isRestoringSession, setSession, clearSession, logout, updateUser }),
+    [user, isRestoringSession, setSession, clearSession, logout, updateUser],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

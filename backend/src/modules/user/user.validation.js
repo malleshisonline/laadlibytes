@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { objectIdSchema } from '../../utils/validators.js';
+import { objectIdSchema, passwordSchema } from '../../utils/validators.js';
 
 import { USER_ROLES } from './user.model.js';
 
@@ -40,3 +40,23 @@ export const updateUserSchema = z
     isActive: z.boolean().optional(),
   })
   .refine((data) => Object.keys(data).length > 0, { message: 'At least one field is required' });
+
+/** What a user may change on their own profile. Email and phone need OTP proof, so not here. */
+export const updateMeSchema = z.object({
+  name: z.string().trim().min(2, 'Name must be at least 2 characters').max(60),
+});
+
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, 'Current password is required'),
+    newPassword: passwordSchema,
+    confirmPassword: z.string().min(1, 'Please confirm your new password'),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    path: ['confirmPassword'],
+    message: 'Passwords do not match',
+  })
+  .refine((data) => data.newPassword !== data.currentPassword, {
+    path: ['newPassword'],
+    message: 'New password must be different from the current one',
+  });

@@ -1,5 +1,6 @@
 import { sendNoContent, sendResponse } from '../../utils/ApiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
+import { readRefreshToken } from '../../utils/refreshCookie.js';
 
 import { userService } from './user.service.js';
 
@@ -12,6 +13,16 @@ export const userController = {
   me: asyncHandler(async (req, res) => {
     const user = await userService.getById(req.user.id);
     sendResponse(res, { message: 'Profile fetched successfully', data: user });
+  }),
+
+  updateMe: asyncHandler(async (req, res) => {
+    const user = await userService.updateMe(req.user.id, req.body);
+    sendResponse(res, { message: 'Profile updated successfully', data: user });
+  }),
+
+  changePassword: asyncHandler(async (req, res) => {
+    await userService.changePassword(req.user.id, req.body, readRefreshToken(req));
+    sendResponse(res, { message: 'Password changed. Other devices have been signed out.' });
   }),
 
   getById: asyncHandler(async (req, res) => {

@@ -1,25 +1,11 @@
-import { env } from '../../config/env.js';
 import { logger } from '../../config/logger.js';
 import { sendCreated, sendResponse } from '../../utils/ApiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { clearCartCookie, readGuestToken } from '../../utils/cartCookie.js';
+import { clearRefreshCookie, readRefreshToken, setRefreshCookie } from '../../utils/refreshCookie.js';
 import { cartService } from '../cart/cart.service.js';
 
 import { authService } from './auth.service.js';
-
-const REFRESH_COOKIE = 'refreshToken';
-
-// Refresh token lives in an httpOnly cookie; the access token goes in the JSON body
-// for the client to hold in memory.
-const cookieOptions = {
-  httpOnly: true,
-  secure: env.isProd,
-  sameSite: env.isProd ? 'none' : 'lax',
-  path: '/',
-  maxAge: 7 * 24 * 60 * 60 * 1000,
-};
-
-const setSessionCookie = (res, refreshToken) => res.cookie(REFRESH_COOKIE, refreshToken, cookieOptions);
 
 /**
  * Moves what the shopper added as a guest into their account cart. Best-effort: a failure is logged
@@ -50,7 +36,7 @@ export const authController = {
 
   login: asyncHandler(async (req, res) => {
     const { user, accessToken, refreshToken } = await authService.login(req.body);
-    setSessionCookie(res, refreshToken);
+    setRefreshCookie(res, refreshToken);
     await mergeGuestCart(req, res, user.id);
     sendResponse(res, { message: 'Logged in successfully', data: { user, accessToken } });
   }),
@@ -62,7 +48,7 @@ export const authController = {
 
   verifyOtp: asyncHandler(async (req, res) => {
     const { purpose, user, accessToken, refreshToken } = await authService.verifyOtp(req.body);
-    setSessionCookie(res, refreshToken);
+    setRefreshCookie(res, refreshToken);
     await mergeGuestCart(req, res, user.id);
 
     if (purpose === 'register') {
@@ -78,15 +64,15 @@ export const authController = {
   }),
 
   refresh: asyncHandler(async (req, res) => {
-    const presented = req.body?.refreshToken ?? req.cookies?.[REFRESH_COOKIE];
+    const presented = req.body?.refreshToken ?? readRefreshToken(req);
     const { accessToken, refreshToken } = await authService.refresh(presented);
-    setSessionCookie(res, refreshToken);
+    setRefreshCookie(res, refreshToken);
     sendResponse(res, { message: 'Token refreshed successfully', data: { accessToken } });
   }),
 
   logout: asyncHandler(async (req, res) => {
-    await authService.logout(req.user?.id, req.cookies?.[REFRESH_COOKIE]);
-    res.clearCookie(REFRESH_COOKIE, { ...cookieOptions, maxAge: undefined });
+    await authService.logout(req.user?.id, readRefreshToken(req));
+    clearRefreshCookie(res);
     sendResponse(res, { message: 'Logged out successfully' });
   }),
 };

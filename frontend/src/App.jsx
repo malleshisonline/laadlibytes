@@ -1,9 +1,15 @@
 import { Route, Routes } from 'react-router'
 
+import AddressesSection from './components/account/AddressesSection.jsx'
+import OrdersSection from './components/account/OrdersSection.jsx'
+import ProfileSection from './components/account/ProfileSection.jsx'
+import SecuritySection from './components/account/SecuritySection.jsx'
+import RequireAuth from './components/auth/RequireAuth.jsx'
 import { APP_ROUTES } from './constants/appRoutepoints.js'
 import AuthLayout from './layouts/AuthLayout.jsx'
 import MainLayout from './layouts/MainLayout.jsx'
 import AboutPage from './pages/AboutPage.jsx'
+import AccountPage from './pages/AccountPage.jsx'
 import CartPage from './pages/CartPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
 import HomePage from './pages/HomePage.jsx'
@@ -25,6 +31,16 @@ function App() {
         <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
         <Route path={APP_ROUTES.PRODUCT_DETAILS} element={<ProductDetailsPage />} />
         <Route path={APP_ROUTES.CART} element={<CartPage />} />
+
+        {/* Signed-in only: a guest is sent to sign in and brought back. */}
+        <Route element={<RequireAuth />}>
+          <Route path={APP_ROUTES.ACCOUNT} element={<AccountPage />}>
+            <Route index element={<ProfileSection />} />
+            <Route path={APP_ROUTES.ACCOUNT_ORDERS} element={<OrdersSection />} />
+            <Route path={APP_ROUTES.ACCOUNT_ADDRESSES} element={<AddressesSection />} />
+            <Route path={APP_ROUTES.ACCOUNT_SECURITY} element={<SecuritySection />} />
+          </Route>
+        </Route>
       </Route>
 
       {/* Sign-in flow: no navbar or footer. */}

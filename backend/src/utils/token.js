@@ -10,10 +10,14 @@ export const signAccessToken = (payload) =>
     issuer: 'laadlibytes-api',
   });
 
+// jwtid makes every refresh token unique. Without it, two sign-ins by the same user within the
+// same second get identical tokens, and so the same stored hash, and one session cannot be
+// revoked without the other.
 export const signRefreshToken = (payload) =>
   jwt.sign(payload, env.JWT_REFRESH_SECRET, {
     expiresIn: env.JWT_REFRESH_EXPIRES_IN,
     issuer: 'laadlibytes-api',
+    jwtid: crypto.randomUUID(),
   });
 
 export const verifyAccessToken = (token) =>
