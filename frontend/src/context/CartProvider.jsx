@@ -113,6 +113,10 @@ function CartProvider({ children }) {
 
   const isPending = useCallback((productId) => pendingProductIds.has(productId), [pendingProductIds])
 
+  // Product buttons switch to "Go to Cart" from the cart itself, so the state survives a reload.
+  const cartProductIds = useMemo(() => new Set(cart?.items.map((item) => item.product.id)), [cart])
+  const isInCart = useCallback((productId) => cartProductIds.has(productId), [cartProductIds])
+
   const value = useMemo(
     () => ({
       cart,
@@ -123,9 +127,10 @@ function CartProvider({ children }) {
       removeFromCart,
       clearCart,
       isPending,
+      isInCart,
       reload,
     }),
-    [cart, status, addToCart, updateQuantity, removeFromCart, clearCart, isPending, reload],
+    [cart, status, addToCart, updateQuantity, removeFromCart, clearCart, isPending, isInCart, reload],
   )
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

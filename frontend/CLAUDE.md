@@ -197,8 +197,9 @@ Reusable class names are in `global-styles.css`. Component files go in `src/comp
 ### Product Card — `components/product/ProductCard.jsx`
 - Class `product-card`.
 - Top: `product-card-image-area` (cream background) with the product image centred.
-- Below: product name (`text-sm font-bold text-navy-800`), price (`product-price`), MRP struck through when higher than price (`product-mrp`), full-width `btn-add-to-cart`.
-- Whole card links to the product details page; the Add to Cart button stops the link click.
+- Below: product name (`text-sm font-bold text-navy-800`), price (`product-price`), MRP struck through when higher than price (`product-mrp`), then two stacked full-width buttons: **Add to Cart** (navy) and **Buy Now** (caramel).
+- Add to Cart becomes **Go to Cart** (leaf green, a link to `/cart`) whenever the product is in the cart: `useCart().isInCart(id)` reads the real cart, so it survives a reload. Buy Now never changes; it adds the product unless it is already in the cart, then opens `/checkout`. Both go through `hooks/useProductCartActions.js`, which the card calls itself; the details page uses `ProductCartButtons` from `ProductBuyBox.jsx`. Out of stock shows one disabled button and no Buy Now.
+- Whole card links to the product details page; the buttons sit outside that link.
 
 ### Category Card — `components/category/CategoryCard.jsx`
 - Class `category-card`. Round product image, category name, small arrow icon (`ArrowRight`) below.
@@ -340,7 +341,7 @@ Minimum touch target on mobile: 44 × 44 px for buttons and icons.
 | Login / Signup | `/login`, `/register`, `/verify-otp` | Auth APIs | Ready. The design shows **Continue with Google** and **Forgot password**; the backend has no API for these yet. Do not build them until confirmed. |
 | My Account | `/account` | `GET /users/me` | Ready |
 | Cart | `/cart` | `GET/DELETE /cart`, `POST /cart/items`, `PATCH/DELETE /cart/items/:productId` | Ready. State lives in `CartProvider` (`useCart`); guests have a cart via a cookie, merged on sign-in. No coupons (client decision), so no `ApplyCouponBox`. Checkout button is a placeholder until the order module |
-| Checkout | `/checkout` | **Not built** | Build UI only when instructed |
+| Checkout | `/checkout` | **Not built** | Placeholder page (`CheckoutPage.jsx`) reached from Buy Now. It already redirects guests to `/identify` with `returnTo: '/checkout'`. Build the real UI only when instructed |
 | Track Order | `/track-order` | **Not built** | Build UI only when instructed |
 | FAQ | `/faq` | None (static content) | Ready |
 | Contact Us | `/contact` | `POST /enquiries` | Ready. Saved, emailed to `ENQUIRY_NOTIFY_EMAIL`, auto-reply to the sender. Admin inbox API is `/admin/enquiries`; its UI waits for the admin panel |

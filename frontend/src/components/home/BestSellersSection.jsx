@@ -4,7 +4,6 @@ import { ArrowRight } from 'lucide-react'
 
 import { productApi } from '../../api/productApi.js'
 import APP_ROUTES from '../../constants/appRoutepoints.js'
-import { useAddToCartFeedback } from '../../hooks/useAddToCartFeedback.js'
 import ProductCard from '../product/ProductCard.jsx'
 
 // Every featured product goes into the row. 100 is the API's page-size maximum.
@@ -24,6 +23,7 @@ function PlaceholderCard() {
       <div className='mt-2.5 h-4 w-3/4 animate-pulse rounded bg-cream-100' />
       <div className='mt-1.5 h-4 w-1/3 animate-pulse rounded bg-cream-100' />
       <div className='mt-2.5 h-9 animate-pulse rounded-full bg-lightblue-100' />
+      <div className='mt-2.5 h-9 animate-pulse rounded-full bg-cream-100' />
     </div>
   )
 }
@@ -36,7 +36,6 @@ function PlaceholderCard() {
 function BestSellersSection() {
   const [products, setProducts] = useState([])
   const [status, setStatus] = useState('loading') // 'loading' | 'ready' | 'hidden'
-  const { handleAddToCart, isAdded } = useAddToCartFeedback()
 
   useEffect(() => {
     let isCancelled = false
@@ -79,11 +78,7 @@ function BestSellersSection() {
               ))
             : products.map((product) => (
                 <li key={product.id} className={CARD_WIDTH_CLASSES}>
-                  <ProductCard
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                    isAdded={isAdded(product.id)}
-                  />
+                  <ProductCard product={product} />
                 </li>
               ))}
         </ul>

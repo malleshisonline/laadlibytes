@@ -1,7 +1,8 @@
 import { Link } from 'react-router'
-import { Check, ShoppingCart } from 'lucide-react'
+import { ArrowRight, ShoppingCart, Zap } from 'lucide-react'
 
-import { productDetailsPath } from '../../constants/appRoutepoints.js'
+import { APP_ROUTES, productDetailsPath } from '../../constants/appRoutepoints.js'
+import { useProductCartActions } from '../../hooks/useProductCartActions.js'
 import { formatPackSize, formatPrice } from '../../utils/productFormatters.js'
 
 // Outer shell is a 1px gradient frame: soft cream/blue at rest, gold-to-navy on hover (Tailwind v4 animates the
@@ -17,7 +18,10 @@ const BUTTON_BASE_CLASSES =
 
 const BUTTON_BUBBLE_CLASSES = 'relative grid size-7 shrink-0 place-items-center rounded-full transition duration-500'
 
-function AddToCartButton({ product, onAddToCart, isAdded }) {
+const BUTTON_PENDING_CLASSES = 'disabled:cursor-wait disabled:opacity-70'
+
+/** Add to Cart, or Go to Cart (a link) once the product is in the cart. */
+function AddToCartButton({ product, inCart, pending, onAddToCart }) {
   if (!product.inStock) {
     return (
       <button type='button' disabled className={`${BUTTON_BASE_CLASSES} cursor-not-allowed bg-lightblue-100 text-muted shadow-none`}>
@@ -29,28 +33,32 @@ function AddToCartButton({ product, onAddToCart, isAdded }) {
     )
   }
 
-  if (isAdded) {
+  if (inCart) {
     return (
-      <button
-        type='button'
-        onClick={() => onAddToCart?.(product)}
-        aria-label={`${product.name} added to cart`}
-        className={`${BUTTON_BASE_CLASSES} bg-leaf-600 text-white shadow-leaf-600/30`}
+      <Link
+        to={APP_ROUTES.CART}
+        aria-label={`${product.name} is in your cart. Go to cart`}
+        className={`${BUTTON_BASE_CLASSES} bg-leaf-600 text-white shadow-leaf-600/30 hover:shadow-md motion-safe:active:scale-95`}
       >
-        <span>Added</span>
-        <span className={`${BUTTON_BUBBLE_CLASSES} bg-surface text-leaf-600 motion-safe:animate-bounce`}>
-          <Check size={14} strokeWidth={2.5} aria-hidden='true' />
+        <span className='relative transition-transform duration-300 motion-safe:group-hover/button:translate-x-0.5'>
+          Go to Cart
         </span>
-      </button>
+        <span
+          className={`${BUTTON_BUBBLE_CLASSES} bg-surface text-leaf-600 motion-safe:group-hover/button:translate-x-0.5`}
+        >
+          <ArrowRight size={14} strokeWidth={2.5} aria-hidden='true' />
+        </span>
+      </Link>
     )
   }
 
   return (
     <button
       type='button'
-      onClick={() => onAddToCart?.(product)}
+      onClick={() => onAddToCart(product)}
+      disabled={pending}
       aria-label={`Add ${product.name} to cart`}
-      className={`${BUTTON_BASE_CLASSES} bg-navy-800 text-white shadow-navy-900/25 hover:bg-navy-700 hover:shadow-md motion-safe:active:scale-95`}
+      className={`${BUTTON_BASE_CLASSES} ${BUTTON_PENDING_CLASSES} bg-navy-800 text-white shadow-navy-900/25 hover:bg-navy-700 hover:shadow-md motion-safe:active:scale-95`}
     >
       {/* Light sweep that crosses the pill on hover. */}
       <span
@@ -70,13 +78,34 @@ function AddToCartButton({ product, onAddToCart, isAdded }) {
   )
 }
 
+/** Buy Now: same at all times; adds the product if needed and opens checkout. */
+function BuyNowButton({ product, pending, onBuyNow }) {
+  return (
+    <button
+      type='button'
+      onClick={() => onBuyNow(product)}
+      disabled={pending}
+      aria-label={`Buy ${product.name} now`}
+      className={`${BUTTON_BASE_CLASSES} ${BUTTON_PENDING_CLASSES} bg-caramel-700 text-white shadow-caramel-700/25 hover:shadow-md motion-safe:active:scale-95`}
+    >
+      <span className='relative transition-transform duration-300 motion-safe:group-hover/button:translate-x-0.5'>
+        Buy Now
+      </span>
+      <span className={`${BUTTON_BUBBLE_CLASSES} bg-surface text-caramel-700 motion-safe:group-hover/button:scale-110`}>
+        <Zap size={14} strokeWidth={2} aria-hidden='true' />
+      </span>
+    </button>
+  )
+}
+
 /**
- * Storefront product card. The image and name link to the product page; the Add to Cart button sits beside
- * the link rather than inside it (a button inside a link is invalid HTML and confuses screen readers).
- * `onAddToCart(product)` is the only cart hook, so the real cart can be wired in without touching the card.
- * `isAdded` swaps the button into its brief "Added" confirmation.
+ * Storefront product card. The image and name link to the product page; the cart buttons sit beside the link
+ * rather than inside it (a button inside a link is invalid HTML and confuses screen readers). Add to Cart turns
+ * into Go to Cart while the product is in the cart; Buy Now stays. Out of stock shows only a disabled button.
  */
-function ProductCard({ product, onAddToCart, isAdded = false }) {
+function ProductCard({ product }) {
+  const { addToCart, buyNow, isInCart, isPending } = useProductCartActions()
+  const pending = isPending(product.id)
   const image = product.images?.[0]
   const showMrp = product.mrp > product.price
   const packSize = formatPackSize(product.packSize)
@@ -160,7 +189,8 @@ function ProductCard({ product, onAddToCart, isAdded = false }) {
             )}
           </p>
 
-          <AddToCartButton product={product} onAddToCart={onAddToCart} isAdded={isAdded} />
+          <AddToCartButton product={product} inCart={isInCart(product.id)} pending={pending} onAddToCart={addToCart} />
+          {product.inStock && <BuyNowButton product={product} pending={pending} onBuyNow={buyNow} />}
         </div>
       </div>
     </article>

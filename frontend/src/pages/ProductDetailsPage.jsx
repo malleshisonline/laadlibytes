@@ -5,7 +5,7 @@ import { PackageSearch, RotateCw } from 'lucide-react'
 
 import wavingMascot from '../assets/illustrations/mascot-waving-with-flute.avif'
 import ImageZoomViewer from '../components/product/details/ImageZoomViewer.jsx'
-import { AddToCartButton, ProductBuyBox } from '../components/product/details/ProductBuyBox.jsx'
+import { ProductBuyBox, ProductCartButtons } from '../components/product/details/ProductBuyBox.jsx'
 import ProductImageGallery from '../components/product/details/ProductImageGallery.jsx'
 import ProductInfoTabs from '../components/product/details/ProductInfoTabs.jsx'
 import ProductSummary from '../components/product/details/ProductSummary.jsx'
@@ -14,9 +14,8 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.jsx'
 import { APP_ROUTES } from '../constants/appRoutepoints.js'
 import { APP_SETTINGS } from '../constants/appSettings.js'
 import { categoryProductsPath } from '../content/navigationMenuItems.js'
-import { useAddToCartFeedback } from '../hooks/useAddToCartFeedback.js'
 import { useProduct } from '../hooks/useProduct.js'
-import { formatPrice } from '../utils/productFormatters.js'
+import { useProductCartActions } from '../hooks/useProductCartActions.js'
 import { maxQuantityFor } from '../utils/productStock.js'
 
 const PAGE_CLASSES = 'px-3 py-5 sm:px-4 md:py-8 lg:px-6 xl:px-16 2xl:px-24'
@@ -56,12 +55,12 @@ function ProductNotFound() {
 /**
  * Product details page, laid out like Amazon's in the Laadli Bytes style: photos with hover zoom and a
  * full-screen viewer, the summary column, a buy box, product information tabs and related products. On phones
- * a bar with the price and Add to Cart stays at the bottom of the screen.
+ * a bar with Add to Cart and Buy Now stays at the bottom of the screen.
  */
 function ProductDetailsPage() {
   const { slug } = useParams()
   const { product, status, retry } = useProduct(slug)
-  const { handleAddToCart, isAdded } = useAddToCartFeedback()
+  const { addToCart, buyNow, isInCart, isPending } = useProductCartActions()
   const [quantity, setQuantity] = useState(1)
   const [viewerIndex, setViewerIndex] = useState(null) // photo open in the full-screen viewer, or null
 
@@ -145,7 +144,13 @@ function ProductDetailsPage() {
   const images = product.images ?? []
   // Never above what can be bought now (stock can be lower than a quantity picked earlier).
   const safeQuantity = Math.max(1, Math.min(quantity, maxQuantityFor(product) || 1))
-  const addToCart = () => handleAddToCart(product, safeQuantity)
+  const cartButtonProps = {
+    product,
+    inCart: isInCart(product.id),
+    pending: isPending(product.id),
+    onAddToCart: () => addToCart(product, safeQuantity),
+    onBuyNow: () => buyNow(product, safeQuantity),
+  }
 
   return (
     <div className='bg-linear-to-b from-cream-50 via-surface to-surface'>
@@ -172,11 +177,9 @@ function ProductDetailsPage() {
           <div className='md:col-start-2 lg:col-span-3 lg:col-start-auto'>
             <div className='lg:sticky lg:top-28'>
               <ProductBuyBox
-                product={product}
+                {...cartButtonProps}
                 quantity={safeQuantity}
                 onQuantityChange={setQuantity}
-                isAdded={isAdded(product.id)}
-                onAddToCart={addToCart}
                 onShare={handleShare}
               />
             </div>
@@ -192,25 +195,9 @@ function ProductDetailsPage() {
         <div aria-hidden='true' className='h-20 md:hidden' />
       </div>
 
-      {/* Phones: price, share and Add to Cart always within reach. */}
-      <div className='fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-cream-200 bg-surface/95 px-3 py-2.5 shadow-lg shadow-navy-900/10 backdrop-blur-sm md:hidden'>
-        <div className='min-w-0'>
-          <p className='text-lg leading-tight font-extrabold text-navy-800'>{formatPrice(product.price)}</p>
-          {product.mrp > product.price ? (
-            <p className='text-xs text-muted'>
-              <span className='line-through'>{formatPrice(product.mrp)}</span>{' '}
-              <span className='font-bold text-caramel-700'>{product.discountPercent}% off</span>
-            </p>
-          ) : (
-            <p className='text-xs text-muted'>Free delivery</p>
-          )}
-        </div>
-        <AddToCartButton
-          product={product}
-          isAdded={isAdded(product.id)}
-          onAddToCart={addToCart}
-          className='ml-auto min-w-40 flex-1'
-        />
+      {/* Phones: Add to Cart and Buy Now always within reach. The price is already on the page. */}
+      <div className='fixed inset-x-0 bottom-0 z-40 border-t border-cream-200 bg-surface/95 px-3 py-2.5 shadow-lg shadow-navy-900/10 backdrop-blur-sm md:hidden'>
+        <ProductCartButtons {...cartButtonProps} />
       </div>
 
       {viewerIndex !== null && images.length > 0 && (

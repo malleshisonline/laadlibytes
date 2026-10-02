@@ -134,7 +134,7 @@ function CartPage() {
             <PriceDetailsBox cart={cart}>
               <button type='button' onClick={handleCheckout} disabled={hasIssues} className={PRIMARY_BUTTON_CLASSES}>
                 {!user && <Lock size={16} strokeWidth={2} aria-hidden='true' />}
-                {user ? 'Proceed to Checkout' : 'Sign in to Checkout'}
+                {user ? 'Proceed to Payment' : 'Sign in to Payment'}
               </button>
               {hasIssues && (
                 <p className='mt-2 text-center text-xs font-semibold text-error'>

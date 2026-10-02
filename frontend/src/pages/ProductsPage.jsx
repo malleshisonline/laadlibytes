@@ -14,7 +14,6 @@ import ProductPromiseStrip from '../components/product/ProductPromiseStrip.jsx'
 import PageHeroSection from '../components/sections/PageHeroSection.jsx'
 import Pagination from '../components/ui/Pagination.jsx'
 import { DEFAULT_SORT, PRICE_RANGES, PRODUCTS_PER_PAGE, SORT_OPTIONS } from '../content/productFilterOptions.js'
-import { useAddToCartFeedback } from '../hooks/useAddToCartFeedback.js'
 import { useCategories } from '../hooks/useCategories.js'
 import { useProductList } from '../hooks/useProductList.js'
 
@@ -52,6 +51,7 @@ function ProductCardSkeleton() {
       <div className='mt-3 h-4 w-3/4 animate-pulse rounded bg-cream-100' />
       <div className='mt-2 h-4 w-1/3 animate-pulse rounded bg-cream-100' />
       <div className='mt-3 h-9 animate-pulse rounded-full bg-lightblue-100' />
+      <div className='mt-2.5 h-9 animate-pulse rounded-full bg-cream-100' />
     </div>
   )
 }
@@ -65,7 +65,6 @@ function ProductsPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const filters = useMemo(() => readFilters(searchParams), [searchParams])
   const { categories } = useCategories()
-  const { handleAddToCart, isAdded } = useAddToCartFeedback()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const resultsRef = useRef(null)
 
@@ -320,7 +319,7 @@ function ProductsPage() {
                           // Timing only: each card starts a moment after the one before it.
                           style={{ animationDelay: `${Math.min(index * CARD_STAGGER_MS, MAX_STAGGER_MS)}ms` }}
                         >
-                          <ProductCard product={product} onAddToCart={handleAddToCart} isAdded={isAdded(product.id)} />
+                          <ProductCard product={product} />
                         </li>
                       ))}
                 </ul>

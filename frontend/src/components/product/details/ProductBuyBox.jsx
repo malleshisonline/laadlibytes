@@ -1,5 +1,7 @@
-import { Check, Lock, Share2, ShoppingCart, Store, Truck } from 'lucide-react'
+import { Link } from 'react-router'
+import { ArrowRight, Lock, Share2, ShoppingCart, Store, Truck, Zap } from 'lucide-react'
 
+import { APP_ROUTES } from '../../../constants/appRoutepoints.js'
 import { LOW_STOCK_THRESHOLD, maxQuantityFor } from '../../../utils/productStock.js'
 import QuantityStepper from '../../ui/QuantityStepper.jsx'
 import { ProductPrice } from './ProductSummary.jsx'
@@ -13,33 +15,62 @@ export function StockStatus({ product }) {
   return <p className='text-base font-bold text-success'>In stock</p>
 }
 
-/** Add to Cart button; shows "Added" for a moment after a click (see useAddToCartFeedback). */
-export function AddToCartButton({ product, isAdded, onAddToCart, className = '' }) {
-  const disabled = !product.inStock
+const CART_BUTTON_CLASSES =
+  'inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full px-4 text-sm font-bold text-white shadow-md transition duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600 disabled:cursor-not-allowed disabled:bg-lightblue-100 disabled:text-muted disabled:shadow-none motion-safe:active:scale-95'
+
+/**
+ * Add to Cart (Go to Cart, a link, while the product is in the cart) and Buy Now. Both are disabled while a
+ * change for this product is in flight; out of stock shows a single disabled button. `className` lays the
+ * pair out: stacked in the buy box, side by side in the phone bar.
+ */
+export function ProductCartButtons({ product, inCart, pending, onAddToCart, onBuyNow, className = '' }) {
+  if (!product.inStock) {
+    return (
+      <div className={`flex ${className}`}>
+        <button type='button' disabled className={CART_BUTTON_CLASSES}>
+          <ShoppingCart size={18} strokeWidth={2} aria-hidden='true' />
+          Out of Stock
+        </button>
+      </div>
+    )
+  }
+
   return (
-    <button
-      type='button'
-      onClick={onAddToCart}
-      disabled={disabled}
-      className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-sm font-bold shadow-md transition duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600 disabled:cursor-not-allowed disabled:bg-lightblue-100 disabled:text-muted disabled:shadow-none motion-safe:active:scale-95 ${
-        isAdded ? 'bg-leaf-600 text-white' : 'bg-navy-800 text-white hover:bg-navy-700'
-      } ${className}`}
-    >
-      {isAdded ? (
-        <Check size={18} strokeWidth={2.5} aria-hidden='true' />
+    <div className={`flex gap-2 ${className}`}>
+      {inCart ? (
+        <Link to={APP_ROUTES.CART} className={`${CART_BUTTON_CLASSES} bg-leaf-600 hover:shadow-lg`}>
+          Go to Cart
+          <ArrowRight size={18} strokeWidth={2.5} aria-hidden='true' />
+        </Link>
       ) : (
-        <ShoppingCart size={18} strokeWidth={2} aria-hidden='true' />
+        <button
+          type='button'
+          onClick={onAddToCart}
+          disabled={pending}
+          className={`${CART_BUTTON_CLASSES} bg-navy-800 hover:bg-navy-700 disabled:cursor-wait`}
+        >
+          <ShoppingCart size={18} strokeWidth={2} aria-hidden='true' />
+          Add to Cart
+        </button>
       )}
-      {disabled ? 'Out of Stock' : isAdded ? 'Added to Cart' : 'Add to Cart'}
-    </button>
+      <button
+        type='button'
+        onClick={onBuyNow}
+        disabled={pending}
+        className={`${CART_BUTTON_CLASSES} bg-caramel-700 hover:shadow-lg disabled:cursor-wait`}
+      >
+        <Zap size={18} strokeWidth={2} aria-hidden='true' />
+        Buy Now
+      </button>
+    </div>
   )
 }
 
 /**
- * Right-hand buy box, like Amazon's: price, free delivery, stock, quantity, Add to Cart, Share and seller
- * lines, in a cream card with a caramel top edge. Sticky on desktop.
+ * Right-hand buy box, like Amazon's: price, free delivery, stock, quantity, Add to Cart / Buy Now, Share and
+ * seller lines, in a cream card with a caramel top edge. Sticky on desktop.
  */
-function ProductBuyBox({ product, quantity, onQuantityChange, isAdded, onAddToCart, onShare }) {
+function ProductBuyBox({ product, quantity, onQuantityChange, inCart, pending, onAddToCart, onBuyNow, onShare }) {
   const maxQuantity = maxQuantityFor(product)
 
   return (
@@ -64,7 +95,14 @@ function ProductBuyBox({ product, quantity, onQuantityChange, isAdded, onAddToCa
         </div>
       )}
 
-      <AddToCartButton product={product} isAdded={isAdded} onAddToCart={onAddToCart} className='mt-4 w-full' />
+      <ProductCartButtons
+        product={product}
+        inCart={inCart}
+        pending={pending}
+        onAddToCart={onAddToCart}
+        onBuyNow={onBuyNow}
+        className='mt-4 flex-col'
+      />
 
       <button
         type='button'

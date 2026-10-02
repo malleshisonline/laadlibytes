@@ -3,7 +3,6 @@ import { Link } from 'react-router'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { categoryProductsPath } from '../../../content/navigationMenuItems.js'
-import { useAddToCartFeedback } from '../../../hooks/useAddToCartFeedback.js'
 import { useProductList } from '../../../hooks/useProductList.js'
 import { useScrollPager } from '../../../hooks/useScrollPager.js'
 import ProductCard from '../ProductCard.jsx'
@@ -26,7 +25,6 @@ function RelatedProducts({ product }) {
   // One extra, since the current product may come back in the list.
   const query = useMemo(() => ({ category: categorySlug, limit: RELATED_LIMIT + 1, sort: 'newest' }), [categorySlug])
   const { products, status } = useProductList(query)
-  const { handleAddToCart, isAdded } = useAddToCartFeedback()
 
   const related = products.filter((item) => item.id !== product.id).slice(0, RELATED_LIMIT)
   // Re-measured once the cards arrive (the row isn't rendered before that).
@@ -83,7 +81,7 @@ function RelatedProducts({ product }) {
       >
         {related.map((item) => (
           <li key={item.id} className={CARD_WIDTH_CLASSES}>
-            <ProductCard product={item} onAddToCart={handleAddToCart} isAdded={isAdded(item.id)} />
+            <ProductCard product={item} />
           </li>
         ))}
       </ul>

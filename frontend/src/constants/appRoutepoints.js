@@ -9,6 +9,7 @@ export const APP_ROUTES = {
   PRODUCTS: '/products',
   PRODUCT_DETAILS: '/products/:slug',
   CART: '/cart',
+  CHECKOUT: '/checkout',
 };
 
 /** Link to one product's details page. */
