@@ -1,5 +1,6 @@
 import { ApiError } from '../../utils/ApiError.js';
 import { buildMeta, getPagination } from '../../utils/pagination.js';
+import { hashToken } from '../../utils/token.js';
 
 import { User } from './user.model.js';
 
@@ -53,6 +54,30 @@ export const userService = {
     const user = await User.findByIdAndUpdate(id, payload, { new: true, runValidators: true });
     if (!user) throw ApiError.notFound('User not found');
     return user;
+  },
+
+  async updateMe(userId, { name }) {
+    return userService.update(userId, { name });
+  },
+
+  /**
+   * Checks the current password, sets the new one and signs out every other device: only the
+   * session holding `currentRefreshToken` survives. With no refresh token, every session goes.
+   * A wrong current password is a 400, not a 401, so the client does not mistake it for an
+   * expired access token and try to refresh.
+   */
+  async changePassword(userId, { currentPassword, newPassword }, currentRefreshToken) {
+    const user = await User.findById(userId).select('+password +refreshTokens');
+    if (!user) throw ApiError.notFound('User not found');
+
+    if (!(await user.comparePassword(currentPassword))) {
+      throw ApiError.badRequest('Your current password is incorrect', { code: 'INVALID_CURRENT_PASSWORD' });
+    }
+
+    const currentHash = currentRefreshToken ? hashToken(currentRefreshToken) : null;
+    user.password = newPassword; // hashed by the pre-save hook
+    user.refreshTokens = user.refreshTokens.filter((entry) => entry.token === currentHash);
+    await user.save();
   },
 
   async remove(id) {

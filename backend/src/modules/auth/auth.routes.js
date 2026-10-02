@@ -29,5 +29,4 @@ router.post('/otp/resend', otpSendLimiter, validate({ body: otpResendSchema }), 
 
 router.post('/refresh', authLimiter, validate({ body: refreshSchema }), authController.refresh);
 router.post('/logout', authenticate, authController.logout);
-
 export default router;

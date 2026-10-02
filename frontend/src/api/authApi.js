@@ -29,7 +29,6 @@ export const authApi = {
 
   /** Revokes this device's refresh token and clears the cookie. */
   logout: () => httpClient.post(API_ENDPOINTS.AUTH.LOGOUT),
-
   /** Resolves to the signed-in user. */
   getMe: () => httpClient.get(API_ENDPOINTS.USERS.ME),
 }

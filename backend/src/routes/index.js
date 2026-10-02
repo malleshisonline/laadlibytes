@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import addressRoutes from '../modules/address/address.routes.js';
 import adminRoutes from '../modules/admin/admin.routes.js';
 import authRoutes from '../modules/auth/auth.routes.js';
 import cartRoutes from '../modules/cart/cart.routes.js';
@@ -18,6 +19,7 @@ const router = Router();
 const routes = [
   // Everything an admin writes lives under /admin, gated once in admin.routes.js. The entries
   // below are the public storefront plus each user's own account.
+  { path: '/addresses', router: addressRoutes },
   { path: '/admin', router: adminRoutes },
   { path: '/auth', router: authRoutes },
   { path: '/cart', router: cartRoutes },

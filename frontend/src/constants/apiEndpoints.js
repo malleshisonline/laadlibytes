@@ -7,8 +7,7 @@ export const API_ENDPOINTS = {
     OTP_VERIFY: '/auth/otp/verify',
     OTP_RESEND: '/auth/otp/resend',
     REFRESH: '/auth/refresh',
-    LOGOUT: '/auth/logout',
-  },
+    LOGOUT: '/auth/logout',  },
   PRODUCTS: {
     LIST: '/products',
     // One product by slug (or id).
@@ -24,6 +23,12 @@ export const API_ENDPOINTS = {
   },
   USERS: {
     ME: '/users/me',
+    ME_PASSWORD: '/users/me/password',
+  },
+  ADDRESSES: {
+    ROOT: '/addresses',
+    ITEM: (id) => `/addresses/${encodeURIComponent(id)}`,
+    DEFAULT: (id) => `/addresses/${encodeURIComponent(id)}/default`,
   },
   ENQUIRIES: {
     CREATE: '/enquiries',

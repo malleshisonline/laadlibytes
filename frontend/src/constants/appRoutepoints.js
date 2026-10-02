@@ -10,6 +10,11 @@ export const APP_ROUTES = {
   PRODUCT_DETAILS: '/products/:slug',
   CART: '/cart',
   CHECKOUT: '/checkout',
+  // My Account: one path per section rather than ?tab=, because sign-in's returnTo keeps only the pathname.
+  ACCOUNT: '/account',
+  ACCOUNT_ORDERS: '/account/orders',
+  ACCOUNT_ADDRESSES: '/account/addresses',
+  ACCOUNT_SECURITY: '/account/security',
 };
 
 /** Link to one product's details page. */

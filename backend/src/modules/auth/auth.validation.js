@@ -1,14 +1,7 @@
 import { z } from 'zod';
 
 import { parseIdentifier } from '../../utils/identifier.js';
-
-const password = z
-  .string()
-  .min(8, 'Password must be at least 8 characters')
-  .max(128)
-  .regex(/[a-z]/, 'Password must contain a lowercase letter')
-  .regex(/[A-Z]/, 'Password must contain an uppercase letter')
-  .regex(/\d/, 'Password must contain a number');
+import { passwordSchema } from '../../utils/validators.js';
 
 /** One sign-in input for email or phone. Parses to { channel, value } with value normalized. */
 export const identifierSchema = z
@@ -41,7 +34,7 @@ export const registerSchema = z
   .object({
     identifier: identifierSchema,
     name: z.string().trim().min(2).max(60),
-    password,
+    password: passwordSchema,
     confirmPassword: z.string().min(1, 'Please confirm your password'),
   })
   .refine((data) => data.password === data.confirmPassword, {
