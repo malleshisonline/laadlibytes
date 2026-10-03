@@ -1,13 +1,14 @@
-import { useEffect } from 'react'
-import { toast } from 'react-hot-toast'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { Lock, RotateCw, ShoppingBag } from 'lucide-react'
 
 import wavingMascot from '../assets/illustrations/mascot-waving-with-flute.avif'
 import CartItemRow from '../components/cart/CartItemRow.jsx'
+import DeliveryAddressBox from '../components/cart/DeliveryAddressBox.jsx'
 import PriceDetailsBox from '../components/cart/PriceDetailsBox.jsx'
 import { APP_ROUTES } from '../constants/appRoutepoints.js'
 import { APP_SETTINGS } from '../constants/appSettings.js'
+import { pickAddress, useAddresses } from '../hooks/useAddresses.js'
 import { useAuth } from '../hooks/useAuth.js'
 import { useCart } from '../hooks/useCart.js'
 
@@ -59,6 +60,13 @@ function CartPage() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { cart, status, updateQuantity, removeFromCart, clearCart, isPending, reload } = useCart()
+  const addressState = useAddresses(Boolean(user))
+  const [chosenAddressId, setChosenAddressId] = useState(null)
+  const [addressError, setAddressError] = useState('')
+  const addressBoxRef = useRef(null)
+
+  // Until the shopper picks one, the default address is selected.
+  const selectedAddress = pickAddress(addressState.addresses, chosenAddressId)
 
   useEffect(() => {
     const previousTitle = document.title
@@ -70,14 +78,27 @@ function CartPage() {
 
   const hasIssues = cart?.items.some((item) => item.issue) ?? false
 
-  function handleCheckout() {
+  function handleSelectAddress(id) {
+    setChosenAddressId(id)
+    setAddressError('')
+  }
+
+  // Continue needs a signed-in shopper and a delivery address; the order summary gets the chosen one.
+  function handleContinue() {
     if (!user) {
       navigate(APP_ROUTES.IDENTIFY, { state: { returnTo: APP_ROUTES.CART } })
       return
     }
-    // Checkout, orders and payment are the next branch.
-    toast('Checkout is coming soon.')
+    if (!selectedAddress) {
+      setAddressError('Please add a delivery address before you continue.')
+      addressBoxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      addressBoxRef.current?.focus({ preventScroll: true })
+      return
+    }
+    navigate(APP_ROUTES.CHECKOUT, { state: { addressId: selectedAddress.id } })
   }
+
+  const isLoadingAddresses = Boolean(user) && addressState.status === 'loading'
 
   let content
   if (status === 'loading' && !cart) {
@@ -101,41 +122,61 @@ function CartPage() {
   } else {
     content = (
       <div className='grid gap-6 lg:grid-cols-12 lg:gap-8'>
-        <section aria-label='Items in your cart' className='lg:col-span-8'>
-          <div className='rounded-2xl border border-line bg-surface px-4 shadow-card sm:px-5'>
-            <ul className='divide-y divide-line'>
-              {cart.items.map((item) => (
-                <CartItemRow
-                  key={item.product.id}
-                  item={item}
-                  onQuantityChange={updateQuantity}
-                  onRemove={removeFromCart}
-                  isPending={isPending(item.product.id)}
-                />
-              ))}
-            </ul>
-          </div>
-          <div className='mt-3 flex items-center justify-between gap-3'>
-            <Link to={APP_ROUTES.PRODUCTS} className='text-sm font-semibold text-navy-700 hover:underline'>
-              Continue shopping
-            </Link>
-            <button
-              type='button'
-              onClick={clearCart}
-              className='min-h-11 rounded-lg px-2 text-sm font-semibold text-muted transition hover:text-error'
-            >
-              Remove all
-            </button>
-          </div>
-        </section>
+        <div className='space-y-4 lg:col-span-8'>
+          <DeliveryAddressBox
+            ref={addressBoxRef}
+            user={user}
+            addresses={addressState.addresses}
+            status={addressState.status}
+            onRetry={addressState.retry}
+            onCreateAddress={addressState.createAddress}
+            selectedId={selectedAddress?.id}
+            onSelect={handleSelectAddress}
+            error={addressError}
+          />
+
+          <section aria-label='Items in your cart'>
+            <div className='rounded-2xl border border-line bg-surface px-4 shadow-card sm:px-5'>
+              <ul className='divide-y divide-line'>
+                {cart.items.map((item) => (
+                  <CartItemRow
+                    key={item.product.id}
+                    item={item}
+                    onQuantityChange={updateQuantity}
+                    onRemove={removeFromCart}
+                    isPending={isPending(item.product.id)}
+                  />
+                ))}
+              </ul>
+            </div>
+            <div className='mt-3 flex items-center justify-between gap-3'>
+              <Link to={APP_ROUTES.PRODUCTS} className='text-sm font-semibold text-navy-700 hover:underline'>
+                Continue shopping
+              </Link>
+              <button
+                type='button'
+                onClick={clearCart}
+                className='min-h-11 rounded-lg px-2 text-sm font-semibold text-muted transition hover:text-error'
+              >
+                Remove all
+              </button>
+            </div>
+          </section>
+        </div>
 
         <div className='lg:col-span-4'>
           <div className='lg:sticky lg:top-28'>
             <PriceDetailsBox cart={cart}>
-              <button type='button' onClick={handleCheckout} disabled={hasIssues} className={PRIMARY_BUTTON_CLASSES}>
+              <button
+                type='button'
+                onClick={handleContinue}
+                disabled={hasIssues || isLoadingAddresses}
+                className={PRIMARY_BUTTON_CLASSES}
+              >
                 {!user && <Lock size={16} strokeWidth={2} aria-hidden='true' />}
-                {user ? 'Proceed to Payment' : 'Sign in to Payment'}
+                Continue
               </button>
+              {!user && <p className='mt-2 text-center text-xs text-muted'>You’ll sign in before choosing an address.</p>}
               {hasIssues && (
                 <p className='mt-2 text-center text-xs font-semibold text-error'>
                   Fix the items marked above to continue.

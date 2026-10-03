@@ -10,7 +10,7 @@ export const APP_ROUTES = {
   PRODUCT_DETAILS: '/products/:slug',
   CART: '/cart',
   CHECKOUT: '/checkout',
-  // My Account: one path per section rather than ?tab=, because sign-in's returnTo keeps only the pathname.
+  // My Account: one path per section rather than ?tab=.
   ACCOUNT: '/account',
   ACCOUNT_ORDERS: '/account/orders',
   ACCOUNT_ADDRESSES: '/account/addresses',
@@ -19,5 +19,9 @@ export const APP_ROUTES = {
 
 /** Link to one product's details page. */
 export const productDetailsPath = (slug) => `${APP_ROUTES.PRODUCTS}/${encodeURIComponent(slug)}`;
+
+/** Order Summary for one product only (Buy Now on a product that isn't in the cart). */
+export const buyNowCheckoutPath = (slug, quantity = 1) =>
+  `${APP_ROUTES.CHECKOUT}?${new URLSearchParams({ buyNow: slug, qty: String(quantity) })}`;
 
 export default APP_ROUTES;

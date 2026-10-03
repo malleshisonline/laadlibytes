@@ -1,13 +1,13 @@
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 
-import { APP_ROUTES } from '../constants/appRoutepoints.js'
+import { APP_ROUTES, buyNowCheckoutPath } from '../constants/appRoutepoints.js'
 import { useCart } from './useCart.js'
 
 /**
- * Add to Cart and Buy Now for product cards and the details page. Buy Now adds the product (unless it is
- * already in the cart, so a second click never adds another unit) and opens checkout, which sends guests
- * through sign-in first. A failed add shows the cart's error toast and stays on the page. Returns
+ * Add to Cart and Buy Now for product cards and the details page. Buy Now on a product that isn't in the cart
+ * opens an Order Summary for that product alone and leaves the cart untouched; on one already in the cart it
+ * opens the Order Summary for the whole cart. Checkout sends guests through sign-in first. Returns
  * { addToCart(product, quantity = 1), buyNow(product, quantity = 1), isInCart(productId), isPending(productId) }.
  */
 export function useProductCartActions() {
@@ -17,11 +17,10 @@ export function useProductCartActions() {
   const addToCart = useCallback((product, quantity = 1) => addItem(product, quantity), [addItem])
 
   const buyNow = useCallback(
-    async (product, quantity = 1) => {
-      if (!isInCart(product.id) && !(await addItem(product, quantity))) return
-      navigate(APP_ROUTES.CHECKOUT)
+    (product, quantity = 1) => {
+      navigate(isInCart(product.id) ? APP_ROUTES.CHECKOUT : buyNowCheckoutPath(product.slug, quantity))
     },
-    [addItem, isInCart, navigate],
+    [isInCart, navigate],
   )
 
   return { addToCart, buyNow, isInCart, isPending }

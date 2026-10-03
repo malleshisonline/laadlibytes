@@ -7,7 +7,7 @@ import { useAuth } from '../../hooks/useAuth.js'
 /**
  * Wraps routes that need a signed-in user. A guest is sent to sign in and, through returnTo, brought
  * back to the page they asked for. Waits for the session restore first, so a reload never bounces a
- * signed-in user to the sign-in page.
+ * signed-in user to the sign-in page. The query string comes back too (e.g. Buy Now's ?buyNow=…).
  */
 function RequireAuth() {
   const { user, isRestoringSession } = useAuth()
@@ -22,7 +22,7 @@ function RequireAuth() {
     )
   }
 
-  if (!user) return <Navigate to={APP_ROUTES.IDENTIFY} state={{ returnTo: location.pathname }} replace />
+  if (!user) return <Navigate to={APP_ROUTES.IDENTIFY} state={{ returnTo: `${location.pathname}${location.search}` }} replace />
 
   return <Outlet />
 }

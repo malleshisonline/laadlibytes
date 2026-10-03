@@ -27,6 +27,12 @@ export function formatIndianMobile(phone) {
   return MOBILE_PATTERN.test(local) ? `+91 ${local.slice(0, 5)} ${local.slice(5)}` : phone
 }
 
+/** An address on one line, the way Flipkart lists them: street, area, landmark, city, state - PIN. */
+export function formatAddressLine({ line1, line2, landmark, city, state, pincode }) {
+  const landmarkText = landmark && `Near ${landmark.replace(/^near\s+/i, '')}`
+  return [line1, line2, landmarkText, city, `${state} - ${pincode}`].filter(Boolean).join(', ')
+}
+
 // Mirrors createAddressSchema in backend/src/modules/address/address.validation.js; the backend still decides.
 export function validateAddress(values) {
   const errors = {}

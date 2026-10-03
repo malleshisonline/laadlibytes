@@ -32,10 +32,10 @@ function App() {
         <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
         <Route path={APP_ROUTES.PRODUCT_DETAILS} element={<ProductDetailsPage />} />
         <Route path={APP_ROUTES.CART} element={<CartPage />} />
-        <Route path={APP_ROUTES.CHECKOUT} element={<CheckoutPage />} />
 
         {/* Signed-in only: a guest is sent to sign in and brought back. */}
         <Route element={<RequireAuth />}>
+          <Route path={APP_ROUTES.CHECKOUT} element={<CheckoutPage />} />
           <Route path={APP_ROUTES.ACCOUNT} element={<AccountPage />}>
             <Route index element={<ProfileSection />} />
             <Route path={APP_ROUTES.ACCOUNT_ORDERS} element={<OrdersSection />} />
