@@ -33,6 +33,10 @@ export const API_ENDPOINTS = {
   ENQUIRIES: {
     CREATE: '/enquiries',
   },
+  ORDERS: {
+    ROOT: '/orders',
+    ITEM: (id) => `/orders/${encodeURIComponent(id)}`,
+  },
 }
 
 export default API_ENDPOINTS

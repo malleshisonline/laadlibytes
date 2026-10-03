@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react'
-import { Link, useLocation, useSearchParams } from 'react-router'
+import { useCallback, useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router'
+import { toast } from 'react-hot-toast'
 import { RotateCw, ShoppingBag } from 'lucide-react'
 
+import { orderApi } from '../api/orderApi.js'
 import wavingMascot from '../assets/illustrations/mascot-waving-with-flute.avif'
 import DeliveryAddressBox from '../components/cart/DeliveryAddressBox.jsx'
 import OrderSummaryView from '../components/checkout/OrderSummaryView.jsx'
-import { APP_ROUTES, productDetailsPath } from '../constants/appRoutepoints.js'
+import { APP_ROUTES, orderDetailsPath, productDetailsPath } from '../constants/appRoutepoints.js'
 import { APP_SETTINGS } from '../constants/appSettings.js'
 import { pickAddress, useAddresses } from '../hooks/useAddresses.js'
 import { useAuth } from '../hooks/useAuth.js'
@@ -20,6 +22,47 @@ const PRIMARY_LINK_CLASSES =
   'mt-6 inline-flex min-h-11 items-center gap-2 rounded-lg bg-navy-800 px-6 text-sm font-semibold text-white shadow-md transition hover:bg-navy-700'
 
 const HEADER_LINK_CLASSES = 'min-h-11 content-center px-2 text-sm font-semibold text-navy-700 hover:underline'
+
+// Backend messages written for shoppers, shown as they are ("Only 1 left of Peanut Chikki").
+const SHOPPER_MESSAGE_CODES = ['INSUFFICIENT_STOCK', 'PRODUCT_UNAVAILABLE']
+
+const PLACE_ORDER_ERROR_MESSAGES = {
+  ADDRESS_NOT_FOUND: 'That address is no longer saved. Please choose another one.',
+  CART_EMPTY: 'Your cart is empty.',
+  PRODUCT_NOT_FOUND: 'Sorry, this product is no longer available.',
+}
+
+function placeOrderErrorMessage(error) {
+  if (SHOPPER_MESSAGE_CODES.includes(error.code)) return error.message
+  if (PLACE_ORDER_ERROR_MESSAGES[error.code]) return PLACE_ORDER_ERROR_MESSAGES[error.code]
+  if (error.status === 0) return 'We couldn’t reach the store. Check your internet connection and try again.'
+  if (error.status === 429) return 'Too many tries in a short time. Please wait a moment and try again.'
+  return 'Sorry, we couldn’t place your order. Please try again.'
+}
+
+/**
+ * Returns placeOrder({ addressId, buyNow }, onFailure). On success it opens the new order (replacing the Order
+ * Summary in history, so Back doesn't offer to place it again); on failure it shows a toast and calls
+ * `onFailure`, which reloads whatever may have changed (stock, the cart, the addresses).
+ */
+function usePlaceOrder() {
+  const navigate = useNavigate()
+
+  return useCallback(
+    async (payload, onFailure) => {
+      try {
+        const order = await orderApi.place(payload)
+        navigate(orderDetailsPath(order.id), { replace: true, state: { justPlaced: true } })
+        return order
+      } catch (error) {
+        toast.error(placeOrderErrorMessage(error))
+        onFailure?.(error)
+        return null
+      }
+    },
+    [navigate],
+  )
+}
 
 function SummarySkeleton() {
   return (
@@ -111,6 +154,7 @@ function CartOrderSummary() {
   const location = useLocation()
   const { cart, status: cartStatus, reload } = useCart()
   const { addresses, status: addressStatus, retry } = useAddresses()
+  const placeOrder = usePlaceOrder()
 
   if ((cartStatus === 'loading' && !cart) || addressStatus === 'loading') return <SummarySkeleton />
 
@@ -148,9 +192,20 @@ function CartOrderSummary() {
     )
   }
 
+  // The ordered lines leave the cart on the server, so the cart is reloaded either way: after an order it is
+  // (usually) empty, after a stock error the short line comes back flagged.
+  async function handlePlaceOrder() {
+    const order = await placeOrder({ addressId: address.id }, (error) => {
+      if (error.code === 'ADDRESS_NOT_FOUND') retry()
+    })
+    reload()
+    return order
+  }
+
   return (
     <OrderSummaryView
       order={cart}
+      onPlaceOrder={handlePlaceOrder}
       address={<AddressSummary address={address} />}
       addressAction={
         <Link to={APP_ROUTES.CART} className={HEADER_LINK_CLASSES}>
@@ -175,6 +230,7 @@ function BuyNowOrderSummary({ slug, quantity }) {
   const { product, status: productStatus, retry: retryProduct } = useProduct(slug)
   const addressState = useAddresses()
   const [chosenAddressId, setChosenAddressId] = useState(null)
+  const placeOrder = usePlaceOrder()
 
   if (productStatus === 'loading' || addressState.status === 'loading') return <SummarySkeleton />
 
@@ -201,10 +257,21 @@ function BuyNowOrderSummary({ slug, quantity }) {
   }
 
   const selectedAddress = pickAddress(addressState.addresses, chosenAddressId)
+  const order = buyNowOrder(product, quantity)
+
+  // Buy Now never touches the cart. A failure reloads the product, so a sold-out one shows as out of stock.
+  function handlePlaceOrder() {
+    const buyNow = { productId: product.id, quantity: order.items[0].quantity }
+    return placeOrder({ addressId: selectedAddress.id, buyNow }, (error) => {
+      if (error.code === 'ADDRESS_NOT_FOUND') addressState.retry()
+      else retryProduct()
+    })
+  }
 
   return (
     <OrderSummaryView
-      order={buyNowOrder(product, quantity)}
+      order={order}
+      onPlaceOrder={handlePlaceOrder}
       address={
         <DeliveryAddressBox
           bare

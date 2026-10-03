@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router'
 
 import AddressesSection from './components/account/AddressesSection.jsx'
+import OrderDetailsSection from './components/account/OrderDetailsSection.jsx'
 import OrdersSection from './components/account/OrdersSection.jsx'
 import ProfileSection from './components/account/ProfileSection.jsx'
 import SecuritySection from './components/account/SecuritySection.jsx'
@@ -39,6 +40,7 @@ function App() {
           <Route path={APP_ROUTES.ACCOUNT} element={<AccountPage />}>
             <Route index element={<ProfileSection />} />
             <Route path={APP_ROUTES.ACCOUNT_ORDERS} element={<OrdersSection />} />
+            <Route path={APP_ROUTES.ACCOUNT_ORDER_DETAILS} element={<OrderDetailsSection />} />
             <Route path={APP_ROUTES.ACCOUNT_ADDRESSES} element={<AddressesSection />} />
             <Route path={APP_ROUTES.ACCOUNT_SECURITY} element={<SecuritySection />} />
           </Route>

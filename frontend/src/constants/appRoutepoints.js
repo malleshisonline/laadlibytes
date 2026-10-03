@@ -13,12 +13,16 @@ export const APP_ROUTES = {
   // My Account: one path per section rather than ?tab=.
   ACCOUNT: '/account',
   ACCOUNT_ORDERS: '/account/orders',
+  ACCOUNT_ORDER_DETAILS: '/account/orders/:id',
   ACCOUNT_ADDRESSES: '/account/addresses',
   ACCOUNT_SECURITY: '/account/security',
 };
 
 /** Link to one product's details page. */
 export const productDetailsPath = (slug) => `${APP_ROUTES.PRODUCTS}/${encodeURIComponent(slug)}`;
+
+/** One of the user's orders, in My Account. Placing an order lands here too. */
+export const orderDetailsPath = (id) => `${APP_ROUTES.ACCOUNT_ORDERS}/${encodeURIComponent(id)}`;
 
 /** Order Summary for one product only (Buy Now on a product that isn't in the cart). */
 export const buyNowCheckoutPath = (slug, quantity = 1) =>
