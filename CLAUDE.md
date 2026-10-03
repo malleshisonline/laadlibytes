@@ -47,7 +47,7 @@ Each feature is one directory under `src/modules/<name>/` with up to six files:
 
 Then add one line to the `routes` array in `src/routes/index.js` (public router), or one `router.use(...)` line in `src/modules/admin/admin.routes.js` (admin router). **Controllers never touch Mongoose** — see `src/modules/user/` for the reference implementation.
 
-Implemented modules: `auth`, `user`, `otp`, `category`, `product`, `enquiry`, `cart`, `address` and `admin`. `address` is the signed-in user's saved delivery addresses (`/addresses`: list, create, `PATCH /:id`, `DELETE /:id`, `POST /:id/default`). Up to `MAX_ADDRESSES` (5), every query is scoped by user, so another user's id is a 404 `ADDRESS_NOT_FOUND`. The first address becomes the default, deleting the default promotes the newest one, and every write returns the whole list. `state` is an enum of `INDIAN_STATES` (exported from `address.model.js`, mirrored in `frontend/src/constants/indianStates.js`). `enquiry` is Contact Us: `POST /enquiries` (guest-friendly, `enquiryLimiter`, a `website` honeypot) saves the message and best-effort emails `ENQUIRY_NOTIFY_EMAIL` plus an auto-reply; `/admin/enquiries` lists/reads/updates status. Two of them break the five-file shape deliberately: `otp` has just a model and service (no routes) and is used by `auth`; `admin` has no model, because an admin is a *role*, not an entity. `category` and `product` are the catalogue pair: `category.service.js` refuses to delete a category that still has products (409 `CATEGORY_NOT_EMPTY`), and `product.service.js` owns the sort whitelist, the id-or-slug detail lookup and the soft delete. The remaining module directories (`order`, `payment`, …) are still empty `.gitkeep` placeholders, and `order.model.js` is a zero-byte stub.
+Implemented modules: `auth`, `user`, `otp`, `category`, `product`, `enquiry`, `cart`, `address`, `order` and `admin`. `order` is described under *Orders* below. `address` is the signed-in user's saved delivery addresses (`/addresses`: list, create, `PATCH /:id`, `DELETE /:id`, `POST /:id/default`). Up to `MAX_ADDRESSES` (5), every query is scoped by user, so another user's id is a 404 `ADDRESS_NOT_FOUND`. The first address becomes the default, deleting the default promotes the newest one, and every write returns the whole list. `state` is an enum of `INDIAN_STATES` (exported from `address.model.js`, mirrored in `frontend/src/constants/indianStates.js`). `enquiry` is Contact Us: `POST /enquiries` (guest-friendly, `enquiryLimiter`, a `website` honeypot) saves the message and best-effort emails `ENQUIRY_NOTIFY_EMAIL` plus an auto-reply; `/admin/enquiries` lists/reads/updates status. Two of them break the five-file shape deliberately: `otp` has just a model and service (no routes) and is used by `auth`; `admin` has no model, because an admin is a *role*, not an entity. `category` and `product` are the catalogue pair: `category.service.js` refuses to delete a category that still has products (409 `CATEGORY_NOT_EMPTY`), and `product.service.js` owns the sort whitelist, the id-or-slug detail lookup and the soft delete. The remaining module directories (`payment`, …) are still empty `.gitkeep` placeholders.
 
 External senders live in `src/integrations/` (`email/`, `sms/`), each choosing a driver from env; message templates live in `src/templates/`. Cloudinary lives in `src/integrations/storage/`.
 
@@ -117,6 +117,29 @@ Everything an admin writes lives under **`/admin`**. `admin.routes.js` calls `ro
 The first admin is made with `npm run promote-admin -- <email|phone>`; the role is read from the access token, so that account must sign in again afterwards.
 
 **Audit fields** — `createdBy` / `updatedBy` come from `auditFields()` in `src/utils/auditFields.js` and are on `Product` and `Category`. They are optional (the seeder writes the catalogue with no admin in scope) and `select: false`. Services take the actor as a trailing argument (`create(payload, uploads, actorId)`); controllers pass `req.user.id`. Both models call `stripUnpopulatedAuditRefs(ret)` in their `toJSON` transform, because `select: false` does not stop a document you just built in memory from carrying the value — same reason `user.model.js` also does `delete ret.password`. The helper keeps the field only once it has been **populated**, so the ids surface nowhere and the admin detail routes (`{ withAudit: true }`) return `{ id, name, … }`.
+
+## Orders
+
+`POST /orders { addressId, buyNow? }` (signed in only) orders the whole cart, or with `buyNow: { productId, quantity }` that one product, leaving the cart alone. `order.service.js` does the following:
+
+1. Checks that the address is the caller's (404 `ADDRESS_NOT_FOUND`).
+2. Prices every line live, skipping cart lines whose product was unpublished. An empty cart is 400 `CART_EMPTY`.
+3. **Takes the stock at placement**, not at payment, so an unpaid order cannot be oversold. Each `$inc` only matches while `stock >= qty`. If a line fails, the lines already taken are put back and nothing is saved (409 `INSUFFICIENT_STOCK` / `PRODUCT_UNAVAILABLE`). That is why no transaction is needed.
+4. Saves copies of the lines (name, SKU, price, MRP, pack size, image) and of the address. Editing a product or address never changes a past order.
+5. Removes the ordered lines from the cart.
+
+Contact is the address phone plus the account email, if any. The order number is `LB-<IST YYYYMMDD>-<5 chars>`, unique by index, and retried on collision. There is no `shippingCharge`, and `total` = `subtotal`.
+
+`status` (delivery) and `paymentStatus` are separate fields:
+
+- `status` moves only along `ORDER_STATUS_TRANSITIONS`: `placed → confirmed → packed → shipped → delivered`.
+- The shop takes **no cancellations, refunds, returns or exchanges**, so there is no `cancelled`, no `refunded` and no customer cancel route.
+- The one exception is `voided`: an admin may void an order **only while it is unpaid** and only before it ships. Voiding puts its stock back.
+- `paymentStatus` is `pending | paid | failed`. `PATCH /admin/orders/:id/payment` sets it by hand (with an optional UPI `reference`) until a gateway exists. The payment module should only ever set this field.
+- Both admin updates filter on the status they read, so two admins acting at once get 409 `ORDER_CHANGED` instead of a double change or a double restock.
+- Every change appends `{ event, value, note, by, at }` to `history`. Customer reads (`GET /orders`, `GET /orders/:id`, own orders only, another user's id is a 404) strip `by`, `note` and `user`.
+- `/admin/orders` lists (filter `status` / `paymentStatus`, `search` on order number, name, phone or email) and reads, with `user` and `history.by` populated.
+- `GET /admin/summary` has `orders: { total, byStatus, unpaid }`.
 
 ## Product decisions
 
