@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link, NavLink, useNavigate } from 'react-router'
-import { ChevronDown, ChevronRight, LogOut, Menu, Search, ShoppingCart, User, UserRound, X } from 'lucide-react'
+import { ChevronDown, ChevronRight, LayoutDashboard, LogOut, Menu, Search, ShoppingCart, User, UserRound, X } from 'lucide-react'
 
 import logo from '../../assets/brand/logo.svg'
 import { APP_ROUTES } from '../../constants/appRoutepoints.js'
@@ -93,7 +93,7 @@ function Navbar() {
     // The bar is 64px tall on mobile and 80px from lg; HeaderSection pulls the hero up by that, so the hero
     // image (not white page) shows in the rounded bottom corners.
     <header className="sticky top-0 z-40 rounded-b-2xl border-x border-b border-caramel-500 bg-white shadow-sm">
-      <div className="flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:h-20">
+      <div className="relative flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:h-20">
         {/* Left: logo */}
         <Link to={APP_ROUTES.HOME} aria-label={`${APP_SETTINGS.SITE_NAME} home`} className="shrink-0">
           <img src={logo} alt={APP_SETTINGS.SITE_NAME} className="h-12 w-auto lg:h-18" />
@@ -119,8 +119,10 @@ function Navbar() {
         {/* Right: search, account, cart and (mobile) menu toggle */}
         <div className="flex items-center gap-1">
           {/* Search opens as a pill that grows leftwards from the search icon into the empty space before it, so
-              the menu and the account/cart icons neither move nor get covered. Enter searches; Escape or X closes. */}
-          <div className="relative">
+              the menu and the account/cart icons neither move nor get covered. Enter searches; Escape or X closes.
+              Phones have no empty space beside the icons, so there the pill spans the whole bar (positioned against
+              the bar row, since this wrapper is only `relative` from sm) and covers the logo and icons until closed. */}
+          <div className="sm:relative">
             <button
               type="button"
               aria-label="Search"
@@ -134,7 +136,7 @@ function Navbar() {
               <form
                 role="search"
                 onSubmit={handleSearchSubmit}
-                className="absolute top-1/2 right-0 z-10 flex -translate-y-1/2 items-center rounded-full bg-white"
+                className="absolute inset-x-4 top-1/2 z-10 flex -translate-y-1/2 items-center rounded-full bg-white sm:inset-x-auto sm:right-0"
               >
                 <label htmlFor="navbar-search-input" className="sr-only">
                   Search products
@@ -142,7 +144,7 @@ function Navbar() {
                 <button
                   type="submit"
                   aria-label="Search"
-                  className="absolute left-1 inline-flex size-8 items-center justify-center rounded-full text-muted transition hover:text-navy-800"
+                  className="absolute left-1 inline-flex size-9 items-center justify-center rounded-full text-muted transition hover:text-navy-800 sm:size-8"
                 >
                   <Search size={16} strokeWidth={1.75} aria-hidden="true" />
                 </button>
@@ -155,13 +157,13 @@ function Navbar() {
                   onChange={(event) => setSearchTerm(event.target.value)}
                   onKeyDown={(event) => event.key === 'Escape' && setIsSearchOpen(false)}
                   placeholder="Search chikki, nuts…"
-                  className="h-10 w-44 rounded-full border border-line bg-lightblue-50 pr-9 pl-9 text-sm text-navy-800 transition outline-none placeholder:text-muted focus:border-navy-600 focus:bg-white focus:ring-2 focus:ring-lightblue-200 sm:w-72 lg:w-56 xl:w-64 [&::-webkit-search-cancel-button]:hidden"
+                  className="h-11 w-full rounded-full border border-line bg-lightblue-50 pr-10 pl-10 text-base text-navy-800 transition outline-none placeholder:text-muted focus:border-navy-600 focus:bg-white focus:ring-2 focus:ring-lightblue-200 sm:h-10 sm:w-72 sm:pr-9 sm:pl-9 sm:text-sm lg:w-56 xl:w-64 [&::-webkit-search-cancel-button]:hidden"
                 />
                 <button
                   type="button"
                   aria-label="Close search"
                   onClick={() => setIsSearchOpen(false)}
-                  className="absolute right-1 inline-flex size-8 items-center justify-center rounded-full text-muted transition hover:bg-lightblue-100 hover:text-navy-800"
+                  className="absolute right-1 inline-flex size-9 items-center justify-center rounded-full text-muted transition hover:bg-lightblue-100 hover:text-navy-800 sm:size-8"
                 >
                   <X size={16} strokeWidth={1.75} aria-hidden="true" />
                 </button>
@@ -231,6 +233,29 @@ function Navbar() {
                         className="text-muted transition group-hover:translate-x-0.5 group-hover:text-navy-800"
                       />
                     </Link>
+
+                    {user.role === 'admin' && (
+                      <Link
+                        to={APP_ROUTES.ADMIN}
+                        role="menuitem"
+                        onClick={() => setIsAccountMenuOpen(false)}
+                        className={`${ACCOUNT_MENU_ITEM_CLASSES} hover:bg-lightblue-100`}
+                      >
+                        <span className={`${ACCOUNT_MENU_ICON_CLASSES} bg-lightblue-100 text-navy-800 group-hover:bg-white`}>
+                          <LayoutDashboard size={18} strokeWidth={1.75} aria-hidden="true" />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-sm font-semibold text-navy-800">Admin panel</span>
+                          <span className="block text-xs text-muted">Orders, products and customers</span>
+                        </span>
+                        <ChevronRight
+                          size={16}
+                          strokeWidth={2}
+                          aria-hidden="true"
+                          className="text-muted transition group-hover:translate-x-0.5 group-hover:text-navy-800"
+                        />
+                      </Link>
+                    )}
 
                     <button
                       type="button"
@@ -321,6 +346,13 @@ function Navbar() {
                     My Account
                   </NavLink>
                 </li>
+                {user.role === 'admin' && (
+                  <li>
+                    <NavLink to={APP_ROUTES.ADMIN} onClick={() => setIsMobileMenuOpen(false)} className={mobileLinkClasses}>
+                      Admin panel
+                    </NavLink>
+                  </li>
+                )}
                 <li>
                   <button
                     type="button"

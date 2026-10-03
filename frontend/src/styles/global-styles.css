@@ -116,6 +116,12 @@
   select:disabled {
     cursor: not-allowed;
   }
+
+  /* Admin panel only (AdminLayout adds the class while it is open): 17px instead of 16px. Every Tailwind size is
+     in rem, so text, inputs and spacing all grow a little together and the layout keeps its proportions. */
+  html.admin-panel {
+    font-size: 106.25%;
+  }
 }
 
 @layer components {

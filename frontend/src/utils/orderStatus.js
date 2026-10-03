@@ -37,6 +37,8 @@ const PAYMENT_STATUS_BADGE_CLASSES = {
 }
 
 export const orderStatusLabel = (status) => ORDER_STATUS_LABELS[status] ?? status
+/** The admin panel's wording: the customer reads "Not completed", the shop "Voided". */
+export const adminOrderStatusLabel = (status) => (status === 'voided' ? 'Voided' : orderStatusLabel(status))
 export const paymentStatusLabel = (status) => PAYMENT_STATUS_LABELS[status] ?? status
 export const orderStatusBadgeClasses = (status) => ORDER_STATUS_BADGE_CLASSES[status] ?? 'bg-lightblue-100 text-navy-800'
 export const paymentStatusBadgeClasses = (status) => PAYMENT_STATUS_BADGE_CLASSES[status] ?? 'bg-lightblue-100 text-navy-800'

@@ -351,7 +351,44 @@ There is no online payment yet (the client has not chosen a gateway, and may use
 | Track Order | `/track-order` | **Not built** | Build UI only when instructed |
 | FAQ | `/faq` | None (static content) | Ready |
 | Contact Us | `/contact` | `POST /enquiries` | Ready. Saved, emailed to `ENQUIRY_NOTIFY_EMAIL`, auto-reply to the sender. Admin inbox API is `/admin/enquiries`; its UI waits for the admin panel |
-| Admin pages | `/admin/...` | Admin APIs | Ready; design not provided, use the same tokens with a simple sidebar layout |
+| Admin pages | `/admin/...` | `/admin/*` (see below) | Ready. See **Admin panel** below |
+
+### Admin panel
+
+There was no approved design, so it uses the same tokens in a plain sidebar layout. Everything it calls lives in `api/adminApi.js`.
+
+**Access and layout**
+- `RequireAdmin` waits for the session restore. A guest is sent to sign in and comes back; a non-admin is sent home.
+- The backend checks the role on every `/admin` call too, so hiding the screens is not the only guard.
+- `AdminLayout` has its own top bar (View store, Logout) and a section nav: a scrolling pill row on mobile, a sidebar from `lg`. It has no storefront navbar or footer.
+- Admins also get an **Admin panel** link in the Navbar account menu.
+- The pages are `lazy()` in `App.jsx`, so shoppers never download them.
+
+**Shared pieces**
+- Class strings in `components/admin/adminStyles.js`. Use them rather than new button or field styles.
+- `AdminPageHeader`, `AdminLoadState` (loading / error / empty / not-found), `AdminPagination`.
+- `hooks/useAdminList.js`: one page of a list, refetched when its params change, with `replaceItem` for inline edits.
+- `hooks/useDocumentTitle.js` for page titles.
+- List filters live in the URL, so dashboard cards open pre-filtered lists and Back keeps them.
+
+**Pages**
+- **Dashboard:** counts from `GET /admin/summary`; each card links to its filtered list.
+- **Orders:** list plus detail. The detail page has one forward step at a time (Confirm → Pack → Ship → Deliver, with an optional admin-only note) and **Void**, allowed only while unpaid and before shipping, with a confirm. **Save payment** marks it paid, pending or failed with a UPI reference/UTR. History shows who changed what. Status labels come from `utils/orderStatus.js`; admins see `adminOrderStatusLabel` ("Voided"), customers "Not completed".
+- **Products:**
+  - The list loads the whole catalogue (56 products, pages of 100) and filters in the browser: search, category, published or hidden, low or out of stock. Low stock means 10 or fewer, mirroring `DEFAULT_LOW_STOCK_THRESHOLD`.
+  - Each row has a quick stock edit and a publish switch.
+  - The form edits every field. Lists such as ingredients are one per line.
+  - `ProductImagesEditor` handles photos: add, reorder, make front, remove, alt text. New files preview locally and upload on save as `multipart/form-data` (`productFields` JSON + `images`), with `images` the full final order of `{ publicId }` / `{ newImageFileIndex }`. See `toImagePayload` in `components/admin/adminImageRules.js`, whose file rules mirror the backend's.
+  - The client-side checks for SKU, price ≤ MRP and the rest also mirror the backend.
+- **Categories:** list in display order, plus a form with one image. A new file replaces the stored one, and Remove sends `image: null`. Deleting a category that still has products shows the backend's `CATEGORY_NOT_EMPTY` message.
+- **Customers** (`/admin/users`):
+  - Search, role filter and sort, plus switches for **Active** and **Make/Remove admin**.
+  - Your own row is locked.
+  - There is deliberately no delete, because orders reference the account.
+  - The list API returns `_id` (lean query), so rows are keyed by `id ?? _id`.
+- **Enquiries:** inbox with status and search filters. Opening a new one fetches it, which marks it read. Rows have Reply by email (`mailto:`) and Mark as replied / new.
+
+`httpClient` sends a `FormData` body as-is (the browser sets the multipart boundary) and returns `null` for a 204.
 
 ---
 

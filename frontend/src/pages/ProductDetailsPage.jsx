@@ -64,6 +64,12 @@ function ProductDetailsPage() {
   const [quantity, setQuantity] = useState(1)
   const [viewerIndex, setViewerIndex] = useState(null) // photo open in the full-screen viewer, or null
 
+  // BrowserRouter keeps the scroll position between pages, so a product opened from halfway down a list (or
+  // from "You may also like" at the bottom of this page) would start near its end. Each product opens at the top.
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+  }, [slug])
+
   // Tab title follows the product, and goes back to the previous title when leaving the page.
   useEffect(() => {
     if (!product?.name) return undefined
