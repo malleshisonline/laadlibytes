@@ -44,7 +44,9 @@ const envSchema = z.object({
   MSG91_OTP_TEMPLATE_ID: z.string().trim().optional(),
 
   // Comma-separated list, or "*" to allow any origin.
-  CORS_ORIGIN: z.string().default('http://localhost:5173'),
+  // CORS_ORIGIN: z.string().default('http://localhost:5173'),
+    CORS_ORIGIN: z.string().default('https://laadlibytes-1.onrender.com'),
+
 
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(15 * 60 * 1000),
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(100),
