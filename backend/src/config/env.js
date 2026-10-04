@@ -89,12 +89,16 @@ if (!parsed.success) {
 
 const raw = parsed.data;
 
+// A browser's Origin header has no quotes, path or trailing slash, and cors matches it exactly, so
+// "https://example.com/" or '"https://example.com"' in the env value would silently never match.
+const normalizeOrigin = (origin) => origin.trim().replace(/^["']|["']$/g, '').replace(/\/+$/, '');
+
 export const env = Object.freeze({
   ...raw,
   isDev: raw.NODE_ENV === 'development',
   isTest: raw.NODE_ENV === 'test',
   isProd: raw.NODE_ENV === 'production',
-  corsOrigins: raw.CORS_ORIGIN === '*' ? '*' : raw.CORS_ORIGIN.split(',').map((o) => o.trim()).filter(Boolean),
+  corsOrigins: raw.CORS_ORIGIN === '*' ? '*' : raw.CORS_ORIGIN.split(',').map(normalizeOrigin).filter(Boolean),
 });
 
 export default env;
