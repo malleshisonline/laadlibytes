@@ -6,6 +6,7 @@ import authRoutes from '../modules/auth/auth.routes.js';
 import cartRoutes from '../modules/cart/cart.routes.js';
 import categoryRoutes from '../modules/category/category.routes.js';
 import enquiryRoutes from '../modules/enquiry/enquiry.routes.js';
+import orderRoutes from '../modules/order/order.routes.js';
 import productRoutes from '../modules/product/product.routes.js';
 import userRoutes from '../modules/user/user.routes.js';
 
@@ -25,6 +26,7 @@ const routes = [
   { path: '/cart', router: cartRoutes },
   { path: '/categories', router: categoryRoutes },
   { path: '/enquiries', router: enquiryRoutes },
+  { path: '/orders', router: orderRoutes },
   { path: '/products', router: productRoutes },
   { path: '/users', router: userRoutes },
 ];

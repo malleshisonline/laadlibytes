@@ -33,6 +33,26 @@ export const API_ENDPOINTS = {
   ENQUIRIES: {
     CREATE: '/enquiries',
   },
+  ORDERS: {
+    ROOT: '/orders',
+    ITEM: (id) => `/orders/${encodeURIComponent(id)}`,
+  },
+  // Everything under /admin needs an admin token; the backend checks the role once for the whole surface.
+  ADMIN: {
+    SUMMARY: '/admin/summary',
+    ORDERS: '/admin/orders',
+    ORDER: (id) => `/admin/orders/${encodeURIComponent(id)}`,
+    ORDER_STATUS: (id) => `/admin/orders/${encodeURIComponent(id)}/status`,
+    ORDER_PAYMENT: (id) => `/admin/orders/${encodeURIComponent(id)}/payment`,
+    PRODUCTS: '/admin/products',
+    PRODUCT: (id) => `/admin/products/${encodeURIComponent(id)}`,
+    CATEGORIES: '/admin/categories',
+    CATEGORY: (id) => `/admin/categories/${encodeURIComponent(id)}`,
+    USERS: '/admin/users',
+    USER: (id) => `/admin/users/${encodeURIComponent(id)}`,
+    ENQUIRIES: '/admin/enquiries',
+    ENQUIRY: (id) => `/admin/enquiries/${encodeURIComponent(id)}`,
+  },
 }
 
 export default API_ENDPOINTS

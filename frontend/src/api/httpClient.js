@@ -44,16 +44,22 @@ export function onSessionExpired(callback) {
 }
 
 async function send(path, { method, body }) {
+  // FormData (the admin image uploads) goes as it is: the browser sets the multipart boundary itself.
+  const isFormData = typeof FormData !== 'undefined' && body instanceof FormData
   const headers = {}
-  if (body !== undefined) headers['Content-Type'] = 'application/json'
+  if (body !== undefined && !isFormData) headers['Content-Type'] = 'application/json'
   if (accessToken) headers.Authorization = `Bearer ${accessToken}`
+
+  let requestBody
+  if (isFormData) requestBody = body
+  else if (body !== undefined) requestBody = JSON.stringify(body)
 
   try {
     return await fetch(`${API_BASE_URL}${path}`, {
       method,
       credentials: 'include',
       headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: requestBody,
     })
   } catch {
     throw new ApiRequestError('Could not reach the server. Check your connection and try again.')
@@ -112,6 +118,9 @@ export async function request(path, { method = 'GET', body, withMeta = false } =
     }
     response = await send(path, { method, body })
   }
+
+  // 204 No Content (e.g. an admin delete) has no body to read.
+  if (response.status === 204) return withMeta ? { data: null, meta: undefined } : null
 
   const payload = await response.json().catch(() => null)
 

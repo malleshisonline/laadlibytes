@@ -339,13 +339,56 @@ Minimum touch target on mobile: 44 × 44 px for buttons and icons.
 | Product Details | `/products/:slug` | `GET /products/:idOrSlug` | Not in the design; follow Product Listing style |
 | 56 Bhog | `/56-bhog` | Products (filtered) or static | Confirm with manager |
 | Login / Signup | `/login`, `/register`, `/verify-otp` | Auth APIs | Ready. The design shows **Continue with Google** and **Forgot password**; the backend has no API for these yet. Do not build them until confirmed. |
-| My Account | `/account` | `GET /users/me` | Ready |
+| My Account | `/account` | `GET /users/me`, `GET /orders`, `GET /orders/:id` | Ready. **My Orders** (`/account/orders`) lists orders newest first with "Load more". Each row opens `/account/orders/:id` (`OrderDetailsSection`): status badges, the tracking steps, payment, items (the order's own copy, shown through `OrderItemsSummary` via `toSummaryItem`), the address and the price details. A voided order (unpaid, set aside by the shop) shows a short notice instead of the steps. Labels and badge colours live in `utils/orderStatus.js`. There are no cancel or return buttons: the shop takes no cancellations, refunds, returns or exchanges |
 | Cart | `/cart` | `GET/DELETE /cart`, `POST /cart/items`, `PATCH/DELETE /cart/items/:productId`, `GET/POST /addresses` | Ready. State lives in `CartProvider` (`useCart`); guests have a cart via a cookie, merged on sign-in. No coupons (client decision), so no `ApplyCouponBox`. `DeliveryAddressBox` (Flipkart-style "Deliver to") lists saved addresses as radios with the default selected and adds new ones inline with `AddressForm`; guests are asked to sign in. **Continue** sends a guest to sign in, scrolls to the box with an error when no address is chosen, otherwise opens `/checkout` with `state.addressId` |
-| Order Summary | `/checkout` | `GET /addresses`, `GET /products/:slug`; order and payment **not built** | Behind `RequireAuth`, whose `returnTo` keeps the query string so Buy Now survives sign-in. Two modes sharing `OrderSummaryView`: **whole cart** (cart's Continue, or Buy Now on a product already in the cart) shows the address from `state.addressId` (else the default, via `pickAddress` in `hooks/useAddresses.js`) with Change/Edit links to the cart; **Buy Now** (`?buyNow=<slug>&qty=<n>`) shows that product alone, priced from the product API, with `DeliveryAddressBox bare` to pick or add the address on the page. Both show the items (`OrderItemsSummary`), the price details and `PaymentMethodOptions` (UPI and QR only). **Place Order** only shows a "coming soon" toast until the order and Razorpay modules exist |
+| Order Summary | `/checkout` | `GET /addresses`, `GET /products/:slug`, `POST /orders`; online payment **not built** | Behind `RequireAuth`, whose `returnTo` keeps the query string so Buy Now survives sign-in. Two modes sharing `OrderSummaryView`: **whole cart** (cart's Continue, or Buy Now on a product already in the cart) shows the address from `state.addressId` (else the default, via `pickAddress` in `hooks/useAddresses.js`) with Change/Edit links to the cart; **Buy Now** (`?buyNow=<slug>&qty=<n>`) shows that product alone, priced from the product API, with `DeliveryAddressBox bare` to pick or add the address on the page. Both show the items (`OrderItemsSummary`), the price details and a payment note.
+
+There is no online payment yet (the client has not chosen a gateway, and may use a merchant UPI instead), so the payment step is a note saying the team will call to confirm and share UPI details. `PaymentMethodOptions` is kept, unused, for the real payment step.
+
+**Place Order** sends `POST /orders` with `{ addressId }`, plus `buyNow: { productId, quantity }` for Buy Now. The button is disabled while it waits.
+- **Success:** a cart order reloads the cart. Either kind replaces the page with `/account/orders/:id` and `state.justPlaced`, which shows the "Thank you! Your order is placed" banner once.
+- **Failure:** a toast; stock messages (`INSUFFICIENT_STOCK`, `PRODUCT_UNAVAILABLE`) are shown as they are. Then the cart, product or addresses reload, so the problem line shows up flagged |
 | Track Order | `/track-order` | **Not built** | Build UI only when instructed |
 | FAQ | `/faq` | None (static content) | Ready |
 | Contact Us | `/contact` | `POST /enquiries` | Ready. Saved, emailed to `ENQUIRY_NOTIFY_EMAIL`, auto-reply to the sender. Admin inbox API is `/admin/enquiries`; its UI waits for the admin panel |
-| Admin pages | `/admin/...` | Admin APIs | Ready; design not provided, use the same tokens with a simple sidebar layout |
+| Admin pages | `/admin/...` | `/admin/*` (see below) | Ready. See **Admin panel** below |
+
+### Admin panel
+
+There was no approved design, so it uses the same tokens in a plain sidebar layout. Everything it calls lives in `api/adminApi.js`.
+
+**Access and layout**
+- `RequireAdmin` waits for the session restore. A guest is sent to sign in and comes back; a non-admin is sent home.
+- The backend checks the role on every `/admin` call too, so hiding the screens is not the only guard.
+- `AdminLayout` has its own top bar (View store, Logout) and a section nav: a scrolling pill row on mobile, a sidebar from `lg`. It has no storefront navbar or footer.
+- Admins also get an **Admin panel** link in the Navbar account menu.
+- The pages are `lazy()` in `App.jsx`, so shoppers never download them.
+
+**Shared pieces**
+- Class strings in `components/admin/adminStyles.js`. Use them rather than new button or field styles.
+- `AdminPageHeader`, `AdminLoadState` (loading / error / empty / not-found), `AdminPagination`.
+- `hooks/useAdminList.js`: one page of a list, refetched when its params change, with `replaceItem` for inline edits.
+- `hooks/useDocumentTitle.js` for page titles.
+- List filters live in the URL, so dashboard cards open pre-filtered lists and Back keeps them.
+
+**Pages**
+- **Dashboard:** counts from `GET /admin/summary`; each card links to its filtered list.
+- **Orders:** list plus detail. The detail page has one forward step at a time (Confirm → Pack → Ship → Deliver, with an optional admin-only note) and **Void**, allowed only while unpaid and before shipping, with a confirm. **Save payment** marks it paid, pending or failed with a UPI reference/UTR. History shows who changed what. Status labels come from `utils/orderStatus.js`; admins see `adminOrderStatusLabel` ("Voided"), customers "Not completed".
+- **Products:**
+  - The list loads the whole catalogue (56 products, pages of 100) and filters in the browser: search, category, published or hidden, low or out of stock. Low stock means 10 or fewer, mirroring `DEFAULT_LOW_STOCK_THRESHOLD`.
+  - Each row has a quick stock edit and a publish switch.
+  - The form edits every field. Lists such as ingredients are one per line.
+  - `ProductImagesEditor` handles photos: add, reorder, make front, remove, alt text. New files preview locally and upload on save as `multipart/form-data` (`productFields` JSON + `images`), with `images` the full final order of `{ publicId }` / `{ newImageFileIndex }`. See `toImagePayload` in `components/admin/adminImageRules.js`, whose file rules mirror the backend's.
+  - The client-side checks for SKU, price ≤ MRP and the rest also mirror the backend.
+- **Categories:** list in display order, plus a form with one image. A new file replaces the stored one, and Remove sends `image: null`. Deleting a category that still has products shows the backend's `CATEGORY_NOT_EMPTY` message.
+- **Customers** (`/admin/users`):
+  - Search, role filter and sort, plus switches for **Active** and **Make/Remove admin**.
+  - Your own row is locked.
+  - There is deliberately no delete, because orders reference the account.
+  - The list API returns `_id` (lean query), so rows are keyed by `id ?? _id`.
+- **Enquiries:** inbox with status and search filters. Opening a new one fetches it, which marks it read. Rows have Reply by email (`mailto:`) and Mark as replied / new.
+
+`httpClient` sends a `FormData` body as-is (the browser sets the multipart boundary) and returns `null` for a 204.
 
 ---
 
