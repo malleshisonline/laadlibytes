@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 
 import { env } from '../../config/env.js';
 import { logger } from '../../config/logger.js';
+import dns from 'node:dns';
 
 let transporter;
 
@@ -17,7 +18,9 @@ const getTransporter = () => {
         user: decodeURIComponent(smtpUrl.username),
         pass: decodeURIComponent(smtpUrl.password),
       },
-      family: 4,
+      lookup: (hostname, options, callback) => {
+        dns.lookup(hostname, { family: 4 }, callback);
+      },
     });
   }
 
