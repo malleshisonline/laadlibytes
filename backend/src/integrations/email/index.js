@@ -2,34 +2,17 @@ import nodemailer from 'nodemailer';
 
 import { env } from '../../config/env.js';
 import { logger } from '../../config/logger.js';
-import dns from 'node:dns';
 
 let transporter;
 
 const getTransporter = () => {
-  if (!transporter) {
-    const smtpUrl = new URL(env.SMTP_URL);
-
-    transporter = nodemailer.createTransport({
-      host: smtpUrl.hostname,
-      port: Number(smtpUrl.port),
-      secure: smtpUrl.protocol === 'smtps:',
-      auth: {
-        user: decodeURIComponent(smtpUrl.username),
-        pass: decodeURIComponent(smtpUrl.password),
-      },
-      lookup: (hostname, options, callback) => {
-        dns.lookup(hostname, { family: 4 }, callback);
-      },
-    });
-  }
-
+  transporter ??= nodemailer.createTransport(env.SMTP_URL);
   return transporter;
 };
 
 const drivers = {
   smtp: (message) => getTransporter().sendMail({ from: env.EMAIL_FROM, ...message }),
-
+  // Development stand-in until SMTP is configured. env.js refuses it in production.
   console: async ({ to, subject, text }) => {
     logger.info(`[email:console] to=${to} subject="${subject}"\n${text}`);
   },

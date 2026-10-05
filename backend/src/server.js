@@ -48,8 +48,6 @@ process.on('uncaughtException', (err) => {
   shutdown('uncaughtException', 1);
 });
 
-logger.info(`Node version: ${process.version}`);
-
 bootstrap().catch((err) => {
   logger.error('Failed to start server', err);
   process.exit(1);
