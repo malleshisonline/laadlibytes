@@ -83,7 +83,7 @@ function AdminLayout() {
       {/* grid-cols-1 + min-w-0, so the scrolling nav row and wide tables never stretch the page on a phone. */}
       <div className="grid grid-cols-1 gap-4 px-3 py-4 sm:px-4 lg:grid-cols-12 lg:gap-6 lg:px-6 lg:py-6">
         <nav aria-label="Admin sections" className="min-w-0 lg:col-span-3 xl:col-span-2">
-          <ul className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1 lg:sticky lg:top-22 lg:mx-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:rounded-2xl lg:border lg:border-line lg:bg-surface lg:p-2 lg:shadow-sm">
+          <ul className="-mx-3 lg:h-full lg:max-h-[80vh] flex gap-2 overflow-x-auto px-3 pb-1 lg:sticky lg:top-22 lg:mx-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:rounded-2xl lg:border lg:border-line lg:bg-surface lg:p-2 lg:shadow-sm">
             {SECTIONS.map(({ path, label, Icon, end }) => (
               <li key={path}>
                 <NavLink to={path} end={end} className={sectionLinkClasses}>

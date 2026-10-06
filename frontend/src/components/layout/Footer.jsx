@@ -17,7 +17,6 @@ const QUICK_LINKS = [
 
 const CUSTOMER_CARE_LINKS = [
   { label: 'Track Order', path: '/track-order' },
-  { label: 'Return Policy', path: '/return-policy' },
   { label: 'Privacy Policy', path: '/privacy-policy' },
   { label: 'Terms & Conditions', path: '/terms' },
   { label: 'FAQs', path: '/faq' },
