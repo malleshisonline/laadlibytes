@@ -1,6 +1,8 @@
 import heroImage from '../assets/backgrounds/HeroImage.avif'
+import ManufacturingSection from '../components/about/ManufacturingSection.jsx'
 import OurPromiseSection from '../components/about/OurPromiseSection.jsx'
 import OurStorySection from '../components/about/OurStorySection.jsx'
+import SinceSection from '../components/about/SinceSection.jsx'
 import ValuesRow from '../components/about/ValuesRow.jsx'
 import PageHeroSection from '../components/sections/PageHeroSection.jsx'
 import { ABOUT_HERO } from '../content/aboutUsContent.js'
@@ -9,9 +11,11 @@ import { ABOUT_HERO } from '../content/aboutUsContent.js'
 function AboutPage() {
   return (
     <div>
-      <PageHeroSection title={ABOUT_HERO.title} subtitle={ABOUT_HERO.subtitle} backgroundImage={heroImage} />
+      {/* <PageHeroSection title={ABOUT_HERO.title} subtitle={ABOUT_HERO.subtitle} backgroundImage={heroImage} /> */}
       <OurStorySection />
+      <SinceSection />
       <ValuesRow />
+      <ManufacturingSection />
       <OurPromiseSection />
     </div>
   )

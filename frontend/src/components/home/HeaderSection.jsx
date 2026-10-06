@@ -25,10 +25,10 @@ const HeaderSection = () => {
 
     return (
 
-        <section className='relative -mt-4'>
+        <section className='relative -mt-4 pb-10'>
             {SLIDES.map((Slide, index) => currentSlide === index && <Slide key={index} />)}
 
-            <div className='absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 sm:gap-3'>
+            <div className='absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 sm:gap-3'>
                 {/* Gold and white dots with a contrasting ring, so they read on both the light sky (slide 1) and the
                     dark navy (slide 2) and the sunlit table (slide 3); the active one stretches into a pill. */}
                 {SLIDES.map((_, index) => (
@@ -40,7 +40,6 @@ const HeaderSection = () => {
                     />
                 ))}
             </div>
-
         </section>
     )
 }

@@ -1,5 +1,5 @@
-import { lazy } from 'react'
-import { Route, Routes } from 'react-router'
+import { lazy, useLayoutEffect } from 'react'
+import { Route, Routes, useLocation } from 'react-router'
 
 import AddressesSection from './components/account/AddressesSection.jsx'
 import OrderDetailsSection from './components/account/OrderDetailsSection.jsx'
@@ -36,56 +36,69 @@ const AdminProductFormPage = lazy(() => import('./pages/admin/AdminProductFormPa
 const AdminProductsPage = lazy(() => import('./pages/admin/AdminProductsPage.jsx'))
 const AdminUsersPage = lazy(() => import('./pages/admin/AdminUsersPage.jsx'))
 
+function ScrollToTop() {
+  const { pathname } = useLocation()
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+  }, [pathname])
+
+  return null
+}
+
 function App() {
   return (
-    <Routes>
-      {/* Storefront: navbar and footer on every page. */}
-      <Route element={<MainLayout />}>
-        <Route path={APP_ROUTES.HOME} element={<HomePage />} />
-        <Route path={APP_ROUTES.ABOUT} element={<AboutPage />} />
-        <Route path={APP_ROUTES.CONTACT} element={<ContactPage />} />
-        <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
-        <Route path={APP_ROUTES.PRODUCT_DETAILS} element={<ProductDetailsPage />} />
-        <Route path={APP_ROUTES.CART} element={<CartPage />} />
+    <>
+      <ScrollToTop />
+      <Routes>
+        {/* Storefront: navbar and footer on every page. */}
+        <Route element={<MainLayout />}>
+          <Route path={APP_ROUTES.HOME} element={<HomePage />} />
+          <Route path={APP_ROUTES.ABOUT} element={<AboutPage />} />
+          <Route path={APP_ROUTES.CONTACT} element={<ContactPage />} />
+          <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
+          <Route path={APP_ROUTES.PRODUCT_DETAILS} element={<ProductDetailsPage />} />
+          <Route path={APP_ROUTES.CART} element={<CartPage />} />
 
-        {/* Signed-in only: a guest is sent to sign in and brought back. */}
-        <Route element={<RequireAuth />}>
-          <Route path={APP_ROUTES.CHECKOUT} element={<CheckoutPage />} />
-          <Route path={APP_ROUTES.ACCOUNT} element={<AccountPage />}>
-            <Route index element={<ProfileSection />} />
-            <Route path={APP_ROUTES.ACCOUNT_ORDERS} element={<OrdersSection />} />
-            <Route path={APP_ROUTES.ACCOUNT_ORDER_DETAILS} element={<OrderDetailsSection />} />
-            <Route path={APP_ROUTES.ACCOUNT_ADDRESSES} element={<AddressesSection />} />
-            <Route path={APP_ROUTES.ACCOUNT_SECURITY} element={<SecuritySection />} />
+          {/* Signed-in only: a guest is sent to sign in and brought back. */}
+          <Route element={<RequireAuth />}>
+            <Route path={APP_ROUTES.CHECKOUT} element={<CheckoutPage />} />
+            <Route path={APP_ROUTES.ACCOUNT} element={<AccountPage />}>
+              <Route index element={<ProfileSection />} />
+              <Route path={APP_ROUTES.ACCOUNT_ORDERS} element={<OrdersSection />} />
+              <Route path={APP_ROUTES.ACCOUNT_ORDER_DETAILS} element={<OrderDetailsSection />} />
+              <Route path={APP_ROUTES.ACCOUNT_ADDRESSES} element={<AddressesSection />} />
+              <Route path={APP_ROUTES.ACCOUNT_SECURITY} element={<SecuritySection />} />
+            </Route>
           </Route>
         </Route>
-      </Route>
 
-      {/* Admin panel: admins only, its own layout with no storefront navbar or footer. */}
-      <Route element={<RequireAdmin />}>
-        <Route element={<AdminLayout />}>
-          <Route path={APP_ROUTES.ADMIN} element={<AdminDashboardPage />} />
-          <Route path={APP_ROUTES.ADMIN_ORDERS} element={<AdminOrdersPage />} />
-          <Route path={APP_ROUTES.ADMIN_ORDER_DETAILS} element={<AdminOrderDetailsPage />} />
-          <Route path={APP_ROUTES.ADMIN_PRODUCTS} element={<AdminProductsPage />} />
-          <Route path={APP_ROUTES.ADMIN_PRODUCT_NEW} element={<AdminProductFormPage />} />
-          <Route path={APP_ROUTES.ADMIN_PRODUCT_EDIT} element={<AdminProductFormPage />} />
-          <Route path={APP_ROUTES.ADMIN_CATEGORIES} element={<AdminCategoriesPage />} />
-          <Route path={APP_ROUTES.ADMIN_CATEGORY_NEW} element={<AdminCategoryFormPage />} />
-          <Route path={APP_ROUTES.ADMIN_CATEGORY_EDIT} element={<AdminCategoryFormPage />} />
-          <Route path={APP_ROUTES.ADMIN_USERS} element={<AdminUsersPage />} />
-          <Route path={APP_ROUTES.ADMIN_ENQUIRIES} element={<AdminEnquiriesPage />} />
+        {/* Admin panel: admins only, its own layout with no storefront navbar or footer. */}
+        <Route element={<RequireAdmin />}>
+          <Route element={<AdminLayout />}>
+            <Route path={APP_ROUTES.ADMIN} element={<AdminDashboardPage />} />
+            <Route path={APP_ROUTES.ADMIN_ORDERS} element={<AdminOrdersPage />} />
+            <Route path={APP_ROUTES.ADMIN_ORDER_DETAILS} element={<AdminOrderDetailsPage />} />
+            <Route path={APP_ROUTES.ADMIN_PRODUCTS} element={<AdminProductsPage />} />
+            <Route path={APP_ROUTES.ADMIN_PRODUCT_NEW} element={<AdminProductFormPage />} />
+            <Route path={APP_ROUTES.ADMIN_PRODUCT_EDIT} element={<AdminProductFormPage />} />
+            <Route path={APP_ROUTES.ADMIN_CATEGORIES} element={<AdminCategoriesPage />} />
+            <Route path={APP_ROUTES.ADMIN_CATEGORY_NEW} element={<AdminCategoryFormPage />} />
+            <Route path={APP_ROUTES.ADMIN_CATEGORY_EDIT} element={<AdminCategoryFormPage />} />
+            <Route path={APP_ROUTES.ADMIN_USERS} element={<AdminUsersPage />} />
+            <Route path={APP_ROUTES.ADMIN_ENQUIRIES} element={<AdminEnquiriesPage />} />
+          </Route>
         </Route>
-      </Route>
 
-      {/* Sign-in flow: no navbar or footer. */}
-      <Route element={<AuthLayout />}>
-        <Route path={APP_ROUTES.IDENTIFY} element={<IdentifyPage />} />
-        <Route path={APP_ROUTES.LOGIN} element={<LoginPage />} />
-        <Route path={APP_ROUTES.REGISTER} element={<RegisterPage />} />
-        <Route path={APP_ROUTES.VERIFY_OTP} element={<VerifyOtpPage />} />
-      </Route>
-    </Routes>
+        {/* Sign-in flow: no navbar or footer. */}
+        <Route element={<AuthLayout />}>
+          <Route path={APP_ROUTES.IDENTIFY} element={<IdentifyPage />} />
+          <Route path={APP_ROUTES.LOGIN} element={<LoginPage />} />
+          <Route path={APP_ROUTES.REGISTER} element={<RegisterPage />} />
+          <Route path={APP_ROUTES.VERIFY_OTP} element={<VerifyOtpPage />} />
+        </Route>
+      </Routes>
+    </>
   )
 }
 

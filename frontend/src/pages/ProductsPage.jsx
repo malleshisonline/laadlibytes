@@ -119,15 +119,15 @@ function ProductsPage() {
 
   return (
     <div>
-      <PageHeroSection
+      {/* <PageHeroSection
         title='Our Products'
         subtitle='Traditional chikkis, made with love'
         backgroundImage={heroImage}
         imageWidth={1983}
         imageHeight={793}
-      />
+      /> */}
 
-      <ProductPromiseStrip />
+      {/* <ProductPromiseStrip /> */}
 
       {/* Warm cream-to-blue wash with faint jasmine in the corners, so the grid doesn't sit on plain white. */}
       <div className='relative overflow-hidden bg-linear-to-b from-cream-50 via-surface to-lightblue-50'>

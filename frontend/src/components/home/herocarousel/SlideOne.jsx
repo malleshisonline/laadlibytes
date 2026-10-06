@@ -7,7 +7,7 @@ import GoldenDivider from '../../common/GoldenDivider.jsx'
 
 const SlideOne = () => {
     return (
-      
+
         <div className='relative flex min-h-104 w-full items-center justify-center pt-4 md:min-h-112 lg:aspect-1920/823 lg:min-h-0'>
 
             <div className='absolute inset-x-0 top-0 -bottom-6 lg:-bottom-8'>
@@ -20,11 +20,15 @@ const SlideOne = () => {
                     fetchPriority='high'
                     className='h-full w-full object-cover object-top-left'
                 />
+                <div
+                    aria-hidden='true'
+                    className='absolute inset-0 bg-linear-to-b from-navy-950/35 via-transparent to-navy-950/25'
+                />
             </div>
 
-        
+
             <div className='relative z-10 md:px-4 text-center md:mb-20'>
-             
+
                 <img
                     src={chikkiRevolutionPlaque}
                     alt='The Chikki Revolution has arrived'
@@ -34,14 +38,22 @@ const SlideOne = () => {
                     className='mx-auto mb-3 h-auto w-56 sm:w-72 md:w-80 lg:w-60 xl:w-80 2xl:w-96'
                 />
 
-                <h1 style={{ color: '#FFC83C', textShadow: '2px 2px 4px rgba(60,20,10,0.85)' }} className='font-display text-3xl leading-tight font-semibold text-shadow-xs text-shadow-cocoa-900/30 sm:text-4xl xl:text-5xl'>
-                    Made with Devotion,
-                    <br />
-                    Shared with Love
-                </h1>
-                <p className='mt-4 text-base text-navy-950 font-extrabold text-shadow-xs text-shadow-cocoa-900/30 md:text-lg'>
-                    Traditional Chikkis • Made with Love
-                </p>
+                <div className='mx-4 max-w-2xl sm:mx-auto'>
+                    <p className='text-xs font-extrabold tracking-[0.2em] text-cream-100 text-shadow-sm text-shadow-navy-950 uppercase sm:text-sm'>
+                        6 Varieties · One Traditional Taste
+                    </p>
+
+                    <h1 className='mt-2 font-display text-2xl leading-tight font-semibold text-cream-50 text-shadow-lg text-shadow-navy-950 sm:text-3xl xl:text-4xl'>
+                        Six Variants Of Chikkis,
+                        <br />
+                        One Love for Tradition
+                    </h1>
+
+                    <p className='mx-auto mt-3 max-w-xl text-sm leading-relaxed font-semibold text-white text-shadow-md text-shadow-navy-950 sm:text-base'>
+                        Explore our collection of six delicious chikki varieties, crafted with
+                        traditional ingredients, jaggery and carefully selected nuts and seeds.
+                    </p>
+                </div>
 
                 <GoldenDivider className='mt-0 text-caramel-500' />
             </div>

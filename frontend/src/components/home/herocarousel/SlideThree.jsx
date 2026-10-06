@@ -4,10 +4,7 @@ import chikkiPlatters from '../../../assets/backgrounds/headerbgthree.avif'
 import { APP_ROUTES } from '../../../constants/appRoutepoints.js'
 import GoldenDivider from '../../common/GoldenDivider.jsx'
 
-/**
- * Hero slide 3: sunlit plates of peanut, sesame and dry-fruit chikki on the right, text in the open space on
- * the left. Below md the photo sits behind the text, so a soft white wash keeps the navy text readable.
- */
+
 const SlideThree = () => {
   return (
     <div className='relative flex min-h-104 w-full items-center pt-4 md:min-h-112 lg:aspect-1920/823 lg:min-h-0'>
@@ -28,21 +25,23 @@ const SlideThree = () => {
       </div>
 
       <div className='relative z-10 mx-auto w-full px-4 text-center sm:px-8 md:mx-0 md:w-1/2 md:pl-12 md:text-left lg:pl-20 xl:pl-28'>
-        <p className='text-sm font-bold tracking-[0.25em] text-caramel-700 uppercase'>Crunchy · Wholesome · Pure</p>
+        <p className='text-sm font-bold tracking-[0.25em] text-caramel-700 uppercase'>
+          Traditional Chikkis · Made with Love
+        </p>
 
-        {/* h2 because slide 1 owns the page's h1. */}
         <h2 className='mt-3 font-display text-3xl leading-tight font-semibold text-navy-800 sm:text-4xl xl:text-5xl'>
-          Pure Goodness
+          Made with Devotion,
           <br />
-          from Vrindavan
+          Shared with Love
         </h2>
 
         <GoldenDivider className='mt-3 md:mx-0' />
 
         <p className='mx-auto mt-3 max-w-md text-base font-semibold text-body md:mx-0 md:text-lg'>
-          Peanut, sesame and dry-fruit chikkis, made the traditional way with jaggery and a lot of love.
+          Every chikki is made with devotion, bringing together traditional recipes,
+          carefully selected ingredients and the rich sweetness of jaggery. Share a
+          wholesome, joyful taste of tradition with every bite.
         </p>
-
         <Link
           to={APP_ROUTES.PRODUCTS}
           className='mt-8 inline-flex min-h-11 min-w-44 items-center justify-center rounded-lg bg-navy-800 px-10 text-sm font-semibold text-white shadow-md transition hover:bg-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600 sm:min-w-52'
