@@ -3,7 +3,6 @@ import BhogCollectionSection from "../components/home/BhogCollectionSection.jsx"
 import WhyChooseUsSection from "../components/home/WhyChooseUsSection.jsx"
 import BhogShowcaseSection from "../components/home/BhogShowcaseSection.jsx"
 import TopRatedSection from "../components/home/TopRatedSection.jsx"
-import TestimonialsSection from "../components/home/TestimonialsSection.jsx"
 
 function HomePage() {
   return (
@@ -13,7 +12,6 @@ function HomePage() {
       <BhogShowcaseSection />
       <TopRatedSection />
       <WhyChooseUsSection />
-      <TestimonialsSection />
     </div>)
 }
 

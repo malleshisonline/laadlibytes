@@ -45,6 +45,8 @@ function AdminLayout() {
   }, [])
 
   async function handleLogout() {
+    if (!window.confirm('Are you sure you want to log out?')) return
+
     await logout()
     navigate(APP_ROUTES.HOME, { replace: true })
   }

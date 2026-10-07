@@ -305,7 +305,7 @@ function ProductsPage() {
                 // From md the columns are sized by the card, not the screen, so wider screens fit more cards rather
                 // than bigger ones: at least 17rem each on tablets, 12.5rem from xl (about 200–250px; 4 per row on a
                 // 1280px laptop). Two columns on phones.
-                <ul className='grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-[repeat(auto-fill,minmax(17rem,1fr))] md:gap-5 xl:grid-cols-[repeat(auto-fill,minmax(12.5rem,1fr))]'>
+                <ul className='grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] md:gap-5 xl:grid-cols-[repeat(auto-fill,minmax(10.5rem,1fr))]'>
                   {status === 'loading'
                     ? Array.from({ length: PRODUCTS_PER_PAGE }, (_, index) => (
                         <li key={index}>

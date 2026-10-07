@@ -1,10 +1,10 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { Link } from 'react-router'
+import { Link, NavLink } from 'react-router'
 import { ArrowRight, ChevronDown } from 'lucide-react'
 
 import vrindavanNightScene from '../../assets/backgrounds/56bhogbg.avif'
 import jasmineCorner from '../../assets/footer/footerflower.avif'
-import giftHamper from '../../assets/illustrations/product_hamper.avif'
+import { APP_ROUTES } from '../../constants/appRoutepoints.js'
 import { categoryProductsPath } from '../../content/navigationMenuItems.js'
 import { useCategories } from '../../hooks/useCategories.js'
 import { cloudinaryImageUrl } from '../../utils/cloudinaryImage.js'
@@ -72,16 +72,7 @@ function ShopMegaMenuPanel({ id, isOpen, categories, isLoading, hasError, onNavi
             <GoldenDivider width={140} className='mt-1 text-caramel-500' />
             <p className='mt-1 text-xs text-lightblue-100'>Traditional chikkis, made with devotion</p>
           </div>
-          <img
-            src={giftHamper}
-            alt=''
-            aria-hidden='true'
-            width='1448'
-            height='1086'
-            loading='lazy'
-            decoding='async'
-            className='relative z-10 w-full drop-shadow-lg'
-          />
+         
         </div>
 
         {/* Right: the categories. */}
@@ -195,19 +186,26 @@ export function DesktopShopMenuItem({ item, linkClassName }) {
         }
       }}
     >
-      {/* Underlined like the active menu item while the dropdown is open. */}
+      <NavLink
+        to={APP_ROUTES.PRODUCTS}
+        onClick={close}
+        className={({ isActive }) => linkClassName({ isActive })}
+      >
+        {item.label}
+      </NavLink>
+
       <button
         ref={toggleRef}
         type='button'
+        aria-label={`${isOpen ? 'Close' : 'Open'} ${item.label} categories`}
         aria-expanded={isOpen}
         aria-controls={panelId}
         onPointerDown={(event) => {
           pointerTypeRef.current = event.pointerType
         }}
         onClick={handleToggleClick}
-        className={`inline-flex items-center gap-1 ${linkClassName({ isActive: isOpen })}`}
+        className={`inline-flex items-center rounded-sm p-1 ${linkClassName({ isActive: isOpen })}`}
       >
-        {item.label}
         <ChevronDown
           size={16}
           strokeWidth={2}
@@ -229,8 +227,8 @@ export function DesktopShopMenuItem({ item, linkClassName }) {
 }
 
 /**
- * Mobile "Shop" menu row: tapping it opens the categories nested underneath (it never navigates itself).
- * `onNavigate` closes the whole mobile menu once a category is picked.
+ * Mobile shop row links to all products; its chevron opens categories underneath.
+ * `onNavigate` closes the whole mobile menu once a destination is picked.
  */
 export function MobileShopMenuItem({ item, linkClassName, onNavigate }) {
   const listId = useId()
@@ -242,21 +240,30 @@ export function MobileShopMenuItem({ item, linkClassName, onNavigate }) {
 
   return (
     <>
-      <button
-        type='button'
-        aria-expanded={isOpen}
-        aria-controls={listId}
-        onClick={() => setIsOpen((wasOpen) => !wasOpen)}
-        className={`w-full justify-between ${linkClassName({ isActive: isOpen })}`}
-      >
-        {item.label}
-        <ChevronDown
-          size={20}
-          strokeWidth={1.75}
-          aria-hidden='true'
-          className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-        />
-      </button>
+      <div className='flex items-center'>
+        <NavLink
+          to={APP_ROUTES.PRODUCTS}
+          onClick={onNavigate}
+          className={({ isActive }) => `${linkClassName({ isActive: isActive || isOpen })} flex-1`}
+        >
+          {item.label}
+        </NavLink>
+        <button
+          type='button'
+          aria-label={`${isOpen ? 'Close' : 'Open'} ${item.label} categories`}
+          aria-expanded={isOpen}
+          aria-controls={listId}
+          onClick={() => setIsOpen((wasOpen) => !wasOpen)}
+          className={`inline-flex min-h-11 items-center justify-center rounded-lg px-3 text-navy-800 transition hover:bg-lightblue-100 ${isOpen ? 'bg-lightblue-100' : ''}`}
+        >
+          <ChevronDown
+            size={20}
+            strokeWidth={1.75}
+            aria-hidden='true'
+            className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          />
+        </button>
+      </div>
 
       {isOpen && (
         // Cream card with a caramel edge, like the category cards, nested under "Shop".

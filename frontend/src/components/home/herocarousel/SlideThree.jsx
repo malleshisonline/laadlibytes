@@ -7,7 +7,7 @@ import GoldenDivider from '../../common/GoldenDivider.jsx'
 
 const SlideThree = () => {
   return (
-    <div className='relative flex min-h-104 w-full items-center pt-4 md:min-h-112 lg:aspect-1920/823 lg:min-h-0'>
+    <div className='relative flex min-h-130 w-full items-center pt-4 md:min-h-112 lg:aspect-1920/823 lg:min-h-0'>
       <div className='absolute inset-x-0 top-0 -bottom-6 lg:-bottom-8'>
         <img
           src={chikkiPlatters}
@@ -25,11 +25,11 @@ const SlideThree = () => {
       </div>
 
       <div className='relative z-10 mx-auto w-full px-4 text-center sm:px-8 md:mx-0 md:w-1/2 md:pl-12 md:text-left lg:pl-20 xl:pl-28'>
-        <p className='text-sm font-bold tracking-[0.25em] text-caramel-700 uppercase'>
+        <p className='text-sm font-extrabold tracking-[0.25em] text-navy-950 uppercase sm:font-bold sm:text-caramel-700'>
           Traditional Chikkis · Made with Love
         </p>
 
-        <h2 className='mt-3 font-display text-3xl leading-tight font-semibold text-navy-800 sm:text-4xl xl:text-5xl'>
+        <h2 className='mt-3 font-display text-3xl leading-tight font-semibold text-navy-950 sm:text-4xl sm:text-navy-800 xl:text-5xl'>
           Made with Devotion,
           <br />
           Shared with Love
@@ -37,7 +37,7 @@ const SlideThree = () => {
 
         <GoldenDivider className='mt-3 md:mx-0' />
 
-        <p className='mx-auto mt-3 max-w-md text-base font-semibold text-body md:mx-0 md:text-lg'>
+        <p className='mx-auto mt-3 max-w-md text-base font-semibold text-[#001a33] md:mx-0 md:text-lg sm:text-body'>
           Every chikki is made with devotion, bringing together traditional recipes,
           carefully selected ingredients and the rich sweetness of jaggery. Share a
           wholesome, joyful taste of tradition with every bite.

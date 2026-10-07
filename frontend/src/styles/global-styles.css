@@ -129,3 +129,75 @@
     @apply bg-navy-950 text-lightblue-100;
   }
 }
+
+
+
+@keyframes offerChange {
+  0% {
+    opacity: 0;
+    transform: translateY(5px);
+    filter: blur(2px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes offerShine {
+  0% {
+    left: -35%;
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    left: 115%;
+    opacity: 0;
+  }
+}
+
+@keyframes heroGoodieFlow {
+  0% {
+    transform: translate3d(0, -45px, 0) rotate(0deg);
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  30% {
+    transform: translate3d(12px, 28vh, 0) rotate(70deg);
+  }
+
+  55% {
+    transform: translate3d(-10px, 55vh, 0) rotate(145deg);
+  }
+
+  80% {
+    opacity: 0.95;
+  }
+
+  100% {
+    transform: translate3d(15px, 105vh, 0) rotate(260deg);
+    opacity: 0;
+  }
+}
+
+.falling-hero-goodie {
+  top: -30px;
+  animation-name: heroGoodieFlow;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}

@@ -15,10 +15,10 @@ function SinceSection() {
           aria-hidden='true'
           className='animate-fade-up bg-page px-6 font-display text-5xl font-semibold text-navy-800 motion-reduce:animate-none sm:text-6xl md:text-7xl'
         >
-          Since <span className='text-caramel-700'>2022</span>
+          Since <span className='text-caramel-700'>2016</span>
         </p>
         <p className='max-w-xl text-base leading-relaxed text-body md:text-lg'>
-          Since 2022, we have been sharing the warmth of Vrindavan-inspired tradition through
+          Since 2016, we have been sharing the warmth of Vrindavan-inspired tradition through
           chikkis made to bring people together.
         </p>
       </div>

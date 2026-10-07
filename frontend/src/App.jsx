@@ -18,12 +18,14 @@ import CartPage from './pages/CartPage.jsx'
 import CheckoutPage from './pages/CheckoutPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
 import HomePage from './pages/HomePage.jsx'
+import GiftStorePage from './pages/GiftStorePage.jsx'
 import IdentifyPage from './pages/IdentifyPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import ProductDetailsPage from './pages/ProductDetailsPage.jsx'
 import ProductsPage from './pages/ProductsPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
 import VerifyOtpPage from './pages/VerifyOtpPage.jsx'
+import BestSellers from './pages/BestSellers.jsx'
 
 // The admin pages load only when an admin opens them, so shoppers never download them.
 const AdminCategoriesPage = lazy(() => import('./pages/admin/AdminCategoriesPage.jsx'))
@@ -59,6 +61,9 @@ function App() {
           <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
           <Route path={APP_ROUTES.PRODUCT_DETAILS} element={<ProductDetailsPage />} />
           <Route path={APP_ROUTES.CART} element={<CartPage />} />
+          <Route path={APP_ROUTES.BEST_SELLERS} element={<BestSellers />} />
+          <Route path={APP_ROUTES.GIFT_STORE} element={<GiftStorePage />} />
+
 
           {/* Signed-in only: a guest is sent to sign in and brought back. */}
           <Route element={<RequireAuth />}>

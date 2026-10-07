@@ -67,7 +67,7 @@ function PlaceholderCard() {
 
 function BhogCollectionSection() {
   const [products, setProducts] = useState([])
-  const [status, setStatus] = useState('loading') 
+  const [status, setStatus] = useState('loading')
   const [pageCount, setPageCount] = useState(1)
   const [currentPage, setCurrentPage] = useState(0)
   const trackRef = useRef(null)
@@ -131,7 +131,7 @@ function BhogCollectionSection() {
   return (
     <section
       aria-labelledby='bhog-collection-heading'
-      className='relative overflow-hidden rounded-t-3xl bg-white py-12 md:py-16'
+      className='relative overflow-hidden rounded-t-3xl bg-white '
     >
       <div
         aria-hidden='true'
@@ -171,8 +171,11 @@ function BhogCollectionSection() {
             className={`${FLUTE_CLASSES} right-0 -rotate-20`}
           />
         </div>
+        {/* Best sellers share this section's white background and width, as in the Home design. */}
+        <BestSellersSection />
 
-        <header className='px-10 text-center sm:px-16'>
+
+        <header className='px-10 text-center sm:px-16 mt-20'>
           <h2 id='bhog-collection-heading' className='text-2xl font-semibold text-navy-800 md:text-3xl'>
             56 Bhog – A Divine Collection
           </h2>
@@ -196,15 +199,15 @@ function BhogCollectionSection() {
           >
             {status === 'loading'
               ? Array.from({ length: PLACEHOLDER_COUNT }, (_, index) => (
-                  <li key={index} className={CARD_WIDTH_CLASSES}>
-                    <PlaceholderCard />
-                  </li>
-                ))
+                <li key={index} className={CARD_WIDTH_CLASSES}>
+                  <PlaceholderCard />
+                </li>
+              ))
               : products.map((product) => (
-                  <li key={product.id} className={CARD_WIDTH_CLASSES}>
-                    <BhogCard product={product} />
-                  </li>
-                ))}
+                <li key={product.id} className={CARD_WIDTH_CLASSES}>
+                  <BhogCard product={product} />
+                </li>
+              ))}
           </ul>
 
           <button
@@ -218,8 +221,7 @@ function BhogCollectionSection() {
           </button>
         </div>
 
-        {/* Best sellers share this section's white background and width, as in the Home design. */}
-        <BestSellersSection />
+
       </div>
     </section>
   )

@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import SlideOne from './herocarousel/SlideOne'
-import SlideTwo from './herocarousel/SlideTwo'
 import SlideThree from './herocarousel/SlideThree.jsx'
 
 // Slides in the order they rotate.
-const SLIDES = [SlideOne, SlideTwo, SlideThree]
+const SLIDES = [SlideOne, SlideThree]
 
 // Smaller on phones (8px dots, 20px pill, thin ring); full size from sm.
 const DOT_CLASSES = 'h-2 rounded-full shadow-md transition-all duration-300 sm:h-3'
@@ -25,10 +24,10 @@ const HeaderSection = () => {
 
     return (
 
-        <section className='relative -mt-4 pb-10'>
+        <section className='relative -mt-4'>
             {SLIDES.map((Slide, index) => currentSlide === index && <Slide key={index} />)}
 
-            <div className='absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 sm:gap-3'>
+            <div className='absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 sm:gap-3'>
                 {/* Gold and white dots with a contrasting ring, so they read on both the light sky (slide 1) and the
                     dark navy (slide 2) and the sunlit table (slide 3); the active one stretches into a pill. */}
                 {SLIDES.map((_, index) => (

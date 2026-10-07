@@ -126,7 +126,7 @@ function BhogShowcaseSection() {
     // Inset rounded card: margin from the section above and from the screen sides, corners clipped.
     <section
       aria-labelledby='bhog-showcase-heading'
-      className='relative mx-2 mt-5 overflow-hidden rounded-3xl py-12 sm:mx-6'
+      className='relative mt-5 overflow-hidden py-12 '
     >
       {/* Temples sit on the left of the scene, so it stays anchored there as the width changes. */}
       <img

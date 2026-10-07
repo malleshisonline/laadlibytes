@@ -7,6 +7,8 @@ export const APP_ROUTES = {
   REGISTER: '/register',
   VERIFY_OTP: '/verify-otp',
   PRODUCTS: '/products',
+  BEST_SELLERS: '/best-sellers',
+  GIFT_STORE: '/gift-store',
   PRODUCT_DETAILS: '/products/:slug',
   CART: '/cart',
   CHECKOUT: '/checkout',

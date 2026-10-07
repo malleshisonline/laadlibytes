@@ -65,22 +65,27 @@ function BestSellersSection() {
         Our Best Sellers
       </h2>
 
-      <div className='relative mt-6 sm:px-10 md:mt-8 md:px-14'>
-        {/* py-2 leaves room for the card's hover lift and shadow inside the scrolling track. */}
+      <div className='relative mt-6 md:mt-8'>
         <ul
-          className='flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth py-2 md:gap-6 scrollbar-none [&::-webkit-scrollbar]:hidden'
+          className='flex snap-x snap-mandatory gap-0 overflow-x-auto scroll-smooth py-0 scrollbar-none [&::-webkit-scrollbar]:hidden'
         >
           {status === 'loading'
             ? Array.from({ length: PLACEHOLDER_COUNT }, (_, index) => (
-                <li key={index} className={CARD_WIDTH_CLASSES}>
-                  <PlaceholderCard />
-                </li>
-              ))
+              <li
+                key={index}
+                className='w-1/2 shrink-0 snap-start sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-[14.285714%]'
+              >
+                <PlaceholderCard />
+              </li>
+            ))
             : products.map((product) => (
-                <li key={product.id} className={CARD_WIDTH_CLASSES}>
-                  <ProductCard product={product} />
-                </li>
-              ))}
+              <li
+                key={product.id}
+                className='w-1/2 shrink-0 snap-start sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-[14.285714%]'
+              >
+                <ProductCard product={product} />
+              </li>
+            ))}
         </ul>
       </div>
 
