@@ -575,7 +575,13 @@ function Navbar() {
 
                     {/* Small greeting */}
 
-                    <span className="text-[11px] font-medium text-muted">
+                    <span
+                      className={
+                        user
+                          ? 'text-sm font-medium text-muted'
+                          : 'text-[11px] font-medium text-muted'
+                      }
+                    >
 
                       {user
                         ? `Hello, ${user.name
