@@ -70,12 +70,14 @@ const envSchema = z.object({
 
   // The console drivers only log codes; nobody would ever receive them.
   if (cfg.NODE_ENV === 'production') {
-    for (const name of ['EMAIL_PROVIDER', 'SMS_PROVIDER']) {
-      if (cfg[name] === 'console') {
-        ctx.addIssue({ code: 'custom', path: [name], message: `${name}=console is not allowed in production` });
-      }
-    }
+  if (cfg.EMAIL_PROVIDER === 'console') {
+    ctx.addIssue({
+      code: 'custom',
+      path: ['EMAIL_PROVIDER'],
+      message: 'EMAIL_PROVIDER=console is not allowed in production',
+    });
   }
+}
 });
 
 const parsed = envSchema.safeParse(process.env);
