@@ -14,7 +14,9 @@ if (env.isDev) {
 export async function connectDB(uri = env.MONGO_URI) {
   mongoose.connection.on('connected', () => logger.info('MongoDB connected'));
   mongoose.connection.on('disconnected', () => logger.warn('MongoDB disconnected'));
-  mongoose.connection.on('error', (err) => logger.error('MongoDB connection error', err));
+mongoose.connection.on('error', (err) => {
+  logger.error(`MongoDB connection error: ${err.message}`);
+});
 
   await mongoose.connect(uri, {
     serverSelectionTimeoutMS: 10_000,

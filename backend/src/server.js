@@ -49,6 +49,15 @@ process.on('uncaughtException', (err) => {
 });
 
 bootstrap().catch((err) => {
-  logger.error('Failed to start server', err);
+  logger.error(`Failed to start server: ${err.name}: ${err.message}`);
+
+  if (err.reason?.servers) {
+    for (const [address, server] of err.reason.servers) {
+      logger.error(
+        `MongoDB server ${address}: ${server.error?.message || 'No detailed error available'}`
+      );
+    }
+  }
+
   process.exit(1);
 });
