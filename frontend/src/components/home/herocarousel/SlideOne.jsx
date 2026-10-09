@@ -91,7 +91,7 @@ const SlideOne = () => {
                         Six Varieties. One Love for Tradition.
                     </h1>
 
-                    <p className='mx-auto mt-2 max-w-2xl text-xs leading-relaxed text-cream-50 font-bold lg:text-navy-950 sm:text-sm sm:font-semibold'>
+                    <p className='mx-auto mt-2 max-w-2xl text-xs leading-relaxed text-cream-50 font-bold md:text-navy-950 md:text-lg sm:text-sm sm:font-semibold'>
                         Discover our collection of traditionally crafted chikkis,
                         made with jaggery, nuts and seeds for an authentic taste.
                     </p>
