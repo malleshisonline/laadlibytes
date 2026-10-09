@@ -1,8 +1,5 @@
 import { Link } from 'react-router'
 import {
-  ArrowRight,
-  ShoppingCart,
-  Zap,
   Heart,
   Star,
   Sparkles,
@@ -19,10 +16,7 @@ const CARD_BODY_CLASSES =
   'flex h-full flex-col bg-surface p-0'
 
 const BUTTON_BASE_CLASSES =
-  'group/button relative mt-2 flex h-8.5 w-full items-center justify-between overflow-hidden rounded-full pr-1 pl-3 text-[0.7rem] font-semibold shadow-sm transition duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600 sm:text-xs'
-
-const BUTTON_BUBBLE_CLASSES =
-  'relative grid size-6.5 shrink-0 place-items-center rounded-full transition duration-500'
+  'flex h-8 min-w-0 w-full items-center justify-center overflow-hidden rounded-lg border px-1 text-[0.6rem] font-semibold leading-none transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600 sm:h-9 sm:px-2 sm:text-xs'
 
 const BUTTON_PENDING_CLASSES =
   'disabled:cursor-wait disabled:opacity-70'
@@ -33,12 +27,12 @@ const BUTTON_PENDING_CLASSES =
 ------------------------------------------------------- */
 
 const PRODUCT_LABELS = [
-  { text: 'Made with Love', icon: Heart },
-  { text: 'Customer Favourite', icon: Star },
-  { text: 'Perfect for Bhog', icon: Sparkles },
+  { text: 'Made with', icon: Heart },
+  { text: 'Favourite', icon: Star },
+  { text: '56Bhog', icon: Sparkles },
   { text: 'Special Treat', icon: Gift },
-  { text: 'Made for Your Ladli', icon: Heart },
-  { text: 'Taste of Tradition', icon: Star },
+  { text: ' for Your Ladli', icon: Heart },
+  // { text: 'Taste of Tradition', icon: Star },
 ]
 
 function getProductLabels(product) {
@@ -63,17 +57,9 @@ function AddToCartButton({ product, inCart, pending, onAddToCart }) {
       <button
         type='button'
         disabled
-        className={`${BUTTON_BASE_CLASSES} cursor-not-allowed bg-lightblue-100 text-muted shadow-none`}
+        className={`${BUTTON_BASE_CLASSES} col-span-2 cursor-not-allowed border-line bg-cream-50 text-muted`}
       >
-        <span>Out of Stock</span>
-
-        <span className={`${BUTTON_BUBBLE_CLASSES} bg-surface text-muted`}>
-          <ShoppingCart
-            size={13}
-            strokeWidth={1.75}
-            aria-hidden='true'
-          />
-        </span>
+        Out of Stock
       </button>
     )
   }
@@ -83,21 +69,9 @@ function AddToCartButton({ product, inCart, pending, onAddToCart }) {
       <Link
         to={APP_ROUTES.CART}
         aria-label={`${product.name} is in your cart. Go to cart`}
-        className={`${BUTTON_BASE_CLASSES} bg-leaf-600 text-white shadow-leaf-600/30 hover:shadow-md motion-safe:active:scale-95`}
+        className={`${BUTTON_BASE_CLASSES} border-caramel-700 bg-caramel-700 text-white hover:brightness-95 motion-safe:active:scale-[0.98]`}
       >
-        <span className='relative transition-transform duration-300 motion-safe:group-hover/button:translate-x-0.5'>
-          Go to Cart
-        </span>
-
-        <span
-          className={`${BUTTON_BUBBLE_CLASSES} bg-surface text-leaf-600 motion-safe:group-hover/button:translate-x-0.5`}
-        >
-          <ArrowRight
-            size={13}
-            strokeWidth={2.5}
-            aria-hidden='true'
-          />
-        </span>
+        Go to Cart
       </Link>
     )
   }
@@ -108,27 +82,9 @@ function AddToCartButton({ product, inCart, pending, onAddToCart }) {
       onClick={() => onAddToCart(product)}
       disabled={pending}
       aria-label={`Add ${product.name} to cart`}
-      className={`${BUTTON_BASE_CLASSES} ${BUTTON_PENDING_CLASSES} bg-navy-800 text-white shadow-navy-900/25 hover:bg-navy-700 hover:shadow-md motion-safe:active:scale-95`}
+      className={`${BUTTON_BASE_CLASSES} ${BUTTON_PENDING_CLASSES} border-navy-800 bg-navy-800 text-white hover:bg-navy-700 motion-safe:active:scale-[0.98]`}
     >
-      {/* Light sweep */}
-      <span
-        aria-hidden='true'
-        className='pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-linear-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 group-hover/button:left-full group-hover/button:opacity-100'
-      />
-
-      <span className='relative transition-transform duration-300 motion-safe:group-hover/button:translate-x-0.5'>
-        Add to Cart
-      </span>
-
-      <span
-        className={`${BUTTON_BUBBLE_CLASSES} bg-caramel-500 text-white shadow-sm motion-safe:group-hover/button:scale-110 motion-safe:group-hover/button:rotate-360`}
-      >
-        <ShoppingCart
-          size={13}
-          strokeWidth={2}
-          aria-hidden='true'
-        />
-      </span>
+      Add to Cart
     </button>
   )
 }
@@ -142,21 +98,9 @@ function BuyNowButton({ product, pending, onBuyNow }) {
       onClick={() => onBuyNow(product)}
       disabled={pending}
       aria-label={`Buy ${product.name} now`}
-      className={`${BUTTON_BASE_CLASSES} ${BUTTON_PENDING_CLASSES} bg-caramel-700 text-white shadow-caramel-700/25 hover:shadow-md motion-safe:active:scale-95`}
+      className={`${BUTTON_BASE_CLASSES} ${BUTTON_PENDING_CLASSES} border-navy-800 bg-transparent text-navy-800 hover:bg-lightblue-50 motion-safe:active:scale-[0.98]`}
     >
-      <span className='relative transition-transform duration-300 motion-safe:group-hover/button:translate-x-0.5'>
-        Buy Now
-      </span>
-
-      <span
-        className={`${BUTTON_BUBBLE_CLASSES} bg-surface text-caramel-700 motion-safe:group-hover/button:scale-110`}
-      >
-        <Zap
-          size={13}
-          strokeWidth={2}
-          aria-hidden='true'
-        />
-      </span>
+      Buy Now
     </button>
   )
 }
@@ -337,22 +281,16 @@ function ProductCard({ product }) {
           </div>
 
 
-          {/* Add to Cart */}
-          <AddToCartButton
-            product={product}
-            inCart={isInCart(product.id)}
-            pending={pending}
-            onAddToCart={addToCart}
-          />
-
-          {/* Buy Now */}
-          {product.inStock && (
-            <BuyNowButton
+          <div className='mt-2 grid grid-cols-2 gap-1.5'>
+            <AddToCartButton
               product={product}
+              inCart={isInCart(product.id)}
               pending={pending}
-              onBuyNow={buyNow}
+              onAddToCart={addToCart}
             />
-          )}
+
+            {product.inStock && <BuyNowButton product={product} pending={pending} onBuyNow={buyNow} />}
+          </div>
 
         </div>
 

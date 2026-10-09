@@ -13,14 +13,14 @@ const INACTIVE_DOT_CLASSES = 'w-2 bg-white ring-1 ring-caramel-500 hover:bg-cara
 const HeaderSection = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % SLIDES.length)
-        }, 3000)
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setCurrentSlide((prev) => (prev + 1) % SLIDES.length)
+    //     }, 3000)
 
-        // Return a functin so the timer is cleared only when the section unmounts.
-        return () => clearInterval(interval)
-    }, [])
+    //     // Return a functin so the timer is cleared only when the section unmounts.
+    //     return () => clearInterval(interval)
+    // }, [])
 
     return (
 
