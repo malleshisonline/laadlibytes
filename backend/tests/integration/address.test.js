@@ -6,6 +6,7 @@ import request from 'supertest';
 const { default: app } = await import('../../src/app.js');
 const { env } = await import('../../src/config/env.js');
 const { Address, MAX_ADDRESSES } = await import('../../src/modules/address/address.model.js');
+const { User } = await import('../../src/modules/user/user.model.js');
 const { signAccessToken } = await import('../../src/utils/token.js');
 
 const api = (path) => `${env.API_PREFIX}${path}`;
@@ -35,7 +36,7 @@ let mongod;
 beforeAll(async () => {
   mongod = await MongoMemoryServer.create();
   await mongoose.connect(mongod.getUri());
-  await Address.init();
+  await Promise.all([Address.init(), User.init()]);
 }, 120_000);
 
 afterAll(async () => {
@@ -44,7 +45,11 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  await Address.deleteMany({});
+  await Promise.all([Address.deleteMany({}), User.deleteMany({})]);
+  await User.create([
+    { _id: userA, name: 'User A', email: 'user-a@example.com', password: 'Secret123' },
+    { _id: userB, name: 'User B', email: 'user-b@example.com', password: 'Secret123' },
+  ]);
 });
 
 describe('create and list', () => {
@@ -56,6 +61,53 @@ describe('create and list', () => {
     expect(res.body.data[0]).toMatchObject({ ...VALID_ADDRESS, phone: '+919876543210', isDefault: true });
     expect(res.body.data[0].id).toBeDefined();
     expect(res.body.data[0].user).toBeUndefined();
+  });
+
+  test('saves an email account address phone on the same user for identify and password login', async () => {
+    const user = await User.create({ name: 'Email User', email: 'renu@example.com', password: 'Secret123' });
+
+    const saved = await createAddress(user.id);
+
+    expect(saved.status).toBe(201);
+    expect((await User.findById(user.id)).phone).toBe('+919876543210');
+
+    const identified = await request(app)
+      .post(api('/auth/identify'))
+      .send({ identifier: VALID_ADDRESS.phone });
+    expect(identified.status).toBe(200);
+    expect(identified.body.data).toEqual({
+      channel: 'phone',
+      identifier: '+919876543210',
+      exists: true,
+    });
+
+    const login = await request(app).post(api('/auth/login')).send({
+      identifier: VALID_ADDRESS.phone,
+      password: 'Secret123',
+    });
+    expect(login.status).toBe(200);
+    expect(login.body.data.user.id).toBe(user.id);
+
+    const register = await request(app).post(api('/auth/register')).send({
+      identifier: VALID_ADDRESS.phone,
+      name: 'Different User',
+      password: 'Secret123',
+      confirmPassword: 'Secret123',
+    });
+    expect(register.status).toBe(409);
+    expect(register.body.code).toBe('ACCOUNT_EXISTS');
+  });
+
+  test('does not save an address phone already assigned to another account', async () => {
+    const account = await User.create({ name: 'Email User', email: 'renu@example.com', password: 'Secret123' });
+    await User.create({ name: 'Phone Owner', phone: '+919876543210', password: 'Secret123' });
+
+    const res = await createAddress(account.id);
+
+    expect(res.status).toBe(409);
+    expect(res.body.code).toBe('PHONE_ALREADY_IN_USE');
+    expect(await Address.countDocuments({ user: account.id })).toBe(0);
+    expect((await User.findById(account.id)).phone).toBeUndefined();
   });
 
   test('a later address is not the default unless asked, and the list puts the default first', async () => {

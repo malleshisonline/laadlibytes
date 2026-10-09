@@ -26,13 +26,14 @@ const { default: app } = await import('../../src/app.js');
 const { env } = await import('../../src/config/env.js');
 const { Category } = await import('../../src/modules/category/category.model.js');
 const { Product } = await import('../../src/modules/product/product.model.js');
+const { User } = await import('../../src/modules/user/user.model.js');
 const { signAccessToken } = await import('../../src/utils/token.js');
 
 const api = (path) => `${env.API_PREFIX}${path}`;
 // Every route exercised here is an admin write, and those live under /admin.
 const adminApi = (path) => api(`/admin${path}`);
-const bearerTokenFor = (role) =>
-  `Bearer ${signAccessToken({ sub: new mongoose.Types.ObjectId().toString(), role })}`;
+const adminId = new mongoose.Types.ObjectId().toString();
+const bearerTokenFor = (role) => `Bearer ${signAccessToken({ sub: adminId, role })}`;
 const ADMIN_AUTHORIZATION = () => bearerTokenFor('admin');
 
 const PNG_FILE_BYTES = Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), Buffer.alloc(64)]);
@@ -96,7 +97,7 @@ const postProductMultipart = (fields) =>
 beforeAll(async () => {
   mongod = await MongoMemoryServer.create();
   await mongoose.connect(mongod.getUri());
-  await Promise.all([Category.init(), Product.init()]);
+  await Promise.all([Category.init(), Product.init(), User.init()]);
 }, 120_000);
 
 afterAll(async () => {
@@ -108,7 +109,14 @@ beforeEach(async () => {
   // clearAllMocks keeps the implementation but drops any queued mock*Once leftovers.
   jest.clearAllMocks();
   uploadImageBufferToCloudinary.mockReset().mockImplementation(fakeCloudinaryUpload);
-  await Promise.all([Product.deleteMany({}), Category.deleteMany({})]);
+  await Promise.all([Product.deleteMany({}), Category.deleteMany({}), User.deleteMany({})]);
+  await User.create({
+    _id: adminId,
+    name: 'Upload Admin',
+    email: 'upload-admin@example.com',
+    password: 'Secret123',
+    role: 'admin',
+  });
   fruitCategory = await Category.create({ name: 'Fruit Variant', displayOrder: 6 });
 });
 

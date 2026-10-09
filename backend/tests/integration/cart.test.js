@@ -168,9 +168,8 @@ describe('changing the cart', () => {
 
   test('PATCH 404s a product that is not in the cart', async () => {
     const product = await makeProduct();
-    const res = await cartRequest('patch', `/items/${product.id}`, { userId: new mongoose.Types.ObjectId().toString() }).send(
-      { quantity: 2 }
-    );
+    const user = await User.create({ name: 'Cart User', email: 'cart-patch@example.com', password: PASSWORD });
+    const res = await cartRequest('patch', `/items/${product.id}`, { userId: user.id }).send({ quantity: 2 });
     expect(res.status).toBe(404);
     expect(res.body.code).toBe('CART_ITEM_NOT_FOUND');
   });
@@ -194,14 +193,14 @@ describe('changing the cart', () => {
 describe('signed-in cart', () => {
   test('a user gets their own cart and no guest cookie', async () => {
     const product = await makeProduct();
-    const userId = new mongoose.Types.ObjectId().toString();
+    const user = await User.create({ name: 'Cart User', email: 'signed-in@example.com', password: PASSWORD });
 
-    const res = await cartRequest('post', '/items', { userId }).send({ productId: product.id });
+    const res = await cartRequest('post', '/items', { userId: user.id }).send({ productId: product.id });
     expect(res.status).toBe(200);
     expect(cartCookie(res)).toBeUndefined();
 
     const cart = await Cart.findOne().lean();
-    expect(String(cart.user)).toBe(userId);
+    expect(String(cart.user)).toBe(user.id);
     expect(cart.expiresAt).toBeUndefined();
   });
 

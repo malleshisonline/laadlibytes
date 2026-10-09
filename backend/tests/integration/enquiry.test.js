@@ -20,11 +20,14 @@ jest.unstable_mockModule('../../src/integrations/email/index.js', () => {
 const { default: app } = await import('../../src/app.js');
 const { env } = await import('../../src/config/env.js');
 const { Enquiry } = await import('../../src/modules/enquiry/enquiry.model.js');
+const { User } = await import('../../src/modules/user/user.model.js');
 const { signAccessToken } = await import('../../src/utils/token.js');
 
 const api = (path) => `${env.API_PREFIX}${path}`;
 const adminApi = (path) => api(`/admin${path}`);
-const tokenFor = (role, sub = new mongoose.Types.ObjectId().toString()) => signAccessToken({ sub, role });
+const adminId = new mongoose.Types.ObjectId().toString();
+const customerId = new mongoose.Types.ObjectId().toString();
+const tokenFor = (role, sub = role === 'admin' ? adminId : customerId) => signAccessToken({ sub, role });
 const ADMIN = () => `Bearer ${tokenFor('admin')}`;
 const CUSTOMER = () => `Bearer ${tokenFor('user')}`;
 
@@ -41,7 +44,7 @@ let mongod;
 beforeAll(async () => {
   mongod = await MongoMemoryServer.create();
   await mongoose.connect(mongod.getUri());
-  await Enquiry.init();
+  await Promise.all([Enquiry.init(), User.init()]);
 }, 120_000);
 
 afterAll(async () => {
@@ -50,7 +53,11 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  await Enquiry.deleteMany({});
+  await Promise.all([Enquiry.deleteMany({}), User.deleteMany({})]);
+  await User.create([
+    { _id: adminId, name: 'Enquiry Admin', email: 'enquiry-admin@example.com', password: 'Secret123', role: 'admin' },
+    { _id: customerId, name: 'Enquiry Customer', email: 'enquiry-customer@example.com', password: 'Secret123' },
+  ]);
   outbox.length = 0;
   failNextEmailTo = null;
 });
@@ -78,6 +85,12 @@ describe('POST /enquiries', () => {
 
   test('links the enquiry to a signed-in sender', async () => {
     const userId = new mongoose.Types.ObjectId().toString();
+    await User.create({
+      _id: userId,
+      name: 'Enquiry Sender',
+      email: 'enquiry-sender@example.com',
+      password: 'Secret123',
+    });
     await request(app)
       .post(api('/enquiries'))
       .set('Authorization', `Bearer ${tokenFor('user', userId)}`)

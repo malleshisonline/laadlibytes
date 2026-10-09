@@ -1,6 +1,13 @@
 import { ApiError } from '../../utils/ApiError.js';
 import { buildMeta, getPagination } from '../../utils/pagination.js';
 import { hashToken } from '../../utils/token.js';
+import { Address } from '../address/address.model.js';
+import { Cart } from '../cart/cart.model.js';
+import { Category } from '../category/category.model.js';
+import { Enquiry } from '../enquiry/enquiry.model.js';
+import { OtpChallenge } from '../otp/otp.model.js';
+import { Order } from '../order/order.model.js';
+import { Product } from '../product/product.model.js';
 
 import { User } from './user.model.js';
 
@@ -81,8 +88,54 @@ export const userService = {
   },
 
   async remove(id) {
-    const user = await User.findByIdAndDelete(id);
-    if (!user) throw ApiError.notFound('User not found');
+    const user = await User.findById(id).select('email phone').lean();
+    const identifiers = [user?.email, user?.phone].filter(Boolean);
+
+    if (identifiers.length) {
+      await OtpChallenge.deleteMany({ identifier: { $in: identifiers } });
+    }
+
+    const deletion = await User.deleteOne({ _id: id });
+
+    const unpaidUnshippedOrders = await Order.find({
+      user: id,
+      status: { $in: ['placed', 'confirmed', 'packed'] },
+      paymentStatus: { $in: ['pending', 'failed'] },
+    })
+      .select('items.product items.quantity')
+      .lean();
+    const stockByProduct = new Map();
+    unpaidUnshippedOrders.forEach(({ items }) => {
+      items.forEach(({ product, quantity }) => {
+        const productId = product.toString();
+        stockByProduct.set(productId, (stockByProduct.get(productId) ?? 0) + quantity);
+      });
+    });
+    if (stockByProduct.size) {
+      await Product.bulkWrite(
+        [...stockByProduct].map(([product, quantity]) => ({
+          updateOne: { filter: { _id: product }, update: { $inc: { stock: quantity } } },
+        }))
+      );
+    }
+
+    await Promise.all([
+      Address.deleteMany({ user: id }),
+      Cart.deleteMany({ user: id }),
+      Order.deleteMany({ user: id }),
+      Order.updateMany(
+        { 'history.by': id },
+        { $unset: { 'history.$[entry].by': 1 } },
+        { arrayFilters: [{ 'entry.by': id }] }
+      ),
+      Enquiry.deleteMany({ user: id }),
+      Product.updateMany({ createdBy: id }, { $unset: { createdBy: 1 } }),
+      Product.updateMany({ updatedBy: id }, { $unset: { updatedBy: 1 } }),
+      Category.updateMany({ createdBy: id }, { $unset: { createdBy: 1 } }),
+      Category.updateMany({ updatedBy: id }, { $unset: { updatedBy: 1 } }),
+    ]);
+
+    if (deletion.deletedCount === 0) throw ApiError.notFound('User not found');
     return user;
   },
 };

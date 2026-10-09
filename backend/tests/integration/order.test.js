@@ -85,6 +85,13 @@ beforeEach(async () => {
     Product.deleteMany({}),
     User.deleteMany({}),
   ]);
+  await User.create({
+    _id: adminId,
+    name: 'Order Admin',
+    email: 'order-admin@example.com',
+    password: 'Secret123',
+    role: 'admin',
+  });
 });
 
 describe('placing an order', () => {

@@ -1,4 +1,5 @@
 import { ApiError } from '../../utils/ApiError.js';
+import { User } from '../user/user.model.js';
 
 import { Address, MAX_ADDRESSES } from './address.model.js';
 
@@ -9,6 +10,22 @@ const LIST_SORT = { isDefault: -1, createdAt: -1, _id: -1 };
 const addressNotFound = () => ApiError.notFound('Address not found', { code: 'ADDRESS_NOT_FOUND' });
 
 const clearDefault = (userId) => Address.updateMany({ user: userId, isDefault: true }, { $set: { isDefault: false } });
+
+async function saveAccountPhoneIfMissing(userId, phone) {
+  try {
+    await User.updateOne(
+      { _id: userId, $or: [{ phone: { $exists: false } }, { phone: null }] },
+      { $set: { phone } }
+    );
+  } catch (err) {
+    if (err?.code === 11000 && err.keyPattern?.phone) {
+      throw ApiError.conflict('This mobile number is already associated with another account', {
+        code: 'PHONE_ALREADY_IN_USE',
+      });
+    }
+    throw err;
+  }
+}
 
 /**
  * A user's saved delivery addresses. Every query is scoped by user, and every write returns the
@@ -29,6 +46,7 @@ export const addressService = {
     }
 
     const makeDefault = count === 0 || isDefault === true;
+    await saveAccountPhoneIfMissing(userId, fields.phone);
     if (makeDefault) await clearDefault(userId);
     await Address.create({ ...fields, user: userId, isDefault: makeDefault });
 

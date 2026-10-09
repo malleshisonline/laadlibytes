@@ -14,9 +14,9 @@ const api = (path) => `${env.API_PREFIX}${path}`;
 // Everything an admin writes lives under /admin, gated once in admin.routes.js.
 const adminApi = (path) => api(`/admin${path}`);
 
-// authenticate only verifies the JWT and reads { sub, role }; it never loads the user, so a
-// signed token is enough and these tests stay about the catalogue rather than about auth.
-const tokenFor = (role) => signAccessToken({ sub: new mongoose.Types.ObjectId().toString(), role });
+const adminId = new mongoose.Types.ObjectId().toString();
+const customerId = new mongoose.Types.ObjectId().toString();
+const tokenFor = (role) => signAccessToken({ sub: role === 'admin' ? adminId : customerId, role });
 const ADMIN = () => `Bearer ${tokenFor('admin')}`;
 const CUSTOMER = () => `Bearer ${tokenFor('user')}`;
 
@@ -59,6 +59,10 @@ afterAll(async () => {
 
 beforeEach(async () => {
   await Promise.all([Product.deleteMany({}), Category.deleteMany({}), User.deleteMany({})]);
+  await User.create([
+    { _id: adminId, name: 'Catalogue Admin', email: 'catalogue-admin@example.com', password: 'Secret123', role: 'admin' },
+    { _id: customerId, name: 'Catalogue Customer', email: 'catalogue-customer@example.com', password: 'Secret123' },
+  ]);
   [fruit, kids] = await Category.create([
     { name: 'Fruit Variant', displayOrder: 6 },
     { name: 'Kids Wellness', displayOrder: 5 },
@@ -509,14 +513,19 @@ describe('admin audit trail', () => {
 
   test('stamps updatedBy on a soft delete', async () => {
     const product = await createProduct();
-    const adminId = new mongoose.Types.ObjectId().toString();
-    const asAdmin = `Bearer ${signAccessToken({ sub: adminId, role: 'admin' })}`;
+    const admin = await User.create({
+      name: 'Audit Admin',
+      email: 'audit-admin@example.com',
+      password: 'Secret123',
+      role: 'admin',
+    });
+    const asAdmin = `Bearer ${signAccessToken({ sub: admin.id, role: 'admin' })}`;
 
     await request(app).delete(adminApi(`/products/${product._id}`)).set('Authorization', asAdmin);
 
     const stored = await Product.findById(product._id).select('+updatedBy');
     expect(stored.isActive).toBe(false);
-    expect(stored.updatedBy.toString()).toBe(adminId);
+    expect(stored.updatedBy.toString()).toBe(admin.id);
   });
 });
 
