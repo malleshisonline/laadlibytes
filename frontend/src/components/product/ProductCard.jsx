@@ -69,7 +69,7 @@ function AddToCartButton({ product, inCart, pending, onAddToCart }) {
       <Link
         to={APP_ROUTES.CART}
         aria-label={`${product.name} is in your cart. Go to cart`}
-        className={`${BUTTON_BASE_CLASSES} border-caramel-700 bg-caramel-700 text-white hover:brightness-95 motion-safe:active:scale-[0.98]`}
+        className={`${BUTTON_BASE_CLASSES} border-caramel-500 bg-caramel-500 text-navy-950 hover:brightness-95 motion-safe:active:scale-[0.98]`}
       >
         Go to Cart
       </Link>
