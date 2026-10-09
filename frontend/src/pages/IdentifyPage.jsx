@@ -19,7 +19,7 @@ function IdentifyPage() {
     event.preventDefault()
     const trimmedIdentifier = identifier.trim()
     if (!trimmedIdentifier) {
-      setError('Enter your email address or mobile number')
+      setError('Enter your email address')
       return
     }
 
@@ -38,15 +38,15 @@ function IdentifyPage() {
 
   return (
     <>
-      <AuthHeading title="Sign in or Create Account">Enter your email address or mobile number to continue.</AuthHeading>
+      <AuthHeading title="Sign in or Create Account">Please Enter your email address to continue.</AuthHeading>
 
       <form onSubmit={handleSubmit} noValidate className="space-y-6">
         <FormField
           id="identifier"
-          label="Email or mobile number"
+          label="Email "
           type="text"
           autoComplete="username"
-          placeholder="you@example.com or 98765 43210"
+          placeholder="you@example.com "
           autoFocus
           value={identifier}
           onChange={(event) => setIdentifier(event.target.value)}
