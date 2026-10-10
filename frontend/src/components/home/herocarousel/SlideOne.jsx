@@ -83,7 +83,7 @@ const SlideOne = () => {
                 {/* Main heading */}
                 <div className='mx-auto max-w-3xl'>
 
-                    <p className='text-[9px] font-extrabold tracking-[0.14em] text-navy-800 text-shadow-sm text-shadow-cream-50 uppercase sm:text-xs sm:tracking-[0.2em] sm:text-cream-100 sm:text-shadow-navy-950'>
+                    <p className='text-[12px] md:text-[14px] font-extrabold tracking-[0.14em] text-[#01101b] sm:text-[#0a0040] text-shadow-sm text-shadow-cream-50 uppercase sm:text-xs sm:tracking-[0.2em] '>
                         Traditional Taste · Six Delicious Varieties
                     </p>
 
@@ -91,7 +91,7 @@ const SlideOne = () => {
                         Six Varieties. One Love for Tradition.
                     </h1>
 
-                    <p className='mx-auto mt-2 max-w-2xl text-xs leading-relaxed text-cream-50 font-bold md:text-navy-950 md:text-lg sm:text-sm sm:font-semibold'>
+                    <p className='mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-navy-950 font-bold md:text-lg sm:text-sm sm:font-extrabold'>
                         Discover our collection of traditionally crafted chikkis,
                         made with jaggery, nuts and seeds for an authentic taste.
                     </p>
