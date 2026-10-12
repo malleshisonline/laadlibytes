@@ -31,6 +31,7 @@ export const adminService = {
       newEnquiries,
       ordersByStatus,
       unpaidOrders,
+      ordersToPackAndShip,
     ] = await Promise.all([
       Product.countDocuments({}),
       Product.countDocuments({ isActive: true }),
@@ -43,10 +44,10 @@ export const adminService = {
       User.countDocuments({ role: 'admin' }),
       Enquiry.countDocuments({}),
       Enquiry.countDocuments({ status: 'new' }),
-      // One group per status rather than six countDocuments.
+      // One group per status rather than one countDocuments per status.
       Order.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }]),
-      // Voided orders take no payment, so they are not waiting for one.
-      Order.countDocuments({ status: { $ne: 'voided' }, paymentStatus: { $ne: 'paid' } }),
+      Order.countDocuments({ paymentStatus: { $ne: 'paid' } }),
+      Order.countDocuments({ status: { $in: ['placed', 'packed'] }, paymentStatus: 'paid' }),
     ]);
 
     // Every status is present, at 0 when no order has it, so the dashboard need not guess.
@@ -84,6 +85,7 @@ export const adminService = {
         total: Object.values(orderCounts).reduce((sum, count) => sum + count, 0),
         byStatus: orderCounts,
         unpaid: unpaidOrders,
+        toPackAndShip: ordersToPackAndShip,
       },
     };
   },

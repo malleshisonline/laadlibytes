@@ -1,20 +1,18 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { toast } from 'react-hot-toast'
-import { ArrowLeft, ArrowRight, Ban, CircleCheck, LoaderCircle } from 'lucide-react'
+import { ArrowLeft, ArrowRight, LoaderCircle } from 'lucide-react'
 
 import { adminApi } from '../../api/adminApi.js'
 import AdminLoadState from '../../components/admin/AdminLoadState.jsx'
 import AdminPageHeader from '../../components/admin/AdminPageHeader.jsx'
 import {
   ADMIN_BADGE,
-  ADMIN_BUTTON_DANGER,
   ADMIN_BUTTON_PRIMARY,
   ADMIN_BUTTON_SECONDARY,
   ADMIN_CARD,
   ADMIN_INPUT,
   ADMIN_LABEL,
-  ADMIN_TEXTAREA,
 } from '../../components/admin/adminStyles.js'
 import PriceDetailsBox from '../../components/cart/PriceDetailsBox.jsx'
 import OrderItemsSummary from '../../components/checkout/OrderItemsSummary.jsx'
@@ -31,11 +29,7 @@ import {
   toSummaryItem,
 } from '../../utils/orderStatus.js'
 
-// Mirrors ORDER_STATUS_TRANSITIONS in the backend: one step forward at a time, and voiding only before shipping.
-const VOIDABLE_STATUSES = ['placed', 'confirmed', 'packed']
-
 const NEXT_STEP_LABELS = {
-  confirmed: 'Confirm order',
   packed: 'Mark as packed',
   shipped: 'Mark as shipped',
   delivered: 'Mark as delivered',
@@ -83,28 +77,16 @@ function Section({ title, children, className = '' }) {
   )
 }
 
-/** The next delivery step, and Void while the order is unpaid and not yet shipped. */
+/** The next delivery step; packing is available only after verified payment. */
 function StatusActions({ order, onChange, isBusy }) {
   const [note, setNote] = useState('')
   const currentIndex = ORDER_STEPS.indexOf(order.status)
   const nextStatus = currentIndex >= 0 ? ORDER_STEPS[currentIndex + 1] : undefined
-  const canVoid = VOIDABLE_STATUSES.includes(order.status) && order.paymentStatus !== 'paid'
+  const canPack = nextStatus !== 'packed' || order.paymentStatus === 'paid'
 
-  if (!nextStatus && !canVoid) {
-    return (
-      <p className="text-sm text-muted">
-        {order.status === 'voided' ? 'This order was voided; its stock is back on sale.' : 'This order is complete.'}
-      </p>
-    )
-  }
+  if (!nextStatus) return <p className="text-sm text-muted">This order is complete.</p>
 
   async function change(status) {
-    if (
-      status === 'voided' &&
-      !window.confirm('Void this unpaid order? Its items go back into stock. This cannot be undone.')
-    ) {
-      return
-    }
     const done = await onChange(status, note)
     if (done) setNote('')
   }
@@ -126,7 +108,12 @@ function StatusActions({ order, onChange, isBusy }) {
       </div>
       <div className="flex flex-wrap gap-2">
         {nextStatus && (
-          <button type="button" disabled={isBusy} onClick={() => change(nextStatus)} className={ADMIN_BUTTON_PRIMARY}>
+          <button
+            type="button"
+            disabled={isBusy || !canPack}
+            onClick={() => change(nextStatus)}
+            className={ADMIN_BUTTON_PRIMARY}
+          >
             {isBusy ? (
               <LoaderCircle size={16} strokeWidth={1.75} aria-hidden="true" className="animate-spin" />
             ) : (
@@ -135,85 +122,9 @@ function StatusActions({ order, onChange, isBusy }) {
             {NEXT_STEP_LABELS[nextStatus]}
           </button>
         )}
-        {canVoid && (
-          <button type="button" disabled={isBusy} onClick={() => change('voided')} className={ADMIN_BUTTON_DANGER}>
-            <Ban size={16} strokeWidth={1.75} aria-hidden="true" />
-            Void (never paid)
-          </button>
-        )}
       </div>
-      {!canVoid && VOIDABLE_STATUSES.includes(order.status) && (
-        <p className="text-xs text-muted">A paid order cannot be voided: the shop takes no cancellations or refunds.</p>
-      )}
+      {!canPack && <p className="text-xs text-muted">Packing can begin after Razorpay verifies payment.</p>}
     </div>
-  )
-}
-
-/** Records the payment by hand until a payment gateway does it. */
-function PaymentForm({ order, onSave, isBusy }) {
-  const [paymentStatus, setPaymentStatus] = useState(order.paymentStatus === 'pending' ? 'paid' : order.paymentStatus)
-  const [reference, setReference] = useState(order.paymentReference ?? '')
-  const [note, setNote] = useState('')
-
-  if (order.status === 'voided') return <p className="text-sm text-muted">A voided order takes no payment.</p>
-
-  async function handleSubmit(event) {
-    event.preventDefault()
-    const done = await onSave({ paymentStatus, reference: reference.trim(), note: note.trim() })
-    if (done) setNote('')
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-3">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div>
-          <label htmlFor="payment-status" className={ADMIN_LABEL}>
-            Payment status
-          </label>
-          <select
-            id="payment-status"
-            value={paymentStatus}
-            onChange={(event) => setPaymentStatus(event.target.value)}
-            className={ADMIN_INPUT}
-          >
-            <option value="paid">Paid</option>
-            <option value="pending">Payment pending</option>
-            <option value="failed">Payment failed</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor="payment-reference" className={ADMIN_LABEL}>
-            UPI reference / UTR
-          </label>
-          <input
-            id="payment-reference"
-            value={reference}
-            maxLength={100}
-            onChange={(event) => setReference(event.target.value)}
-            placeholder="e.g. 427381920011"
-            className={ADMIN_INPUT}
-          />
-        </div>
-      </div>
-      <div>
-        <label htmlFor="payment-note" className={ADMIN_LABEL}>
-          Note <span className="font-normal text-muted">(optional)</span>
-        </label>
-        <textarea
-          id="payment-note"
-          rows={2}
-          value={note}
-          maxLength={500}
-          onChange={(event) => setNote(event.target.value)}
-          placeholder="e.g. Checked in the bank app"
-          className={ADMIN_TEXTAREA}
-        />
-      </div>
-      <button type="submit" disabled={isBusy} className={ADMIN_BUTTON_PRIMARY}>
-        <CircleCheck size={16} strokeWidth={1.75} aria-hidden="true" />
-        Save payment
-      </button>
-    </form>
   )
 }
 
@@ -311,16 +222,17 @@ function AdminOrderDetailsPage() {
           <Section title="Payment">
             {order.paymentStatus === 'paid' && (
               <p className="mb-3 text-sm text-body">
-                Paid{order.paidAt ? ` on ${formatOrderDateTime(order.paidAt)}` : ''}
-                {order.paymentReference ? ` · reference ${order.paymentReference}` : ''}
+                Verified by Razorpay{order.paidAt ? ` on ${formatOrderDateTime(order.paidAt)}` : ''}
+                {order.paymentReference ? ` · payment ${order.paymentReference}` : ''}
               </p>
             )}
-            <PaymentForm
-              key={`${order.paymentStatus}-${order.paymentReference ?? ''}`}
-              order={order}
-              isBusy={isBusy}
-              onSave={(changes) => runAction(() => adminApi.orders.updatePayment(order.id, changes), 'Payment saved')}
-            />
+            {order.paymentStatus === 'pending' && (
+              <p className="text-sm text-body">Payment has not been verified. The order cannot be packed yet.</p>
+            )}
+            {order.paymentStatus === 'failed' && (
+              <p className="text-sm text-body">Razorpay reported a failed payment attempt; the order remains placed.</p>
+            )}
+            {order.paymentStatus === 'paid' && <p className="text-sm text-muted">Payment status is updated only by verified Razorpay events.</p>}
           </Section>
 
           <Section title={`Items (${order.itemCount})`}>

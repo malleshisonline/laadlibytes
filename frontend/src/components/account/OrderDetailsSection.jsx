@@ -1,21 +1,23 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router'
+import { toast } from 'react-hot-toast'
 import {
   ArrowLeft,
-  BadgeCheck,
-  CircleAlert,
   ClipboardCheck,
+  LoaderCircle,
   PackageCheck,
   PackageOpen,
   PartyPopper,
-  PhoneCall,
   RotateCw,
   Truck,
+  X,
 } from 'lucide-react'
 
 import { orderApi } from '../../api/orderApi.js'
+import krishnaAvatar from '../../assets/illustrations/krishnaavatar.avif'
 import { APP_ROUTES } from '../../constants/appRoutepoints.js'
 import { formatAddressLine, formatIndianMobile } from '../../utils/addressValidation.js'
+import { openRazorpayCheckout } from '../../utils/razorpayCheckout.js'
 import {
   formatOrderDate,
   formatOrderDateTime,
@@ -33,7 +35,6 @@ import AccountCard from './AccountCard.jsx'
 
 const STEP_ICONS = {
   placed: ClipboardCheck,
-  confirmed: BadgeCheck,
   packed: PackageOpen,
   shipped: Truck,
   delivered: PackageCheck,
@@ -87,23 +88,77 @@ function useJustPlaced() {
 }
 
 function OrderPlacedBanner({ order }) {
+  const [isOpen, setIsOpen] = useState(true)
+  const closeButtonRef = useRef(null)
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    closeButtonRef.current?.focus()
+
+    function closeOnEscape(event) {
+      if (event.key === 'Escape') setIsOpen(false)
+    }
+
+    window.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [])
+
+  if (!isOpen) return null
+
   return (
-    <div role='status' className='mb-5 rounded-2xl border border-cream-200 bg-cream-50 p-4 sm:p-5'>
-      <p className='flex items-center gap-2 text-lg font-semibold text-navy-800'>
-        <PartyPopper size={22} strokeWidth={1.75} aria-hidden='true' className='text-caramel-700' />
-        Thank you! Your order is placed.
-      </p>
-      <p className='mt-2 text-body'>
-        Order number <span className='font-bold text-navy-800'>{order.orderNumber}</span>
-      </p>
-      <p className='mt-2 flex items-start gap-2 text-sm text-body'>
-        <PhoneCall size={18} strokeWidth={1.75} aria-hidden='true' className='mt-0.5 shrink-0 text-navy-800' />
-        <span>
-          Our team will call you on{' '}
-          <span className='font-semibold text-navy-800'>{formatIndianMobile(order.contact.phone)}</span> to confirm the
-          order and share the UPI payment details.
-        </span>
-      </p>
+    <div
+      className='fixed inset-0 z-50 grid place-items-center bg-navy-950/60 p-4'
+      onClick={(event) => event.target === event.currentTarget && setIsOpen(false)}
+    >
+      <section
+        role='dialog'
+        aria-modal='true'
+        aria-labelledby='order-received-title'
+        aria-describedby='order-received-description'
+        className='relative w-full max-w-md rounded-3xl border border-cream-200 bg-surface px-6 pb-6 pt-8 text-center shadow-2xl sm:px-8'
+      >
+        <button
+          type='button'
+          aria-label='Close confirmation'
+          ref={closeButtonRef}
+          onClick={() => setIsOpen(false)}
+          className='absolute right-3 top-3 grid size-10 place-items-center rounded-full text-muted transition hover:bg-lightblue-50 hover:text-navy-800 focus-visible:outline-2 focus-visible:outline-navy-600'
+        >
+          <X size={20} aria-hidden='true' />
+        </button>
+        <img
+          src={krishnaAvatar}
+          alt='Krishna playing the flute'
+          width='240'
+          height='240'
+          className='mx-auto mb-3 size-36 object-contain sm:size-44'
+        />
+        <p className='flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-wide text-leaf-600'>
+          <PartyPopper size={18} aria-hidden='true' />
+          Payment successful
+        </p>
+        <h2 id='order-received-title' className='mt-2 text-2xl font-semibold text-navy-800 sm:text-3xl'>
+          We’ve received your order!
+        </h2>
+        <p id='order-received-description' className='mt-2 text-body'>
+          Your order <span className='font-bold text-navy-800'>{order.orderNumber}</span> is placed and we’ll start
+          preparing it.
+        </p>
+        <p className='mt-2 text-sm text-muted'>
+          We may contact you at {formatIndianMobile(order.contact.phone)} if we need anything else.
+        </p>
+        <button
+          type='button'
+          onClick={() => setIsOpen(false)}
+          className='mt-6 inline-flex min-h-11 items-center justify-center rounded-full bg-navy-800 px-6 text-sm font-bold text-white shadow-md transition hover:bg-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600'
+        >
+          View order details
+        </button>
+      </section>
     </div>
   )
 }
@@ -116,13 +171,13 @@ function stepDates(history) {
   }, {})
 }
 
-/** Placed → Confirmed → Packed → Shipped → Delivered, done steps filled in with their date. */
+/** Placed → Packed → Shipped → Delivered, done steps filled in with their date. */
 function OrderTrackingSteps({ order }) {
   const currentIndex = ORDER_STEPS.indexOf(order.status)
   const dates = stepDates(order.history)
 
   return (
-    <ol className='grid gap-3 sm:grid-cols-5 sm:gap-2'>
+    <ol className='grid gap-3 sm:grid-cols-4 sm:gap-2'>
       {ORDER_STEPS.map((step, index) => {
         const Icon = STEP_ICONS[step]
         const isDone = index <= currentIndex
@@ -149,20 +204,33 @@ function OrderTrackingSteps({ order }) {
   )
 }
 
-function PaymentDetails({ order }) {
+function PaymentDetails({ order, isRetryingPayment, onRetryPayment }) {
   if (order.paymentStatus === 'paid') {
     return (
       <p className='text-sm text-body'>
-        Paid by UPI{order.paidAt ? ` on ${formatOrderDateTime(order.paidAt)}` : ''}.
+        Payment verified{order.paidAt ? ` on ${formatOrderDateTime(order.paidAt)}` : ''}.
       </p>
     )
   }
   return (
-    <p className='text-sm text-body'>
-      Our team will call you on{' '}
-      <span className='font-semibold text-navy-800'>{formatIndianMobile(order.contact.phone)}</span> to share the UPI
-      payment details.
-    </p>
+    <div>
+      <p className='text-sm text-body'>
+        {order.paymentStatus === 'failed'
+          ? 'Payment was not completed. The order remains placed.'
+          : 'Payment has not been verified yet. Packing can begin only after successful payment.'}
+      </p>
+      {order.status === 'placed' && (
+        <button
+          type='button'
+          disabled={isRetryingPayment}
+          onClick={onRetryPayment}
+          className='mt-3 inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-navy-800 px-5 text-sm font-semibold text-white shadow-md transition hover:bg-navy-700 disabled:cursor-wait disabled:opacity-70'
+        >
+          {isRetryingPayment && <LoaderCircle size={16} aria-hidden='true' className='animate-spin' />}
+          {isRetryingPayment ? 'Opening secure checkout…' : 'Retry payment'}
+        </button>
+      )}
+    </div>
   )
 }
 
@@ -175,6 +243,28 @@ function OrderDetailsSection() {
   const { id } = useParams()
   const { order, status, retry } = useMyOrder(id)
   const justPlaced = useJustPlaced()
+  const [isRetryingPayment, setIsRetryingPayment] = useState(false)
+
+  async function retryPayment() {
+    if (isRetryingPayment) return
+    setIsRetryingPayment(true)
+    try {
+      const checkout = await orderApi.resumePayment(order.id)
+      const paidOrder = await openRazorpayCheckout(checkout.checkout, (details) =>
+        orderApi.verifyPayment(order.id, details),
+      )
+      if (paidOrder) {
+        toast.success('Payment verified. Your order is placed.')
+        retry()
+      } else {
+        toast.error('Payment was cancelled. The order remains placed.')
+      }
+    } catch (error) {
+      toast.error(error.message || 'Could not open payment checkout. Please try again.')
+    } finally {
+      setIsRetryingPayment(false)
+    }
+  }
 
   const backLink = (
     <Link to={APP_ROUTES.ACCOUNT_ORDERS} className={BACK_LINK_CLASSES}>
@@ -219,8 +309,6 @@ function OrderDetailsSection() {
     )
   }
 
-  const isVoided = order.status === 'voided'
-
   return (
     <>
       {justPlaced && <OrderPlacedBanner order={order} />}
@@ -234,34 +322,23 @@ function OrderDetailsSection() {
           <span className={`rounded-full px-3 py-1 text-sm font-semibold ${orderStatusBadgeClasses(order.status)}`}>
             {orderStatusLabel(order.status)}
           </span>
-          {!isVoided && (
-            <span
-              className={`rounded-full px-3 py-1 text-sm font-semibold ${paymentStatusBadgeClasses(order.paymentStatus)}`}
-            >
-              {paymentStatusLabel(order.paymentStatus)}
-            </span>
-          )}
+          <span
+            className={`rounded-full px-3 py-1 text-sm font-semibold ${paymentStatusBadgeClasses(order.paymentStatus)}`}
+          >
+            {paymentStatusLabel(order.paymentStatus)}
+          </span>
         </div>
 
         <div className='space-y-6'>
-          {isVoided ? (
-            <p className='flex items-start gap-2 rounded-xl bg-cream-100 p-3 text-sm text-body'>
-              <CircleAlert size={18} strokeWidth={1.75} aria-hidden='true' className='mt-0.5 shrink-0 text-error' />
-              This order was not completed because the payment was not received.
-            </p>
-          ) : (
-            <section>
-              <SubHeading>Order status</SubHeading>
-              <OrderTrackingSteps order={order} />
-            </section>
-          )}
+          <section>
+            <SubHeading>Order status</SubHeading>
+            <OrderTrackingSteps order={order} />
+          </section>
 
-          {!isVoided && (
-            <section>
-              <SubHeading>Payment</SubHeading>
-              <PaymentDetails order={order} />
-            </section>
-          )}
+          <section>
+            <SubHeading>Payment</SubHeading>
+            <PaymentDetails order={order} isRetryingPayment={isRetryingPayment} onRetryPayment={retryPayment} />
+          </section>
 
           <section>
             <SubHeading>Items ({order.itemCount})</SubHeading>

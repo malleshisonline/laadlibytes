@@ -28,6 +28,10 @@ const envSchema = z.object({
   // HMAC key for stored OTP hashes.
   OTP_SECRET: z.string().min(32, 'OTP_SECRET must be at least 32 characters'),
 
+  RAZORPAY_KEY_ID: z.string().trim().optional(),
+  RAZORPAY_KEY_SECRET: z.string().trim().optional(),
+  RAZORPAY_WEBHOOK_SECRET: z.string().trim().optional(),
+
   // "console" only logs messages (development); real providers need the credentials below.
   EMAIL_PROVIDER: z.enum(['console', 'smtp']).default('console'),
   SMTP_URL: z.string().trim().optional(),
@@ -67,6 +71,23 @@ const envSchema = z.object({
 
   if (cfg.EMAIL_PROVIDER === 'smtp') requireFor('EMAIL_PROVIDER=smtp', ['SMTP_URL', 'EMAIL_FROM']);
   if (cfg.SMS_PROVIDER === 'msg91') requireFor('SMS_PROVIDER=msg91', ['MSG91_AUTH_KEY', 'MSG91_OTP_TEMPLATE_ID']);
+  if (Boolean(cfg.RAZORPAY_KEY_ID) !== Boolean(cfg.RAZORPAY_KEY_SECRET)) {
+    ctx.addIssue({
+      code: 'custom',
+      path: ['RAZORPAY_KEY_SECRET'],
+      message: 'RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET must be configured together',
+    });
+  }
+  if (cfg.NODE_ENV !== 'production' && cfg.RAZORPAY_KEY_ID && !cfg.RAZORPAY_KEY_ID.startsWith('rzp_test_')) {
+    ctx.addIssue({
+      code: 'custom',
+      path: ['RAZORPAY_KEY_ID'],
+      message: 'Use a Razorpay test Key ID outside production',
+    });
+  }
+  if (cfg.NODE_ENV === 'production') {
+    requireFor('production Razorpay payments', ['RAZORPAY_KEY_ID', 'RAZORPAY_KEY_SECRET', 'RAZORPAY_WEBHOOK_SECRET']);
+  }
 
   // The console drivers only log codes; nobody would ever receive them.
   if (cfg.NODE_ENV === 'production') {

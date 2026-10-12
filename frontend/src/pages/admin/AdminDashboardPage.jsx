@@ -72,8 +72,6 @@ function AdminDashboardPage() {
   }
 
   const { orders, products, users, enquiries } = summary
-  const toShip = orders.byStatus.confirmed + orders.byStatus.packed
-
   return (
     <>
       <AdminPageHeader title="Dashboard" description="What needs your attention today." />
@@ -82,7 +80,7 @@ function AdminDashboardPage() {
       <div className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           label="New orders"
-          hint="Placed, waiting to be confirmed"
+          hint="Placed; payment status is shown in the order list"
           value={orders.byStatus.placed}
           Icon={ShoppingBag}
           to={ordersWith({ status: 'placed' })}
@@ -97,10 +95,10 @@ function AdminDashboardPage() {
         />
         <StatCard
           label="To pack and ship"
-          hint="Confirmed or packed"
-          value={toShip}
+          hint="Paid orders, placed or packed"
+          value={orders.toPackAndShip}
           Icon={Truck}
-          to={ordersWith({ status: 'confirmed' })}
+          to={ordersWith({ paymentStatus: 'paid' })}
         />
         <StatCard label="All orders" value={orders.total} Icon={Package} to={APP_ROUTES.ADMIN_ORDERS} />
       </div>
@@ -108,7 +106,7 @@ function AdminDashboardPage() {
       <div className={`${ADMIN_CARD} mb-6`}>
         <h3 className="mb-3 text-sm font-bold tracking-wide text-muted uppercase">Orders by status</h3>
         <ul className="flex flex-wrap gap-2">
-          {[...ORDER_STEPS, 'voided'].map((step) => (
+          {ORDER_STEPS.map((step) => (
             <li key={step}>
               <Link
                 to={ordersWith({ status: step })}

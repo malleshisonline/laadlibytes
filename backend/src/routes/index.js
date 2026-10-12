@@ -7,10 +7,15 @@ import cartRoutes from '../modules/cart/cart.routes.js';
 import categoryRoutes from '../modules/category/category.routes.js';
 import enquiryRoutes from '../modules/enquiry/enquiry.routes.js';
 import orderRoutes from '../modules/order/order.routes.js';
+import paymentRoutes from '../modules/payment/payment.routes.js';
+import { paymentController } from '../modules/payment/payment.controller.js';
 import productRoutes from '../modules/product/product.routes.js';
 import userRoutes from '../modules/user/user.routes.js';
 
 const router = Router();
+
+// Razorpay Dashboard endpoint. Keep this route outside /payments for a stable webhook URL.
+router.post('/webhooks/razorpay', paymentController.webhook);
 
 /**
  * Every API route lives here — one entry per feature module.
@@ -27,6 +32,7 @@ const routes = [
   { path: '/categories', router: categoryRoutes },
   { path: '/enquiries', router: enquiryRoutes },
   { path: '/orders', router: orderRoutes },
+  { path: '/payments', router: paymentRoutes },
   { path: '/products', router: productRoutes },
   { path: '/users', router: userRoutes },
 ];

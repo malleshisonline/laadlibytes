@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LoaderCircle, MapPin, Package, PhoneCall, ShieldCheck, Wallet } from 'lucide-react'
+import { LoaderCircle,  MapPin, Package, ShieldCheck,  } from 'lucide-react'
 
 import { formatPrice } from '../../utils/productFormatters.js'
 import PriceDetailsBox from '../cart/PriceDetailsBox.jsx'
@@ -27,24 +27,8 @@ function SummarySection({ step, title, Icon, action, children }) {
 }
 
 /**
- * There is no online payment yet (the client has not chosen how customers pay), so the order is placed with
- * payment pending and the shop calls the customer. PaymentMethodOptions waits for the real payment step.
- */
-function PaymentNote() {
-  return (
-    <p className='flex items-start gap-3 rounded-xl border border-line bg-lightblue-50 p-3 text-sm text-body sm:p-4'>
-      <PhoneCall size={20} strokeWidth={1.75} aria-hidden='true' className='mt-0.5 shrink-0 text-navy-800' />
-      <span>
-        <span className='block font-semibold text-navy-800'>Pay by UPI after you place the order</span>
-        Our team will call you on your delivery phone number to confirm the order and share the UPI payment details.
-      </span>
-    </p>
-  )
-}
-
-/**
  * The Order Summary layout shared by the whole-cart and Buy Now checkouts: delivery address, items, how payment
- * works and the price details with Place Order. `order` has the cart's shape
+ * works and the price details with Pay / Place Order. `order` has the cart's shape
  * ({ items, itemCount, subtotal, mrpTotal, savings }). `address` is the delivery section's body; when
  * `addressAction` is given it sits in the section header. `onPlaceOrder` is awaited; the button stays disabled
  * meanwhile, so a double click never places two orders.
@@ -79,9 +63,6 @@ function OrderSummaryView({ order, address, addressAction, itemsAction, canPlace
           <OrderItemsSummary items={order.items} />
         </SummarySection>
 
-        <SummarySection step={3} title='Payment' Icon={Wallet}>
-          <PaymentNote />
-        </SummarySection>
       </div>
 
       <div className='lg:col-span-4'>
@@ -99,10 +80,10 @@ function OrderSummaryView({ order, address, addressAction, itemsAction, canPlace
               ) : (
                 <ShieldCheck size={18} strokeWidth={2} aria-hidden='true' />
               )}
-              {isPlacing ? 'Placing your order…' : `Place Order · ${formatPrice(order.subtotal)}`}
+              {isPlacing ? 'Opening secure checkout…' : `Pay / Place Order · ${formatPrice(order.subtotal)}`}
             </button>
             <p className='mt-2 text-center text-xs text-muted'>
-              {canPlaceOrder ? 'Pay by UPI once our team confirms your order.' : 'Choose a delivery address to place the order.'}
+              {canPlaceOrder ? 'Payment confirmation is verified securely by the store.' : 'Choose a delivery address to place the order.'}
             </p>
           </PriceDetailsBox>
         </div>

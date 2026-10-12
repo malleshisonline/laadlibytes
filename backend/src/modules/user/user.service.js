@@ -99,7 +99,7 @@ export const userService = {
 
     const unpaidUnshippedOrders = await Order.find({
       user: id,
-      status: { $in: ['placed', 'confirmed', 'packed'] },
+      status: { $in: ['placed', 'packed'] },
       paymentStatus: { $in: ['pending', 'failed'] },
     })
       .select('items.product items.quantity')

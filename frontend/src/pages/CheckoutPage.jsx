@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router'
 import { toast } from 'react-hot-toast'
 import { RotateCw, ShoppingBag } from 'lucide-react'
@@ -15,6 +15,7 @@ import { useCart } from '../hooks/useCart.js'
 import { useProduct } from '../hooks/useProduct.js'
 import { formatAddressLine, formatIndianMobile } from '../utils/addressValidation.js'
 import { maxQuantityFor } from '../utils/productStock.js'
+import { openRazorpayCheckout } from '../utils/razorpayCheckout.js'
 
 const PAGE_CLASSES = 'px-3 py-5 sm:px-4 md:py-8 lg:px-6 xl:px-16 2xl:px-24'
 
@@ -30,6 +31,8 @@ const PLACE_ORDER_ERROR_MESSAGES = {
   ADDRESS_NOT_FOUND: 'That address is no longer saved. Please choose another one.',
   CART_EMPTY: 'Your cart is empty.',
   PRODUCT_NOT_FOUND: 'Sorry, this product is no longer available.',
+  PAYMENT_NOT_CAPTURED: 'Razorpay has not confirmed the payment yet. Please wait a moment and check your orders.',
+  PAYMENT_DETAILS_MISMATCH: 'The payment details did not match this order. Please contact us before trying again.',
 }
 
 function placeOrderErrorMessage(error) {
@@ -47,15 +50,24 @@ function placeOrderErrorMessage(error) {
  */
 function usePlaceOrder() {
   const navigate = useNavigate()
+  const checkoutKey = useRef(globalThis.crypto.randomUUID())
 
   return useCallback(
     async (payload, onFailure) => {
+      console.log("payload", payload)
       try {
-        const order = await orderApi.place(payload)
+        const checkout = await orderApi.place({ ...payload, checkoutKey: checkoutKey.current })
+        const order = await openRazorpayCheckout(checkout.checkout, (details) =>
+          orderApi.verifyPayment(checkout.id, details),
+        )
+        if (!order) {
+          toast.error('Payment was cancelled. The order remains placed; you can try again.')
+          return null
+        }
         navigate(orderDetailsPath(order.id), { replace: true, state: { justPlaced: true } })
         return order
       } catch (error) {
-        toast.error(placeOrderErrorMessage(error))
+        toast.error(error.status ? placeOrderErrorMessage(error) : error.message || placeOrderErrorMessage(error))
         onFailure?.(error)
         return null
       }
@@ -192,16 +204,13 @@ function CartOrderSummary() {
     )
   }
 
-  // The ordered lines leave the cart on the server, so the cart is reloaded either way: after an order it is
-  // (usually) empty, after a stock error the short line comes back flagged.
+  // The cart changes only when checkout creation succeeds; errors reload any stock/cart changes.
   async function handlePlaceOrder() {
-    const order = await placeOrder({ addressId: address.id }, (error) => {
+    return placeOrder({ addressId: address.id }, (error) => {
       if (error.code === 'ADDRESS_NOT_FOUND') retry()
+      reload()
     })
-    reload()
-    return order
   }
-
   return (
     <OrderSummaryView
       order={cart}

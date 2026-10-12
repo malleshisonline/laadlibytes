@@ -1,17 +1,13 @@
-// Mirrors ORDER_STATUSES and PAYMENT_STATUSES in backend/src/modules/order/order.model.js. The shop takes no
-// cancellations, refunds or returns, so there are no such statuses. 'voided' is the shop setting aside an order
-// that was never paid for.
+// Mirrors ORDER_STATUSES and PAYMENT_STATUSES in backend/src/modules/order/order.model.js.
 
 /** The delivery journey in order, as the tracking steps show it. */
-export const ORDER_STEPS = ['placed', 'confirmed', 'packed', 'shipped', 'delivered']
+export const ORDER_STEPS = ['placed', 'packed', 'shipped', 'delivered']
 
 const ORDER_STATUS_LABELS = {
   placed: 'Order placed',
-  confirmed: 'Confirmed',
   packed: 'Packed',
   shipped: 'Shipped',
   delivered: 'Delivered',
-  voided: 'Not completed',
 }
 
 const PAYMENT_STATUS_LABELS = {
@@ -23,11 +19,9 @@ const PAYMENT_STATUS_LABELS = {
 // Badge colours from the palette: navy while on the way, green when done, warning or error when it needs a look.
 const ORDER_STATUS_BADGE_CLASSES = {
   placed: 'bg-lightblue-100 text-navy-800',
-  confirmed: 'bg-lightblue-100 text-navy-800',
   packed: 'bg-lightblue-100 text-navy-800',
   shipped: 'bg-lightblue-100 text-navy-800',
   delivered: 'bg-leaf-600/10 text-success',
-  voided: 'bg-cream-100 text-error',
 }
 
 const PAYMENT_STATUS_BADGE_CLASSES = {
@@ -37,8 +31,7 @@ const PAYMENT_STATUS_BADGE_CLASSES = {
 }
 
 export const orderStatusLabel = (status) => ORDER_STATUS_LABELS[status] ?? status
-/** The admin panel's wording: the customer reads "Not completed", the shop "Voided". */
-export const adminOrderStatusLabel = (status) => (status === 'voided' ? 'Voided' : orderStatusLabel(status))
+export const adminOrderStatusLabel = orderStatusLabel
 export const paymentStatusLabel = (status) => PAYMENT_STATUS_LABELS[status] ?? status
 export const orderStatusBadgeClasses = (status) => ORDER_STATUS_BADGE_CLASSES[status] ?? 'bg-lightblue-100 text-navy-800'
 export const paymentStatusBadgeClasses = (status) => PAYMENT_STATUS_BADGE_CLASSES[status] ?? 'bg-lightblue-100 text-navy-800'

@@ -81,6 +81,8 @@ The failure cleanup deletes this request's uploads on `res` `finish` whenever th
 
 **Models** — `{ timestamps: true }`; a `toJSON` transform maps `_id` → `id` and drops `__v` plus secrets. Sensitive fields use `select: false` (`password`, `refreshTokens`) and must be explicitly `.select('+password')`-ed when needed. Enum value arrays are exported as constants from the model and reused by Zod: `export const USER_ROLES = [...]` → `z.enum(USER_ROLES)`. Shared Zod primitives live in `src/utils/validators.js` — `objectIdSchema`, `idParamSchema` and `booleanQuerySchema` (query booleans need the last one: `z.coerce.boolean()` turns `'false'` into `true`). `user.validation.js` re-exports `objectIdSchema` for backwards compatibility. Mongoose 9 does not pass `next` to middleware — write hooks as `async function () { ... return; }`. Unique indexes on optional fields must be partial (`partialFilterExpression: { field: { $type: 'string' } }`), as `User.email`/`User.phone` are; `autoIndex` never drops an old index, so changing one means dropping it by hand.
 
+Before deploying Razorpay checkout, manually create the `Order` indexes added for checkout idempotency and gateway-order uniqueness: `{ user: 1, checkoutKey: 1 }` (unique, partial on string `checkoutKey`) and `{ razorpayOrderId: 1 }` (unique, sparse). Production has `autoIndex` disabled.
+
 **Style** — every module has a named export *plus* a matching `export default` of the same binding. Imports are grouped node builtins (`node:` prefix) → third-party → local, blank-line separated. Routes mount under `env.API_PREFIX` with **no version segment** — there is no `/api/v1`.
 
 ## Auth
@@ -126,16 +128,17 @@ The first admin is made with `npm run promote-admin -- <email|phone>`; the role 
 2. Prices every line live, skipping cart lines whose product was unpublished. An empty cart is 400 `CART_EMPTY`.
 3. **Takes the stock at placement**, not at payment, so an unpaid order cannot be oversold. Each `$inc` only matches while `stock >= qty`. If a line fails, the lines already taken are put back and nothing is saved (409 `INSUFFICIENT_STOCK` / `PRODUCT_UNAVAILABLE`). That is why no transaction is needed.
 4. Saves copies of the lines (name, SKU, price, MRP, pack size, image) and of the address. Editing a product or address never changes a past order.
-5. Removes the ordered lines from the cart.
+5. Leaves cart lines in place while payment is pending. The cart order's lines are removed only after Razorpay confirms payment; Buy Now never changes the cart.
 
 Contact is the address phone plus the account email, if any. The order number is `LB-<IST YYYYMMDD>-<5 chars>`, unique by index, and retried on collision. There is no `shippingCharge`, and `total` = `subtotal`.
 
 `status` (delivery) and `paymentStatus` are separate fields:
 
-- `status` moves only along `ORDER_STATUS_TRANSITIONS`: `placed → confirmed → packed → shipped → delivered`.
+- `status` moves only along `ORDER_STATUS_TRANSITIONS`: `placed → packed → shipped → delivered`.
+- A new order is `placed` while payment is pending or failed. Successful verified Razorpay payment sets `paymentStatus` to `paid` but leaves `status` as `placed`; admins can then move it to `packed`.
 - The shop takes **no cancellations, refunds, returns or exchanges**, so there is no `cancelled`, no `refunded` and no customer cancel route.
-- The one exception is `voided`: an admin may void an order **only while it is unpaid** and only before it ships. Voiding puts its stock back.
-- `paymentStatus` is `pending | paid | failed`. `PATCH /admin/orders/:id/payment` sets it by hand (with an optional UPI `reference`) until a gateway exists. The payment module should only ever set this field.
+- There is no `confirmed` or `voided` order status. Payment state remains separately represented by `paymentStatus`.
+- `paymentStatus` is `pending | paid | failed`. Razorpay checkout creates the gateway order server-side; customer verification and signed `payment.captured` webhooks are the only paths to `paid`. `POST /orders/:id/payment/verify` validates the checkout signature and confirms the captured amount/currency with Razorpay. Admins cannot edit payment status.
 - Both admin updates filter on the status they read, so two admins acting at once get 409 `ORDER_CHANGED` instead of a double change or a double restock.
 - Every change appends `{ event, value, note, by, at }` to `history`. Customer reads (`GET /orders`, `GET /orders/:id`, own orders only, another user's id is a 404) strip `by`, `note` and `user`.
 - `/admin/orders` lists (filter `status` / `paymentStatus`, `search` on order number, name, phone or email) and reads, with `user` and `history.by` populated.
@@ -147,7 +150,7 @@ Contact is the address phone plus the account email, if any. The order number is
 - **Checkout contact details:** phone-only users have no email and email-only users have no phone, so checkout must collect whichever is missing.
 - **Catalogue shape:** 56 products, one pack size each, **no variants** — do not build a variant system. Delivery is free on every order with no minimum, so there is no shipping charge anywhere; the order module should have *no* `shippingCharge` field rather than one permanently set to `0`.
 - **Categories:** six, fixed names and fixed display order — Women Wellness, Peanut Chikki, Nuts n Seeds, Millets n Nuts, Kids Wellness, Fruit Variant. "Nuts n Seeds" and "Millets n Nuts" are deliberately separate; do not merge them. SKU prefixes derive from these names but drift once a category is renamed, so never parse a category out of an SKU.
-- **Payment (not yet built):** Razorpay with **UPI and QR only** — no cards, no netbanking, no wallets. Prices are stored as whole-rupee Numbers, so the payment module multiplies by 100 at the Razorpay boundary.
+- **Payment:** Razorpay Checkout uses the methods enabled in the Razorpay account. Prices are stored as whole-rupee Numbers, so the payment module multiplies by 100 at the Razorpay boundary. Development accepts the Razorpay test `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` without a webhook secret; the Key ID alone is returned to checkout. `RAZORPAY_WEBHOOK_SECRET` is separate, optional for local checkout, and required in production. Configure `/api/payments/webhook` for `payment.captured` and `payment.failed`.
 - **Images:** only admins upload (see *Image uploads*); customers never do. The initial catalogue load goes through the seeder, which uploads local files from `scripts/data/product-images/<SKU>/` and `category-images/<slug>.png`. `publicId` is required on every stored image. `Product.images` is deliberately uncapped; `images[0]` is the front of pack, and ordering alone decides the primary.
 - **Stock:** a plain `stock` number on the product, no inventory module — 56 SKUs, no warehouses, no reservations. `Product.isActive` is both the publish switch and the soft-delete target.
 
