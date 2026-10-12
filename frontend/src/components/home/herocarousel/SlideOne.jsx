@@ -92,7 +92,7 @@ const SlideOne = () => {
                     </h1>
 
                     <p className='mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-[#fffcf6]
-                     lg:text-navy-950 font-bold md:text-lg sm:text-sm sm:font-extrabold'>
+                     md:text-navy-950 font-bold md:text-lg sm:text-sm sm:font-extrabold'>
                         Discover our collection of traditionally crafted chikkis,
                         made with jaggery, nuts and seeds for an authentic taste.
                     </p>
