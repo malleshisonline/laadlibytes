@@ -9,7 +9,13 @@ export const orderApi = {
    * Places an order and resolves to it. `buyNow` ({ productId, quantity }) orders that product alone and leaves
    * the cart as it is; without it the whole cart is ordered and those lines leave the cart.
    */
-  place: ({ addressId, buyNow }) => httpClient.post(API_ENDPOINTS.ORDERS.ROOT, buyNow ? { addressId, buyNow } : { addressId }),
+  place: ({ addressId, buyNow, checkoutKey }) =>
+    httpClient.post(
+      API_ENDPOINTS.ORDERS.ROOT,
+      { addressId, ...(buyNow ? { buyNow } : {}), checkoutKey },
+    ),
+  resumePayment: (id) => httpClient.post(API_ENDPOINTS.ORDERS.CHECKOUT(id), {}),
+  verifyPayment: (id, details) => httpClient.post(API_ENDPOINTS.ORDERS.VERIFY_PAYMENT(id), details),
 
   /** Resolves to { data: orders (newest first), meta: { page, totalPages, hasNextPage, … } }. */
   list: (page = 1) => httpClient.getWithMeta(`${API_ENDPOINTS.ORDERS.ROOT}?${new URLSearchParams({ page: String(page) })}`),

@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import { z } from 'zod';
 
 import { idParamSchema, objectIdSchema } from '../../utils/validators.js';
@@ -13,6 +15,7 @@ export const orderIdParamSchema = idParamSchema;
  */
 export const placeOrderSchema = z.object({
   addressId: objectIdSchema,
+  checkoutKey: z.string().uuid().default(() => randomUUID()),
   buyNow: z
     .object({
       productId: objectIdSchema,
@@ -51,9 +54,8 @@ export const updateOrderStatusSchema = z.object({
   note: noteSchema,
 });
 
-export const updateOrderPaymentSchema = z.object({
-  paymentStatus: z.enum(PAYMENT_STATUSES),
-  // UPI transaction id, or a gateway payment id once there is one.
-  reference: z.string().trim().min(1).max(100).optional(),
-  note: noteSchema,
+export const verifyRazorpayPaymentSchema = z.object({
+  razorpay_order_id: z.string().trim().min(1).max(100),
+  razorpay_payment_id: z.string().trim().min(1).max(100),
+  razorpay_signature: z.string().regex(/^[a-f\d]{64}$/i),
 });

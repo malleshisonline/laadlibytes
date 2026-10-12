@@ -21,7 +21,18 @@ app.set('query parser', sanitizedQueryParser);
 app.disable('x-powered-by');
 
 // --- Security & parsing -----------------------------------------------------
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        'script-src': ["'self'", 'https://checkout.razorpay.com'],
+        'connect-src': ["'self'", 'https://api.razorpay.com', 'https://checkout.razorpay.com'],
+        'frame-src': ["'self'", 'https://api.razorpay.com', 'https://checkout.razorpay.com'],
+      },
+    },
+  })
+);
 app.use(
   cors({
     origin: env.corsOrigins,
@@ -29,7 +40,20 @@ app.use(
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   })
 );
-app.use(express.json({ limit: '10kb' }));
+app.use(
+  express.json({
+    limit: '10kb',
+    verify(req, _res, buffer) {
+      const requestPath = req.originalUrl.split('?')[0];
+      if (
+        requestPath === `${env.API_PREFIX}/payments/webhook` ||
+        requestPath === `${env.API_PREFIX}/webhooks/razorpay`
+      ) {
+        req.rawBody = Buffer.from(buffer);
+      }
+    },
+  })
+);
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 app.use(hpp());

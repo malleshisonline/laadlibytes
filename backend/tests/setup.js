@@ -6,6 +6,9 @@
 process.env.JWT_ACCESS_SECRET ??= 'test_access_secret_at_least_32_characters_long';
 process.env.JWT_REFRESH_SECRET ??= 'test_refresh_secret_at_least_32_characters_long';
 process.env.OTP_SECRET ??= 'test_otp_secret_at_least_32_characters_long_xx';
+process.env.RAZORPAY_KEY_ID ??= 'rzp_test_key';
+process.env.RAZORPAY_KEY_SECRET ??= 'test_razorpay_secret';
+process.env.RAZORPAY_WEBHOOK_SECRET ??= 'test_razorpay_webhook_secret';
 // Integration tests connect to mongodb-memory-server directly; this only satisfies env validation.
 process.env.MONGO_URI ??= 'mongodb://127.0.0.1:27017/laadlibytes-test';
 // A well-formed fake; tests that upload mock the storage module, so it is never used on the wire.

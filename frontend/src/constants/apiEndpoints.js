@@ -36,6 +36,8 @@ export const API_ENDPOINTS = {
   ORDERS: {
     ROOT: '/orders',
     ITEM: (id) => `/orders/${encodeURIComponent(id)}`,
+    CHECKOUT: (id) => `/orders/${encodeURIComponent(id)}/payment/checkout`,
+    VERIFY_PAYMENT: (id) => `/orders/${encodeURIComponent(id)}/payment/verify`,
   },
   // Everything under /admin needs an admin token; the backend checks the role once for the whole surface.
   ADMIN: {
@@ -43,7 +45,6 @@ export const API_ENDPOINTS = {
     ORDERS: '/admin/orders',
     ORDER: (id) => `/admin/orders/${encodeURIComponent(id)}`,
     ORDER_STATUS: (id) => `/admin/orders/${encodeURIComponent(id)}/status`,
-    ORDER_PAYMENT: (id) => `/admin/orders/${encodeURIComponent(id)}/payment`,
     PRODUCTS: '/admin/products',
     PRODUCT: (id) => `/admin/products/${encodeURIComponent(id)}`,
     CATEGORIES: '/admin/categories',

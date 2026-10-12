@@ -34,12 +34,6 @@ export const adminApi = {
     list: (params) => httpClient.getWithMeta(`${ADMIN.ORDERS}${toQueryString(params)}`),
     get: (id) => httpClient.get(ADMIN.ORDER(id)),
     updateStatus: (id, { status, note }) => httpClient.patch(ADMIN.ORDER_STATUS(id), { status, note: note || undefined }),
-    updatePayment: (id, { paymentStatus, reference, note }) =>
-      httpClient.patch(ADMIN.ORDER_PAYMENT(id), {
-        paymentStatus,
-        reference: reference || undefined,
-        note: note || undefined,
-      }),
   },
 
   products: {
@@ -84,6 +78,7 @@ export const adminApi = {
     get: (id) => httpClient.get(ADMIN.ENQUIRY(id)),
     updateStatus: (id, status) => httpClient.patch(ADMIN.ENQUIRY(id), { status }),
   },
+
 }
 
 export default adminApi

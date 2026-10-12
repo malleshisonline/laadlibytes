@@ -30,7 +30,7 @@ import {
 } from '../../utils/orderStatus.js'
 import { formatPrice } from '../../utils/productFormatters.js'
 
-const STATUS_OPTIONS = [...ORDER_STEPS, 'voided']
+const STATUS_OPTIONS = ORDER_STEPS
 const PAYMENT_OPTIONS = ['pending', 'paid', 'failed']
 
 /** /admin/orders. Filters live in the URL, so a dashboard card can open a filtered list and Back keeps it. */
@@ -62,7 +62,7 @@ function AdminOrdersPage() {
 
   return (
     <>
-      <AdminPageHeader title="Orders" description="Confirm, pack and ship orders, and record payments." />
+      <AdminPageHeader title="Orders" description="Pack and ship paid orders, and review payment status." />
 
       <div className={`${ADMIN_CARD} mb-4`}>
         <div className="grid gap-3 md:grid-cols-12">

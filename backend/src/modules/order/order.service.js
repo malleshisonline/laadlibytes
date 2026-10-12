@@ -48,6 +48,9 @@ function toCustomerView(order) {
   const view = order.toJSON();
   view.history = view.history.map(({ event, value, at }) => ({ event, value, at }));
   delete view.user;
+  delete view.razorpayOrderId;
+  delete view.checkoutKey;
+  delete view.checkoutUsesCart;
   return view;
 }
 
@@ -107,7 +110,7 @@ function totalsOf(items) {
   };
 }
 
-/** Puts stock back, e.g. when a later line could not be reserved or an unpaid order is voided. */
+/** Puts stock back when a later line could not be reserved or checkout setup fails. */
 function releaseStock(lines) {
   return Promise.all(
     lines.map(({ productId, quantity }) => Product.updateOne({ _id: productId }, { $inc: { stock: quantity } }))
@@ -163,10 +166,10 @@ async function createWithUniqueNumber(payload) {
 export const orderService = {
   /**
    * Places an order for the signed-in user: checks the address is theirs, prices every line live,
-   * takes the stock and saves a copy of the products and the address. A cart order then removes the
-   * ordered lines from the cart; a Buy Now order leaves the cart alone.
+   * takes the stock and saves a copy of the products and the address. Cart-order lines are removed
+   * after payment is verified; a Buy Now order leaves the cart alone.
    */
-  async placeOrder(userId, { addressId, buyNow }) {
+  async placeOrder(userId, { addressId, buyNow, checkoutKey }, { deferCartRemoval = false } = {}) {
     const [address, user] = await Promise.all([
       Address.findOne({ _id: addressId, user: userId }).lean(),
       User.findById(userId).select('email').lean(),
@@ -176,6 +179,7 @@ export const orderService = {
 
     const lines = await resolveLines(userId, buyNow);
     const items = lines.map(toOrderItem);
+    const totals = totalsOf(items);
     const reserved = await reserveStock(lines);
 
     let order;
@@ -194,19 +198,124 @@ export const orderService = {
           state: address.state,
         },
         contact: { phone: address.phone, email: user.email ?? null },
-        ...totalsOf(items),
+        ...totals,
+        checkoutKey,
+        checkoutUsesCart: !buyNow,
         history: [{ event: 'status', value: 'placed', by: userId, at: new Date() }],
       });
     } catch (error) {
+      if (order) await Order.deleteOne({ _id: order._id });
       await releaseStock(reserved);
       throw error;
     }
 
-    if (!buyNow) {
+    if (!buyNow && !deferCartRemoval) {
       await Cart.updateOne({ user: userId }, { $pull: { items: { product: { $in: items.map((item) => item.product) } } } });
     }
 
     return toCustomerView(order);
+  },
+
+  async findCheckout(userId, checkoutKey) {
+    return Order.findOne({ user: userId, checkoutKey }).select('+razorpayOrderId +checkoutKey');
+  },
+
+  async attachRazorpayOrder(orderId, userId, razorpayOrderId) {
+    return Order.findOneAndUpdate(
+      { _id: orderId, user: userId, status: 'placed', paymentStatus: 'pending', razorpayOrderId: { $exists: false } },
+      { $set: { razorpayOrderId } },
+      { returnDocument: 'after' }
+    ).select('+razorpayOrderId');
+  },
+
+  async removeOrderedCartItems(userId, items) {
+    const productIds = items.map((item) => item.product);
+    if (productIds.length) {
+      await Cart.updateOne({ user: userId }, { $pull: { items: { product: { $in: productIds } } } });
+    }
+  },
+
+  async discardUnpaidCheckout(orderId, userId) {
+    const order = await Order.findOneAndDelete({
+      _id: orderId,
+      user: userId,
+      status: 'placed',
+      paymentStatus: 'pending',
+    });
+    if (order) {
+      await releaseStock(order.items.map((item) => ({ productId: item.product, quantity: item.quantity })));
+    }
+    return Boolean(order);
+  },
+
+  async checkoutForRazorpayOrder(razorpayOrderId) {
+    return Order.findOne({ razorpayOrderId }).select('+razorpayOrderId +checkoutUsesCart');
+  },
+
+  async getCheckoutForUser(orderId, userId) {
+    return Order.findOne({ _id: orderId, user: userId }).select('+razorpayOrderId +checkoutUsesCart');
+  },
+
+  async markPaymentPaid(order, paymentId) {
+    if (order.paymentStatus === 'paid') {
+      if (order.paymentReference === paymentId) {
+        return toCustomerView(order);
+      }
+      throw ApiError.conflict('This order already has a verified payment', { code: 'ORDER_ALREADY_PAID' });
+    }
+
+    const now = new Date();
+    const history = [{ event: 'payment', value: 'paid', at: now }];
+
+    const updated = await Order.findOneAndUpdate(
+      {
+        _id: order._id,
+        status: order.status,
+        paymentStatus: { $in: ['pending', 'failed'] },
+        razorpayOrderId: order.razorpayOrderId,
+      },
+      {
+        $set: {
+          paymentStatus: 'paid',
+          paymentReference: paymentId,
+          paidAt: now,
+        },
+        $push: { history: { $each: history } },
+      },
+      { returnDocument: 'after' }
+    );
+    if (updated) {
+      return toCustomerView(updated);
+    }
+
+    const latest = await Order.findById(order._id).select('+razorpayOrderId');
+    if (latest?.paymentStatus === 'paid' && latest.paymentReference === paymentId) {
+      return toCustomerView(latest);
+    }
+    throw orderChanged();
+  },
+
+  async markPaymentFailed(order, paymentId) {
+    if (order.paymentStatus === 'paid' || order.paymentStatus === 'failed') return;
+    await Order.findOneAndUpdate(
+      {
+        _id: order._id,
+        status: order.status,
+        paymentStatus: 'pending',
+        razorpayOrderId: order.razorpayOrderId,
+      },
+      {
+        $set: { paymentStatus: 'failed' },
+        $push: {
+          history: {
+            event: 'payment',
+            value: 'failed',
+            note: `Razorpay payment ${paymentId} failed`,
+            at: new Date(),
+          },
+        },
+      }
+    );
   },
 
   /** The signed-in user's own orders, newest first. */
@@ -260,64 +369,32 @@ export const orderService = {
   },
 
   /**
-   * Moves an order one step along ORDER_STATUS_TRANSITIONS. Voiding is only for an order that was never
-   * paid for, and it puts the stock back. The update matches the status it was read with, so two
+   * Moves a paid order one step along ORDER_STATUS_TRANSITIONS.
    * admins clicking at once cannot both move it (or put its stock back twice).
    */
   async updateStatus(orderId, { status, note }, actorId) {
     const order = await Order.findById(orderId).select('status paymentStatus').lean();
     if (!order) throw orderNotFound();
 
-    if (!ORDER_STATUS_TRANSITIONS[order.status].includes(status)) {
+    if (!ORDER_STATUS_TRANSITIONS[order.status]?.includes(status)) {
       throw ApiError.conflict(`An order that is ${order.status} cannot be moved to ${status}`, {
         code: 'INVALID_STATUS_TRANSITION',
       });
     }
-    if (status === 'voided' && order.paymentStatus === 'paid') {
-      throw ApiError.conflict('A paid order cannot be voided', { code: 'ORDER_PAID' });
+    if (status === 'packed' && order.paymentStatus !== 'paid') {
+      throw ApiError.conflict('An order cannot be packed until payment is verified', { code: 'PAYMENT_REQUIRED' });
     }
 
-    const filter = { _id: orderId, status: order.status };
-    if (status === 'voided') filter.paymentStatus = { $ne: 'paid' };
-
     const updated = await Order.findOneAndUpdate(
-      filter,
+      { _id: orderId, status: order.status },
       { $set: { status }, $push: { history: { event: 'status', value: status, note, by: actorId, at: new Date() } } },
       { returnDocument: 'after' }
     );
     if (!updated) throw orderChanged();
 
-    if (status === 'voided') {
-      await releaseStock(updated.items.map((item) => ({ productId: item.product, quantity: item.quantity })));
-    }
-
     return orderService.getById(orderId);
   },
 
-  /**
-   * Records the payment by hand until a gateway does it. A voided order takes no payment, its stock
-   * is already back on sale. Setting the same status again without a new reference changes nothing.
-   */
-  async updatePayment(orderId, { paymentStatus, reference, note }, actorId) {
-    const order = await Order.findById(orderId).select('status paymentStatus paidAt').lean();
-    if (!order) throw orderNotFound();
-    if (order.status === 'voided') {
-      throw ApiError.conflict('This order was voided and cannot take a payment', { code: 'ORDER_VOIDED' });
-    }
-    if (order.paymentStatus === paymentStatus && reference === undefined) return orderService.getById(orderId);
-
-    const set = { paymentStatus, paidAt: paymentStatus === 'paid' ? (order.paidAt ?? new Date()) : null };
-    if (reference !== undefined) set.paymentReference = reference;
-
-    const updated = await Order.findOneAndUpdate(
-      { _id: orderId, status: { $ne: 'voided' }, paymentStatus: order.paymentStatus },
-      { $set: set, $push: { history: { event: 'payment', value: paymentStatus, note, by: actorId, at: new Date() } } },
-      { returnDocument: 'after' }
-    );
-    if (!updated) throw orderChanged();
-
-    return orderService.getById(orderId);
-  },
 };
 
 export default orderService;

@@ -3,23 +3,15 @@ import mongoose from 'mongoose';
 import { INDIAN_STATES } from '../address/address.model.js';
 import { PACK_UNITS } from '../product/product.model.js';
 
-// The delivery journey. Kept apart from the payment status, so whichever gateway (or manual UPI)
-// the client chooses only ever has to set paymentStatus.
-export const ORDER_STATUSES = ['placed', 'confirmed', 'packed', 'shipped', 'delivered', 'voided'];
+// The delivery journey stays separate from the verified payment status.
+export const ORDER_STATUSES = ['placed', 'packed', 'shipped', 'delivered'];
 
-/**
- * The only moves an admin may make: forward, one step at a time. The shop takes no cancellations,
- * refunds, returns or exchanges, so nothing moves backwards. `voided` is the one exception and is
- * not a cancellation: an admin may void an order that was never paid for, which puts its stock
- * back. order.service.js refuses it once paymentStatus is 'paid'.
- */
+// Admins move paid orders forward one delivery step at a time.
 export const ORDER_STATUS_TRANSITIONS = Object.freeze({
-  placed: ['confirmed', 'voided'],
-  confirmed: ['packed', 'voided'],
-  packed: ['shipped', 'voided'],
+  placed: ['packed'],
+  packed: ['shipped'],
   shipped: ['delivered'],
   delivered: [],
-  voided: [],
 });
 
 // No 'refunded': there are no refunds.
@@ -110,6 +102,9 @@ const orderSchema = new mongoose.Schema(
     // UPI transaction id or gateway payment id, whichever confirmed the payment.
     paymentReference: { type: String, trim: true, maxlength: 100 },
     paidAt: { type: Date, default: null },
+    razorpayOrderId: { type: String, trim: true, select: false },
+    checkoutKey: { type: String, trim: true, select: false },
+    checkoutUsesCart: { type: Boolean, default: false, select: false },
     history: { type: [orderHistorySchema], default: [] },
   },
   {
@@ -131,6 +126,11 @@ orderSchema.index({ orderNumber: 1 }, { unique: true });
 orderSchema.index({ user: 1, createdAt: -1 });
 // The admin list filtered by status, newest first.
 orderSchema.index({ status: 1, createdAt: -1 });
+orderSchema.index(
+  { user: 1, checkoutKey: 1 },
+  { unique: true, partialFilterExpression: { checkoutKey: { $type: 'string' } } }
+);
+orderSchema.index({ razorpayOrderId: 1 }, { unique: true, sparse: true });
 
 export const Order = mongoose.model('Order', orderSchema);
 

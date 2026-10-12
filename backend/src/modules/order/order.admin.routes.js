@@ -6,7 +6,6 @@ import { orderController } from './order.controller.js';
 import {
   adminListOrdersQuerySchema,
   orderIdParamSchema,
-  updateOrderPaymentSchema,
   updateOrderStatusSchema,
 } from './order.validation.js';
 
@@ -23,10 +22,4 @@ router.patch(
   validate({ params: orderIdParamSchema, body: updateOrderStatusSchema }),
   orderController.updateStatus
 );
-router.patch(
-  '/:id/payment',
-  validate({ params: orderIdParamSchema, body: updateOrderPaymentSchema }),
-  orderController.updatePayment
-);
-
 export default router;

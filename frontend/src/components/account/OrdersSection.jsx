@@ -71,13 +71,11 @@ function OrderRow({ order }) {
             <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${orderStatusBadgeClasses(order.status)}`}>
               {orderStatusLabel(order.status)}
             </span>
-            {order.status !== 'voided' && (
-              <span
-                className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${paymentStatusBadgeClasses(order.paymentStatus)}`}
-              >
-                {paymentStatusLabel(order.paymentStatus)}
-              </span>
-            )}
+            <span
+              className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${paymentStatusBadgeClasses(order.paymentStatus)}`}
+            >
+              {paymentStatusLabel(order.paymentStatus)}
+            </span>
           </p>
         </div>
         <ChevronRight size={20} strokeWidth={1.75} aria-hidden='true' className='shrink-0 text-muted' />

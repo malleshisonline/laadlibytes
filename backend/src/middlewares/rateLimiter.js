@@ -6,7 +6,9 @@ import { ApiError } from '../utils/ApiError.js';
 const baseOptions = {
   standardHeaders: 'draft-8',
   legacyHeaders: false,
-  skip: () => env.isTest,
+  skip: (req) =>
+    env.isTest ||
+    [`${env.API_PREFIX}/payments/webhook`, `${env.API_PREFIX}/webhooks/razorpay`].includes(req.originalUrl.split('?')[0]),
   handler: (_req, _res, next) => next(ApiError.tooMany()),
 };
 
