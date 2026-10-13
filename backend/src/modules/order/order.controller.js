@@ -1,5 +1,6 @@
 import { sendCreated, sendResponse } from '../../utils/ApiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
+import { logger } from '../../config/logger.js';
 import { paymentService } from '../payment/payment.service.js';
 
 import { orderService } from './order.service.js';
@@ -7,16 +8,35 @@ import { orderService } from './order.service.js';
 export const orderController = {
   place: asyncHandler(async (req, res) => {
     const checkout = await paymentService.createCheckout(req.user.id, req.body);
+    logger.info('Checkout API completed', {
+      method: req.method,
+      apiPath: req.originalUrl.split('?')[0],
+      orderId: checkout.id,
+      orderNumber: checkout.orderNumber,
+    });
     sendCreated(res, checkout, 'Razorpay checkout created');
   }),
 
   resumePayment: asyncHandler(async (req, res) => {
     const checkout = await paymentService.resumeCheckout(req.user.id, req.params.id);
+    logger.info('Checkout API resumed', {
+      method: req.method,
+      apiPath: req.originalUrl.split('?')[0],
+      orderId: checkout.id,
+      orderNumber: checkout.orderNumber,
+    });
     sendResponse(res, { message: 'Razorpay checkout loaded', data: checkout });
   }),
 
   verifyPayment: asyncHandler(async (req, res) => {
     const order = await paymentService.verifyCheckoutPayment(req.user.id, req.params.id, req.body);
+    logger.info('Payment verification API completed', {
+      method: req.method,
+      apiPath: req.originalUrl.split('?')[0],
+      orderId: order.id,
+      orderNumber: order.orderNumber,
+      paymentStatus: order.paymentStatus,
+    });
     sendResponse(res, { message: 'Payment verified', data: order });
   }),
 

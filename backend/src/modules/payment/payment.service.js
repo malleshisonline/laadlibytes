@@ -46,6 +46,8 @@ async function razorpayRequest(path, { method = 'GET', body } = {}) {
   assertApiCredentials();
   const authorization = Buffer.from(`${env.RAZORPAY_KEY_ID}:${env.RAZORPAY_KEY_SECRET}`).toString('base64');
 
+  logger.info('Razorpay API request started', { method, path });
+
   let response;
   try {
     response = await fetch(`${RAZORPAY_API}${path}`, {
@@ -85,6 +87,17 @@ async function razorpayRequest(path, { method = 'GET', body } = {}) {
     );
   }
 
+  logger.info('Razorpay API request completed', {
+    method,
+    path,
+    status: response.status,
+    providerId: payload?.id,
+    providerOrderId: payload?.order_id,
+    amount: payload?.amount,
+    currency: payload?.currency,
+    providerStatus: payload?.status,
+  });
+
   return payload;
 }
 
@@ -105,6 +118,17 @@ function checkoutResponse(order, razorpayOrderId) {
       },
     },
   };
+}
+
+function logCheckoutReady(order, razorpayOrderId, outcome) {
+  logger.info(`Razorpay checkout ${outcome}`, {
+    orderId: order.id,
+    orderNumber: order.orderNumber,
+    razorpayOrderId,
+    amount: amountInPaise(order.total),
+    currency: CURRENCY,
+  });
+  return checkoutResponse(order, razorpayOrderId);
 }
 
 function assertPaymentMatchesOrder(payment, order) {
@@ -140,7 +164,7 @@ export const paymentService = {
     ) {
       throw ApiError.conflict('This order is not available for payment', { code: 'CHECKOUT_CLOSED' });
     }
-    return checkoutResponse(await orderService.getMine(userId, order.id), order.razorpayOrderId);
+    return logCheckoutReady(await orderService.getMine(userId, order.id), order.razorpayOrderId, 'resumed');
   },
 
   async createCheckout(userId, payload) {
@@ -155,7 +179,7 @@ export const paymentService = {
           code: 'CHECKOUT_IN_PROGRESS',
         });
       }
-      return checkoutResponse(await orderService.getMine(userId, existing.id), existing.razorpayOrderId);
+      return logCheckoutReady(await orderService.getMine(userId, existing.id), existing.razorpayOrderId, 'reused');
     }
 
     let order;
@@ -164,7 +188,9 @@ export const paymentService = {
     } catch (error) {
       if (error?.code !== 11000) throw error;
       const raced = await orderService.findCheckout(userId, payload.checkoutKey);
-      if (raced?.razorpayOrderId) return checkoutResponse(await orderService.getMine(userId, raced.id), raced.razorpayOrderId);
+      if (raced?.razorpayOrderId) {
+        return logCheckoutReady(await orderService.getMine(userId, raced.id), raced.razorpayOrderId, 'reused');
+      }
       throw ApiError.conflict('Checkout is already being created. Please retry shortly.', {
         code: 'CHECKOUT_IN_PROGRESS',
       });
@@ -195,7 +221,7 @@ export const paymentService = {
         throw ApiError.conflict('The order changed while checkout was being created', { code: 'ORDER_CHANGED' });
       }
 
-      return checkoutResponse(await orderService.getMine(userId, order.id), linkedOrder.razorpayOrderId);
+      return logCheckoutReady(await orderService.getMine(userId, order.id), linkedOrder.razorpayOrderId, 'created');
     } catch (error) {
       try {
         await orderService.discardUnpaidCheckout(order.id, userId);
@@ -224,6 +250,11 @@ export const paymentService = {
     if (order.paymentStatus === 'paid' && order.paymentReference === details.razorpay_payment_id) {
       const paidOrder = await orderService.getMine(userId, localOrderId);
       if (order.checkoutUsesCart) await orderService.removeOrderedCartItems(userId, paidOrder.items);
+      logger.info('Razorpay payment verification reused', {
+        orderId: localOrderId,
+        razorpayOrderId: order.razorpayOrderId,
+        paymentStatus: paidOrder.paymentStatus,
+      });
       return paidOrder;
     }
 
@@ -238,6 +269,11 @@ export const paymentService = {
     const removeFromCart = order.checkoutUsesCart;
     const paidOrder = await orderService.markPaymentPaid(order, details.razorpay_payment_id);
     if (removeFromCart) await orderService.removeOrderedCartItems(userId, paidOrder.items);
+    logger.info('Razorpay payment verified', {
+      orderId: localOrderId,
+      razorpayOrderId: order.razorpayOrderId,
+      paymentStatus: paidOrder.paymentStatus,
+    });
     return paidOrder;
   },
 
@@ -250,7 +286,14 @@ export const paymentService = {
 
   async processWebhookEvent(event) {
     const type = event?.event;
-    if (!['order.paid', 'payment.captured', 'payment.failed'].includes(type)) return;
+    if (!['order.paid', 'payment.captured', 'payment.failed'].includes(type)) {
+      logger.info('Razorpay webhook event ignored', {
+        event: typeof type === 'string' ? type : 'unknown',
+      });
+      return;
+    }
+
+    logger.info('Razorpay webhook event received', { event: type });
 
     const payment = event.payload?.payment?.entity;
     if (
@@ -276,11 +319,23 @@ export const paymentService = {
       }
       await orderService.markPaymentPaid(order, payment.id);
       if (order.checkoutUsesCart) await orderService.removeOrderedCartItems(order.user, order.items);
+      logger.info('Razorpay webhook payment marked paid', {
+        event: type,
+        orderId: order.id,
+        razorpayOrderId: payment.order_id,
+        paymentStatus: 'paid',
+      });
     } else {
       if (payment.status !== 'failed') {
         throw ApiError.badRequest('Razorpay failure event is not failed', { code: 'INVALID_PAYMENT_EVENT' });
       }
       await orderService.markPaymentFailed(order, payment.id);
+      logger.info('Razorpay webhook payment marked failed', {
+        event: type,
+        orderId: order.id,
+        razorpayOrderId: payment.order_id,
+        paymentStatus: 'failed',
+      });
     }
   },
 };
