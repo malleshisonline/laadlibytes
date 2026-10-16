@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { addressApi } from '../api/addressApi.js'
+import { useAuth } from './useAuth.js'
 
 // Matches MAX_ADDRESSES in backend/src/modules/address/address.model.js.
 export const MAX_ADDRESSES = 5
@@ -18,6 +19,7 @@ export function pickAddress(addresses, id) {
  * ApiRequestError on failure, so AddressForm can show it.
  */
 export function useAddresses(enabled = true) {
+  const { user, updateUser } = useAuth()
   const [addresses, setAddresses] = useState(null)
   const [status, setStatus] = useState(enabled ? 'loading' : 'idle')
   const [reloadKey, setReloadKey] = useState(0)
@@ -60,9 +62,11 @@ export function useAddresses(enabled = true) {
       const knownIds = new Set(addresses?.map((address) => address.id))
       setAddresses(list)
       setStatus('ready')
-      return list.find((address) => !knownIds.has(address.id)) ?? list[list.length - 1]
+      const createdAddress = list.find((address) => !knownIds.has(address.id)) ?? list[list.length - 1]
+      if (user && !user.phone && createdAddress?.phone) updateUser({ ...user, phone: createdAddress.phone })
+      return createdAddress
     },
-    [addresses],
+    [addresses, updateUser, user],
   )
 
   return { addresses, status, retry, createAddress }

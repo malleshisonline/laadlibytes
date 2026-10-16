@@ -5,6 +5,7 @@ import request from 'supertest';
 
 // Codes are captured here instead of being sent. Mocks must be registered before the app is imported.
 const outbox = [];
+const TIMEOUT_EMAIL = 'slow@example.com';
 const capture = (to, text) => outbox.push({ to, code: String(text).match(/\b\d{6}\b/)[0] });
 
 jest.unstable_mockModule('../../src/integrations/sms/index.js', () => {
@@ -12,7 +13,10 @@ jest.unstable_mockModule('../../src/integrations/sms/index.js', () => {
   return { sendOtpSms, default: sendOtpSms };
 });
 jest.unstable_mockModule('../../src/integrations/email/index.js', () => {
-  const sendEmail = jest.fn(async ({ to, text }) => capture(to, text));
+  const sendEmail = jest.fn(async ({ to, text }) => {
+    if (to === TIMEOUT_EMAIL) return new Promise(() => {});
+    capture(to, text);
+  });
   return { sendEmail, default: sendEmail };
 });
 
@@ -80,6 +84,20 @@ describe('POST /auth/identify', () => {
 });
 
 describe('sign-up with OTP', () => {
+  test(
+    'returns a clear error when email OTP delivery takes more than 10 seconds',
+    async () => {
+      const startedAt = Date.now();
+      const res = await register(TIMEOUT_EMAIL);
+
+      expect(Date.now() - startedAt).toBeGreaterThanOrEqual(9_000);
+      expect(res.status).toBe(503);
+      expect(res.body.code).toBe('OTP_EMAIL_TIMEOUT');
+      expect(res.body.message).toContain('10 seconds');
+    },
+    15_000
+  );
+
   test('creates a phone account only after the code is verified', async () => {
     const started = await register('98765 43210');
 
