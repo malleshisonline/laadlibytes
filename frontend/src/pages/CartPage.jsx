@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { Lock, RotateCw, ShoppingBag } from 'lucide-react'
 
-import wavingMascot from '../assets/illustrations/mascot-waving-with-flute.avif'
 import CartItemRow from '../components/cart/CartItemRow.jsx'
 import DeliveryAddressBox from '../components/cart/DeliveryAddressBox.jsx'
 import PriceDetailsBox from '../components/cart/PriceDetailsBox.jsx'
@@ -37,12 +36,11 @@ function CartSkeleton() {
   )
 }
 
-/** Nothing in the cart yet: the mascot and a way to the products. */
+/** Nothing in the cart yet: a way to the products. */
 function EmptyCart() {
   return (
     <div className='mx-auto max-w-md py-10 text-center'>
-      <img src={wavingMascot} alt='' aria-hidden='true' width='400' height='400' className='mx-auto w-36' />
-      <h2 className='mt-4 text-2xl font-semibold text-navy-800'>Your cart is empty</h2>
+      <h2 className='text-2xl font-semibold text-navy-800'>Your cart is empty</h2>
       <p className='mt-2 text-body'>Our chikkis are waiting for you. Pick a few favourites and they will show up here.</p>
       <Link
         to={APP_ROUTES.PRODUCTS}

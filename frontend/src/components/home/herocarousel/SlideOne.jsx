@@ -3,7 +3,6 @@ import { Link } from 'react-router'
 
 import heroImage from '../../../assets/backgrounds/hero-vrindavan.avif'
 import chikkiRevolutionPlaque from '../../../assets/illustrations/chikkirevolution.avif'
-import chikkiMascot from '../../../assets/illustrations/mascot-waving-with-flute.avif'
 import peacockRight from '../../../assets/illustrations/peacockright.avif'
 import { APP_ROUTES } from '../../../constants/appRoutepoints.js'
 import GoldenDivider from '../../common/GoldenDivider.jsx'
@@ -126,17 +125,6 @@ const SlideOne = () => {
                 <GoldenDivider className='mt-3 text-caramel-500 sm:mt-4' />
 
             </div>
-
-            {/* Mascot */}
-            <img
-                src={chikkiMascot}
-                alt=''
-                aria-hidden='true'
-                width='400'
-                height='400'
-                decoding='async'
-                className='pointer-events-none absolute right-2 bottom-0 hidden w-28 select-none md:block md:right-6 md:w-40 lg:right-10 lg:w-52'
-            />
 
         </div>
     )

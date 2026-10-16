@@ -7,8 +7,6 @@ import {
   Zap,
 } from 'lucide-react'
 
-import chikkiMascot from '../../assets/illustrations/mascot-waving-with-flute.avif'
-
 const PROMISES = [
   {
     icon: Leaf,
@@ -39,7 +37,6 @@ const PROMISES = [
     iconClass:
       'bg-[#c58a27] text-white shadow-[0_6px_16px_rgba(197,138,39,0.28)]',
     accentClass: 'text-[#c58a27]',
-    mascot: true,
   },
   {
     icon: Heart,
@@ -73,7 +70,6 @@ function ProductPromiseStrip() {
             cardClass,
             iconClass,
             accentClass,
-            mascot,
           }) => (
             <li
               key={title}
@@ -119,91 +115,27 @@ function ProductPromiseStrip() {
               {/* Content */}
               <div className='relative z-10 flex h-full items-center gap-3'>
 
-                {/* Icon / Krishna Mascot */}
-                {mascot ? (
-                  <div className='relative shrink-0'>
-
-                    {/* glow */}
-                    <div
-                      aria-hidden='true'
-                      className='absolute inset-1 rounded-full bg-[#e3b64e]/30 blur-md'
-                    />
-
-                    <div
-                      className='
-                        relative
-                        flex
-                        size-16
-                        items-center
-                        justify-center
-                        rounded-full
-                        border
-                        border-[#e3b64e]/50
-                        bg-[#fff9e8]/90
-                        shadow-[0_6px_18px_rgba(151,103,26,0.18)]
-                        transition-transform
-                        duration-500
-                        group-hover:-rotate-3
-                        group-hover:scale-110
-                      '
-                    >
-                      <img
-                        src={chikkiMascot}
-                        alt=''
-                        aria-hidden='true'
-                        width='400'
-                        height='400'
-                        loading='lazy'
-                        decoding='async'
-                        className='size-14 object-contain'
-                      />
-                    </div>
-
-                    {/* tiny star */}
-                    <Star
-                      size={12}
-                      aria-hidden='true'
-                      className='
-                        absolute
-                        -top-1
-                        -right-1
-                        fill-[#e0aa38]
-                        text-[#e0aa38]
-                        transition-transform
-                        duration-500
-                        group-hover:rotate-45
-                        group-hover:scale-125
-                      '
-                    />
-                  </div>
-                ) : (
-                  <div
-                    className={`
-                      relative
-                      grid
-                      size-12
-                      shrink-0
-                      place-items-center
-                      rounded-[15px]
-                      ${iconClass}
-                      transition-all
-                      duration-500
-                      group-hover:-rotate-6
-                      group-hover:scale-110
-                    `}
-                  >
-                    <Icon
-                      size={23}
-                      strokeWidth={1.9}
-                      aria-hidden='true'
-                    />
-
-                    <span
-                      aria-hidden='true'
-                      className='absolute inset-1 rounded-[11px] border border-white/20'
-                    />
-                  </div>
-                )}
+                <div
+                  className={`
+                    relative
+                    grid
+                    size-12
+                    shrink-0
+                    place-items-center
+                    rounded-[15px]
+                    ${iconClass}
+                    transition-all
+                    duration-500
+                    group-hover:-rotate-6
+                    group-hover:scale-110
+                  `}
+                >
+                  <Icon size={23} strokeWidth={1.9} aria-hidden='true' />
+                  <span
+                    aria-hidden='true'
+                    className='absolute inset-1 rounded-[11px] border border-white/20'
+                  />
+                </div>
 
                 {/* Text */}
                 <div className='min-w-0'>

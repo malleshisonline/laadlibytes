@@ -3,7 +3,6 @@ import { toast } from 'react-hot-toast'
 import { Link, useParams } from 'react-router'
 import { PackageSearch, RotateCw } from 'lucide-react'
 
-import wavingMascot from '../assets/illustrations/mascot-waving-with-flute.avif'
 import ImageZoomViewer from '../components/product/details/ImageZoomViewer.jsx'
 import { ProductBuyBox, ProductCartButtons } from '../components/product/details/ProductBuyBox.jsx'
 import ProductImageGallery from '../components/product/details/ProductImageGallery.jsx'
@@ -35,12 +34,11 @@ function DetailsSkeleton() {
   )
 }
 
-/** Wrong or unpublished slug: the mascot, a message and a way back. */
+/** Wrong or unpublished slug: a message and a way back. */
 function ProductNotFound() {
   return (
     <div className='mx-auto max-w-md py-12 text-center'>
-      <img src={wavingMascot} alt='' aria-hidden='true' width='400' height='400' className='mx-auto w-36' />
-      <h1 className='mt-4 text-2xl font-semibold text-navy-800'>Product not found</h1>
+      <h1 className='text-2xl font-semibold text-navy-800'>Product not found</h1>
       <p className='mt-2 text-body'>This chikki may have sold out or moved. Have a look at the rest of our collection.</p>
       <Link
         to={APP_ROUTES.PRODUCTS}

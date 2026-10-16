@@ -1,7 +1,6 @@
 import { Link, Outlet } from 'react-router'
 
 import logo from '../assets/brand/logo.svg'
-import mascot from '../assets/illustrations/mascot-waving-with-flute.avif'
 import GoldenDivider from '../components/common/GoldenDivider.jsx'
 import { APP_ROUTES } from '../constants/appRoutepoints.js'
 import { APP_SETTINGS } from '../constants/appSettings.js'
@@ -16,18 +15,9 @@ function AuthLayout() {
         </Link>
       </header>
 
-      {/* pt leaves room for the mascot that rises above the card. */}
-      <main className="flex flex-1 flex-col items-center px-4 pt-10 pb-10">
-        <div className="relative w-full max-w-104">
-          {/* Peeks over the top edge: the card below is stacked above it, so its lower half is hidden. */}
-          <img
-            src={mascot}
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none absolute bottom-full left-1/2 h-32 w-auto -translate-x-1/2 translate-y-12 select-none sm:h-36"
-          />
-
-          <div className="relative z-10 rounded-3xl border border-slate-200 bg-white p-6 shadow-xl sm:p-8">
+      <main className="flex flex-1 flex-col items-center px-4 pt-6 pb-10">
+        <div className="w-full max-w-104">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl sm:p-8">
             <Outlet />
           </div>
         </div>

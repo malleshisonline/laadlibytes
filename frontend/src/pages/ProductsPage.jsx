@@ -5,7 +5,6 @@ import { PackageSearch, RotateCw, SlidersHorizontal, X } from 'lucide-react'
 import jasmineCornerLeft from '../assets/footer/footerflowerleft.avif'
 import jasmineCornerRight from '../assets/footer/footerflower.avif'
 import heroImage from '../assets/illustrations/Goodness_in_Everybytes.avif'
-import wavingMascot from '../assets/illustrations/mascot-waving-with-flute.avif'
 import GoldenDivider from '../components/common/GoldenDivider.jsx'
 import FilterDrawer from '../components/product/FilterDrawer.jsx'
 import ProductCard from '../components/product/ProductCard.jsx'
@@ -182,8 +181,7 @@ function ProductsPage() {
 
           <section aria-labelledby='products-heading' className='min-w-0 flex-1'>
             <div className='flex flex-wrap items-end justify-between gap-3'>
-              {/* Title on the left, the page's one mascot waving from the right end of the same row. */}
-              <div className='flex min-w-0 flex-1 items-end justify-between gap-3'>
+              <div className='min-w-0 flex-1'>
                 <div>
                   <p className='text-xs font-bold tracking-[0.25em] text-caramel-700 uppercase'>Handcrafted in Vrindavan</p>
                   <h2 id='products-heading' className='mt-1 text-2xl font-semibold text-navy-800 md:text-3xl'>
@@ -198,16 +196,6 @@ function ProductsPage() {
                         : ''}
                   </p>
                 </div>
-                <img
-                  src={wavingMascot}
-                  alt=''
-                  aria-hidden='true'
-                  width='400'
-                  height='400'
-                  loading='lazy'
-                  decoding='async'
-                  className='pointer-events-none -mb-1 w-20 shrink-0 animate-float select-none motion-reduce:animate-none sm:w-24 lg:w-32'
-                />
               </div>
 
               {/* Filters button and sort, below lg (the sidebar has both on desktop). */}

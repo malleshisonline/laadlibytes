@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
 import ourStoryImage from '../../assets/illustrations/OurStoryImage.avif'
-import fluteMascot from '../../assets/illustrations/krishnaavatar.avif'
 import ourStoryBackground from '../../assets/backgrounds/loginpage_Bg.avif'
 import { OUR_STORY } from '../../content/aboutUsContent.js'
 
@@ -31,20 +30,7 @@ function OurStorySection() {
               {OUR_STORY.heading}
             </h2>
 
-            <div id='our-story-text' className='mt-4 flow-root space-y-4 text-base leading-relaxed text-body md:text-lg'>
-              <span className='float-right mb-2 ml-3 grid size-28 place-items-center rounded-full bg-radial from-cream-100 via-cream-50 to-transparent sm:size-32 lg:size-40'>
-                <img
-                  src={fluteMascot}
-                  alt=''
-                  aria-hidden='true'
-                  width='1254'
-                  height='1254'
-                  loading='lazy'
-                  decoding='async'
-                  className='pointer-events-none w-full animate-float select-none motion-reduce:animate-none'
-                />
-              </span>
-
+            <div id='our-story-text' className='mt-4 space-y-4 text-base leading-relaxed text-body md:text-lg'>
               {OUR_STORY.paragraphs.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}

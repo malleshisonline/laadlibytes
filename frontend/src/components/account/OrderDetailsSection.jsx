@@ -14,7 +14,6 @@ import {
 } from 'lucide-react'
 
 import { orderApi } from '../../api/orderApi.js'
-import krishnaAvatar from '../../assets/illustrations/krishnaavatar.avif'
 import { APP_ROUTES } from '../../constants/appRoutepoints.js'
 import { formatAddressLine, formatIndianMobile } from '../../utils/addressValidation.js'
 import { openRazorpayCheckout } from '../../utils/razorpayCheckout.js'
@@ -130,13 +129,6 @@ function OrderPlacedBanner({ order }) {
         >
           <X size={20} aria-hidden='true' />
         </button>
-        <img
-          src={krishnaAvatar}
-          alt='Krishna playing the flute'
-          width='240'
-          height='240'
-          className='mx-auto mb-3 size-36 object-contain sm:size-44'
-        />
         <p className='flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-wide text-leaf-600'>
           <PartyPopper size={18} aria-hidden='true' />
           Payment successful
