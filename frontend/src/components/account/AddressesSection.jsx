@@ -21,7 +21,7 @@ const ADD_BUTTON_CLASSES =
 
 /** Saved delivery addresses: add, edit, delete and choose the default (up to MAX_ADDRESSES). */
 function AddressesSection() {
-  const { user } = useAuth()
+  const { user, updateUser } = useAuth()
 
   const [addresses, setAddresses] = useState(null)
   const [loadStatus, setLoadStatus] = useState('loading') // 'loading' | 'error' | 'ready'
@@ -57,6 +57,11 @@ function AddressesSection() {
   async function handleSave(payload) {
     const isNew = editor.mode === 'add'
     const list = isNew ? await addressApi.create(payload) : await addressApi.update(editor.address.id, payload)
+    if (isNew && !user.phone) {
+      const knownIds = new Set(addresses?.map((address) => address.id))
+      const createdAddress = list.find((address) => !knownIds.has(address.id))
+      if (createdAddress?.phone) updateUser({ phone: createdAddress.phone })
+    }
     setAddresses(list)
     setEditor(null)
     toast.success(isNew ? 'Address saved' : 'Address updated')

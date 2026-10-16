@@ -18,6 +18,7 @@ export const OTP_TTL_SECONDS = 10 * 60;
 export const OTP_MAX_ATTEMPTS = 5;
 export const OTP_RESEND_COOLDOWN_SECONDS = 60;
 export const OTP_MAX_SENDS = 5;
+export const OTP_EMAIL_SEND_TIMEOUT_MS = 10_000;
 
 export const generateCode = () => crypto.randomInt(0, 10 ** OTP_LENGTH).toString().padStart(OTP_LENGTH, '0');
 
@@ -72,21 +73,53 @@ async function saveChallenge(existing, fields) {
   return existing._id;
 }
 
+function sendEmailWithTimeout(message) {
+  let timeoutId;
+  const timeout = new Promise((resolve, reject) => {
+    timeoutId = setTimeout(() => {
+      const error = new Error('Email OTP delivery exceeded 10 seconds');
+      error.code = 'OTP_EMAIL_TIMEOUT';
+      reject(error);
+    }, OTP_EMAIL_SEND_TIMEOUT_MS);
+  });
+  const delivery = Promise.resolve().then(() => sendEmail(message));
+
+  return Promise.race([delivery, timeout]).finally(() => clearTimeout(timeoutId));
+}
+
 async function deliver(challengeId, { channel, identifier, purpose }, code) {
   try {
     if (channel === 'email') {
-      await sendEmail({ to: identifier, ...otpEmail({ code, purpose, expiresInMinutes: OTP_TTL_SECONDS / 60 }) });
+      await sendEmailWithTimeout({
+        to: identifier,
+        ...otpEmail({ code, purpose, expiresInMinutes: OTP_TTL_SECONDS / 60 }),
+      });
     } else {
       await sendOtpSms({ to: identifier, code });
     }
   } catch (err) {
     logger.error('OTP delivery failed', { channel, error: err?.message });
-    // Nothing reached the user, so let them retry straight away instead of waiting out the cooldown.
-    await OtpChallenge.updateOne({ _id: challengeId }, { $set: { lastSentAt: new Date(0) } });
-    throw new ApiError(StatusCodes.SERVICE_UNAVAILABLE, 'Could not send the verification code. Please try again', {
-      code: 'OTP_DELIVERY_FAILED',
-      cause: err,
-    });
+    // Let the user retry immediately after delivery fails or times out.
+    const timedOut = err?.code === 'OTP_EMAIL_TIMEOUT';
+
+    // Only reset the cooldown when delivery definitely failed.
+    // On timeout, the email may still arrive.
+    if (!timedOut) {
+      await OtpChallenge.updateOne(
+        { _id: challengeId },
+        { $set: { lastSentAt: new Date(0) } }
+      );
+    }
+    throw new ApiError(
+      StatusCodes.SERVICE_UNAVAILABLE,
+      timedOut
+        ? 'The email is taking longer than 10 seconds to send. Please check your inbox shortly or try again.'
+        : 'Could not send the verification code. Please try again',
+      {
+        code: timedOut ? 'OTP_EMAIL_TIMEOUT' : 'OTP_DELIVERY_FAILED',
+        cause: err,
+      }
+    );
   }
 }
 

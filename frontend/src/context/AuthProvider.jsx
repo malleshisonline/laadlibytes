@@ -47,12 +47,15 @@ function AuthProvider({ children }) {
   }, [clearSession])
 
   /** Replaces the signed-in user after a profile change, e.g. so the navbar shows the new name. */
-  const updateUser = useCallback((updatedUser) => setUser(updatedUser), [])
-
+  const updateUser = useCallback((updatedUser) => {
+    setUser((currentUser) =>
+      currentUser ? { ...currentUser, ...updatedUser } : updatedUser,
+    ) 
+  }, [])
   // Refresh token rejected mid-session (expired or revoked): only then is the user signed out.
   useEffect(() => {
     onSessionExpired(clearSession)
-    return () => onSessionExpired(() => {})
+    return () => onSessionExpired(() => { })
   }, [clearSession])
 
   // Restore the session from the refresh cookie. StrictMode runs this twice in dev; refreshAccessToken
