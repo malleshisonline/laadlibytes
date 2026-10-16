@@ -16,7 +16,8 @@ import {
 } from 'lucide-react'
 
 import logo from '../../assets/brand/logo.svg'
-import krishnaMascot from '../../assets/illustrations/krishnaavatar.avif'
+import navbarBackground from '../../assets/backgrounds/laadlibytes-navbar-bg.avif'
+import krishnaMascot from '../../assets/illustrations/laadlibytes-chikki-bowl.avif'
 
 import { APP_ROUTES } from '../../constants/appRoutepoints.js'
 import { APP_SETTINGS } from '../../constants/appSettings.js'
@@ -261,33 +262,26 @@ function Navbar() {
           MAIN NAVBAR
       ===================================================== */}
 
-      <div className="relative flex h-14 items-center justify-between gap-3 px-4 sm:px-6 lg:h-24">
+      <div
+        className="relative flex h-12 items-center justify-between gap-3 bg-cover bg-center px-4 sm:px-6 lg:h-20"
+        style={{ backgroundImage: `url(${navbarBackground})` }}
+      >
 
         <Link
           to={APP_ROUTES.HOME}
           aria-label={`${APP_SETTINGS.SITE_NAME} home`}
           className="relative flex h-11 w-28 shrink-0 items-center sm:w-32 lg:h-12 lg:w-36"
         >
-
-          {/* Logo */}
-
           <img
             src={logo}
             alt={APP_SETTINGS.SITE_NAME}
             className={`
               absolute left-10 max-h-10 w-auto object-contain
               transition-all duration-500 ease-in-out
-              lg:max-h-20
-              ${showMascot
-                ? 'scale-75 rotate-1 opacity-0'
-                : 'scale-100 rotate-0 opacity-100'
-              }
+              lg:max-h-15
+              ${showMascot ? 'scale-75 rotate-1 opacity-0' : 'scale-100 rotate-0 opacity-100'}
             `}
           />
-
-
-          {/* Krishna Mascot */}
-
           <img
             src={krishnaMascot}
             alt=""
@@ -296,13 +290,9 @@ function Navbar() {
               absolute left-10 max-h-11 w-auto object-contain
               transition-all duration-500 ease-in-out
               lg:max-h-20
-              ${showMascot
-                ? 'scale-100 rotate-0 opacity-100'
-                : 'scale-75 -rotate-2 opacity-0'
-              }
+              ${showMascot ? 'scale-100 rotate-0 opacity-100' : 'scale-75 -rotate-2 opacity-0'}
             `}
           />
-
         </Link>
 
 
@@ -314,7 +304,7 @@ function Navbar() {
           aria-label="Main menu"
           className="hidden lg:block"
         >
-          <ul className="flex items-center gap-8">
+          <ul className="flex items-center gap-6">
 
             {NAVIGATION_MENU_ITEMS.map((item) => (
               <li key={item.label}>
@@ -578,8 +568,8 @@ function Navbar() {
                     <span
                       className={
                         user
-                          ? 'text-sm font-medium text-muted'
-                          : 'text-[11px] font-medium text-muted'
+                          ? 'text-base font-medium text-muted'
+                          : 'text-sm font-medium text-muted'
                       }
                     >
 
@@ -595,7 +585,7 @@ function Navbar() {
 
                     {/* Main account label */}
 
-                    <span className="mt-1 whitespace-nowrap text-xs font-bold text-navy-800 transition group-hover:text-caramel-600">
+                    <span className="mt-1 whitespace-nowrap text-sm font-bold text-navy-800 transition group-hover:text-caramel-600">
 
                       {user
                         ? 'My Account'

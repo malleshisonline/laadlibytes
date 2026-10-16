@@ -4,7 +4,6 @@ import { toast } from 'react-hot-toast'
 import { RotateCw, ShoppingBag } from 'lucide-react'
 
 import { orderApi } from '../api/orderApi.js'
-import wavingMascot from '../assets/illustrations/mascot-waving-with-flute.avif'
 import DeliveryAddressBox from '../components/cart/DeliveryAddressBox.jsx'
 import OrderSummaryView from '../components/checkout/OrderSummaryView.jsx'
 import { APP_ROUTES, orderDetailsPath, productDetailsPath } from '../constants/appRoutepoints.js'
@@ -109,8 +108,7 @@ function LoadError({ onRetry }) {
 function SummaryNotice({ title, text, linkTo, linkText }) {
   return (
     <div className='mx-auto max-w-md py-10 text-center'>
-      <img src={wavingMascot} alt='' aria-hidden='true' width='400' height='400' className='mx-auto w-32' />
-      <h2 className='mt-4 text-2xl font-semibold text-navy-800'>{title}</h2>
+      <h2 className='text-2xl font-semibold text-navy-800'>{title}</h2>
       <p className='mt-2 text-body'>{text}</p>
       <Link to={linkTo} className={PRIMARY_LINK_CLASSES}>
         <ShoppingBag size={16} strokeWidth={1.75} aria-hidden='true' />
