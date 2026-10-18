@@ -4,7 +4,6 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { productApi } from '../../api/productApi.js'
 import bhogBackground from '../../assets/backgrounds/56bhogbg.avif'
-import chikkiMascot from '../../assets/illustrations/mascot-waving-with-flute.avif'
 import APP_ROUTES from '../../constants/appRoutepoints.js'
 import { useScrollPager } from '../../hooks/useScrollPager.js'
 
@@ -92,7 +91,7 @@ function PlaceholderCard() {
 }
 
 /**
- * Home "56 Bhog" showcase band, as in design-reference/finaLaadliBytesUI.png, on the navy Vrindavan scene.
+ * Home "Chhappan Bhog" showcase band, as in design-reference/finaLaadliBytesUI.png, on the navy Vrindavan scene.
  * Shows the products that are not best sellers, so it doesn't repeat the Best Sellers row above.
  */
 function BhogShowcaseSection() {
@@ -143,7 +142,7 @@ function BhogShowcaseSection() {
       <div className='relative z-10 mx-auto max-w-7xl px-3 sm:px-6 xl:max-w-none xl:px-10 2xl:px-16'>
         <header className='mx-auto max-w-xl text-center'>
           <h2 id='bhog-showcase-heading' className='text-3xl font-semibold text-white md:text-4xl'>
-            56 Bhog
+            Chhappan Bhog
           </h2>
           <p className='mt-3 text-sm leading-relaxed text-white/90 md:text-base'>
             A divine collection of 56 traditional bhogs,
@@ -168,20 +167,7 @@ function BhogShowcaseSection() {
             <ChevronLeft size={20} strokeWidth={1.75} aria-hidden='true' />
           </button>
 
-          {/* Small mascot standing behind the last visible card: only its top half peeks over the card row. */}
-          <img
-            src={chikkiMascot}
-            alt=''
-            aria-hidden='true'
-            width='400'
-            height='400'
-            loading='lazy'
-            decoding='async'
-            className='pointer-events-none absolute -top-10 right-6 w-16 select-none sm:right-16 sm:w-20 md:-top-12 md:right-20 lg:-top-14 lg:right-24 lg:w-28'
-          />
-
-          {/* py-2 leaves room for the card's hover lift and shadow inside the scrolling track. relative z-10 keeps
-              the cards in front of the mascot. */}
+          {/* py-2 leaves room for the card's hover lift and shadow inside the scrolling track. */}
           <ul
             ref={trackRef}
             className='relative z-10 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth py-2 md:gap-6 scrollbar-none [&::-webkit-scrollbar]:hidden'

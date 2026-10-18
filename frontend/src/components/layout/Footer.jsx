@@ -9,14 +9,11 @@ import GoldenDivider from '../common/GoldenDivider.jsx'
 const QUICK_LINKS = [
   { label: 'Home', path: '/' },
   { label: 'About Us', path: '/about' },
-  { label: 'Shop', path: '/shop' },
-  { label: 'Categories', path: '/categories' },
-  { label: '56 Bhog', path: '/56-bhog' },
+  { label: 'Shop', path: '/products' },
   { label: 'Contact', path: '/contact' },
 ]
 
 const CUSTOMER_CARE_LINKS = [
-  { label: 'Track Order', path: '/track-order' },
   { label: 'Privacy Policy', path: '/privacy-policy' },
   { label: 'Terms & Conditions', path: '/terms' },
   { label: 'FAQs', path: '/faq' },
@@ -155,7 +152,7 @@ function Footer() {
           </div>
 
           <p className="mt-4 max-w-xs text-sm">
-            Traditional chikkis and wholesome bites, made with love from Vrindavan.
+            Traditional chikkis and wholesome bites, made with love.
           </p>
         </div>
 

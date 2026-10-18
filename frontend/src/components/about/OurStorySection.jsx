@@ -1,13 +1,28 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import ourStoryImage from '../../assets/illustrations/OurStoryImage.avif'
-import fluteMascot from '../../assets/illustrations/krishnaavatar.avif'
 import ourStoryBackground from '../../assets/backgrounds/loginpage_Bg.avif'
 import { OUR_STORY } from '../../content/aboutUsContent.js'
 
 
 function OurStorySection() {
   const [isExpanded, setIsExpanded] = useState(false)
+  const moreContentRef = useRef(null)
+  const [moreContentHeight, setMoreContentHeight] = useState(0)
+
+  useEffect(() => {
+    const content = moreContentRef.current
+    if (!content) return undefined
+
+    const resizeObserver = new ResizeObserver(() => {
+      setMoreContentHeight(content.scrollHeight)
+    })
+
+    resizeObserver.observe(content)
+    setMoreContentHeight(content.scrollHeight)
+
+    return () => resizeObserver.disconnect()
+  }, [])
 
   return (
     <section aria-labelledby='our-story-heading' className='relative isolate overflow-hidden bg-cream-50 text-black font-bold'>
@@ -25,35 +40,31 @@ function OurStorySection() {
       />
 
       <div className='mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-16'>
-        <div className='grid items-center gap-8 md:grid-cols-2 md:gap-12'>
+        <div className='grid items-center gap-8 md:grid-cols-2 md:items-start md:gap-12'>
           <div>
             <h2 id='our-story-heading' className='text-2xl font-semibold text-navy-800 md:text-3xl'>
               {OUR_STORY.heading}
             </h2>
 
-            <div id='our-story-text' className='mt-4 flow-root space-y-4 text-base leading-relaxed text-body md:text-lg'>
-              <span className='float-right mb-2 ml-3 grid size-28 place-items-center rounded-full bg-radial from-cream-100 via-cream-50 to-transparent sm:size-32 lg:size-40'>
-                <img
-                  src={fluteMascot}
-                  alt=''
-                  aria-hidden='true'
-                  width='1254'
-                  height='1254'
-                  loading='lazy'
-                  decoding='async'
-                  className='pointer-events-none w-full animate-float select-none motion-reduce:animate-none'
-                />
-              </span>
-
+            <div id='our-story-text' className='mt-4 space-y-4 text-base leading-relaxed text-body md:text-lg'>
               {OUR_STORY.paragraphs.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
-              {isExpanded &&
-                OUR_STORY.moreParagraphs.map((paragraph) => (
-                  <p key={paragraph} className='transition-opacity duration-700 starting:opacity-0'>
-                    {paragraph}
-                  </p>
-                ))}
+              <div
+                aria-hidden={!isExpanded}
+                inert={!isExpanded}
+                style={{ height: isExpanded ? moreContentHeight : 0 }}
+                className='overflow-hidden transition-[height] duration-500 ease-in-out motion-reduce:transition-none'
+              >
+                <div
+                  ref={moreContentRef}
+                  className='space-y-4 pt-4'
+                >
+                  {OUR_STORY.moreParagraphs.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <button
@@ -74,7 +85,7 @@ function OurStorySection() {
             height='1254'
             loading='lazy'
             decoding='async'
-            className='mx-auto h-auto w-full max-w-xs sm:max-w-sm md:max-w-md'
+            className='mx-auto h-auto w-full max-w-xs sm:max-w-sm md:max-w-md md:self-start'
           />
         </div>
       </div>

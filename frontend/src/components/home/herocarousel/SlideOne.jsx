@@ -3,32 +3,34 @@ import { Link } from 'react-router'
 
 import heroImage from '../../../assets/backgrounds/hero-vrindavan.avif'
 import chikkiRevolutionPlaque from '../../../assets/illustrations/chikkirevolution.avif'
-import chikkiMascot from '../../../assets/illustrations/mascot-waving-with-flute.avif'
 import peacockRight from '../../../assets/illustrations/peacockright.avif'
 import { APP_ROUTES } from '../../../constants/appRoutepoints.js'
 import GoldenDivider from '../../common/GoldenDivider.jsx'
 
-const chikkiVarieties = [
+const chikkiCategories = [
     {
-        name: 'Women Wellness',
-        description: 'Classic & Crunchy',
+        name: 'Fruits Variants',
+        description: 'Natural Fruit Sweetness',
     },
     {
+        name: 'Nuts n Seeds',
+        description: 'Classic & Crunchy',
+    },
+     {
         name: 'Millets n Nuts',
         description: 'Rich & Nutty',
     },
     {
+        name: 'Women Wellness',
+        description: '',
+    },
+   
+    {
         name: 'Kids Wellness',
-        description: 'Roasted Sesame Goodness',
+        description: '',
     },
-    {
-        name: 'Fruits Variants',
-        description: 'Pure Traditional Sweetness',
-    },
-    {
-        name: 'Nuts n Seeds',
-        description: 'A Delicious Combination',
-    },
+    
+    
     {
         name: 'Peanut Chikkis',
         description: 'Light & Guilt-Free',
@@ -37,10 +39,10 @@ const chikkiVarieties = [
 
 const SlideOne = () => {
     return (
-        <div className='relative flex min-h-104 w-full items-center justify-center pt-4 md:min-h-112 lg:aspect-1920/823 lg:min-h-0'>
+        <div className='relative flex min-h-104 w-full items-center justify-center pt-4 min-[1025px]:pt-0 md:min-h-112 lg:aspect-1920/823 lg:min-h-0 min-[1025px]:aspect-auto'>
 
             {/* Background */}
-            <div className='absolute inset-x-0 top-0 -bottom-6 overflow-hidden lg:-bottom-8'>
+            <div className='absolute inset-x-0 top-0 -bottom-6 overflow-hidden lg:-bottom-8 min-[1025px]:bottom-0'>
                 <img
                     src={heroImage}
                     alt=''
@@ -68,7 +70,7 @@ const SlideOne = () => {
             />
 
             {/* Content */}
-            <div className='relative z-10 w-full px-3 mt-20 pb-5 text-center sm:px-4 md:mb-12 md:px-6 md:pb-0 lg:mb-16'>
+            <div className='relative z-10 w-full px-3 mt-20 md:mt-5 min-[1025px]:mt-0 pb-5 min-[1025px]:pb-0 text-center sm:px-4 md:mb-12 md:px-6 md:pb-0 min-[1025px]:mb-0'>
 
                 {/* Revolution banner - unchanged */}
                 <img
@@ -84,17 +86,17 @@ const SlideOne = () => {
                 <div className='mx-auto max-w-3xl'>
 
                     <p className='text-[12px] md:text-[14px] font-extrabold tracking-[0.14em] text-[#01101b] sm:text-[#0a0040] text-shadow-sm text-shadow-cream-50 uppercase sm:text-xs sm:tracking-[0.2em] '>
-                        Traditional Taste · Six Delicious Varieties
+                        Traditional Taste · Six Delicious Categories · 56 Varieties
                     </p>
 
                     <h1 className='mt-1 font-display text-xl leading-tight font-semibold text-navy-950 text-shadow-md text-shadow-cream-50 sm:text-2xl sm:text-caramel-700 sm:text-shadow-cream-100 md:text-3xl xl:text-4xl'>
-                        Six Varieties. One Love for Tradition.
+                         One Love for Tradition.
                     </h1>
 
                     <p className='mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-[#fffcf6]
-                     md:text-navy-950 font-bold md:text-lg sm:text-sm sm:font-extrabold'>
-                        Discover our collection of traditionally crafted chikkis,
-                        made with jaggery, nuts and seeds for an authentic taste.
+                     md:text-navy-950 font-bold md:text-lg min-[1025px]:mt-10 sm:text-sm sm:font-extrabold'>
+                        Discover our unique collection of traditionally crafted chikkis,
+                        millets n Nuts , Nuts & Seeds, made with honey for an authentic taste.
                     </p>
 
                 </div>
@@ -102,7 +104,7 @@ const SlideOne = () => {
                 {/* Six category cards */}
                 <div className='mx-auto mt-4 grid max-w-4xl grid-cols-2 gap-2 sm:mt-5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-6'>
 
-                    {chikkiVarieties.map((item) => (
+                    {chikkiCategories.map((item) => (
                         <div
                             key={item.name}
                             className='group relative overflow-hidden rounded-2xl border border-white/80 bg-linear-to-br from-white/95 via-cream-50/95 to-cream-100/90 px-2 py-3 shadow-[0_6px_18px_-10px_rgba(0,38,74,0.65)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-caramel-500/60 hover:shadow-lg sm:px-3 sm:py-3.5'
@@ -126,17 +128,6 @@ const SlideOne = () => {
                 <GoldenDivider className='mt-3 text-caramel-500 sm:mt-4' />
 
             </div>
-
-            {/* Mascot */}
-            <img
-                src={chikkiMascot}
-                alt=''
-                aria-hidden='true'
-                width='400'
-                height='400'
-                decoding='async'
-                className='pointer-events-none absolute right-2 bottom-0 hidden w-28 select-none md:block md:right-6 md:w-40 lg:right-10 lg:w-52'
-            />
 
         </div>
     )

@@ -64,8 +64,8 @@ beforeEach(async () => {
     { _id: customerId, name: 'Catalogue Customer', email: 'catalogue-customer@example.com', password: 'Secret123' },
   ]);
   [fruit, kids] = await Category.create([
-    { name: 'Fruit Variant', displayOrder: 6 },
-    { name: 'Kids Wellness', displayOrder: 5 },
+    { name: 'Fruit Variant', displayOrder: 1 },
+    { name: 'Kids Wellness', displayOrder: 6 },
   ]);
 });
 
@@ -74,8 +74,8 @@ describe('GET /categories', () => {
     const res = await request(app).get(api('/categories'));
 
     expect(res.status).toBe(200);
-    expect(res.body.data.map((category) => category.name)).toEqual(['Kids Wellness', 'Fruit Variant']);
-    expect(res.body.data[0].slug).toBe('kids-wellness');
+    expect(res.body.data.map((category) => category.name)).toEqual(['Fruit Variant', 'Kids Wellness']);
+    expect(res.body.data[0].slug).toBe('fruit-variant');
     // Every catalogue response identifies a document with `id`. Asserting _id is absent is the
     // half that matters: toMatchObject-style checks pass happily while _id leaks through.
     expect(res.body.data[0].id).toBeDefined();
@@ -117,6 +117,39 @@ describe('GET /products', () => {
       hasNextPage: true,
       hasPrevPage: false,
     });
+  });
+
+  test('groups products by category display order before applying the selected product sort', async () => {
+    const [nuts, millets] = await Category.create([
+      { name: 'Nuts n Seeds', displayOrder: 2 },
+      { name: 'Millets n Nuts', displayOrder: 3 },
+    ]);
+    await createProduct({ name: 'Fruit Product', slug: 'fruit-product', sku: 'FV-01', price: 200 });
+    await createProduct({
+      name: 'Nuts Product',
+      slug: 'nuts-product',
+      sku: 'NS-01',
+      category: nuts._id,
+      price: 100,
+    });
+    await createProduct({
+      name: 'Millet Product',
+      slug: 'millet-product',
+      sku: 'MN-01',
+      category: millets._id,
+      price: 50,
+    });
+    await createProduct({
+      name: 'Other Product',
+      slug: 'other-product',
+      sku: 'KW-01',
+      category: kids._id,
+      price: 25,
+    });
+
+    const res = await request(app).get(api('/products?sort=price_asc'));
+
+    expect(res.body.data.map((product) => product.sku)).toEqual(['FV-01', 'NS-01', 'MN-01', 'KW-01']);
   });
 
   test('exposes id, inStock and discountPercent on list rows despite .lean()', async () => {

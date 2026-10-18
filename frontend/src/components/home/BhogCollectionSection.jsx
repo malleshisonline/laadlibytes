@@ -154,7 +154,7 @@ function BhogCollectionSection() {
           />
           <img
             src={bhogLabel}
-            alt='Inspired by 56 Bhog, Reimagined for Today'
+            alt='Inspired by Chhappan Bhog, Reimagined for Today'
             width='1774'
             height='887'
             loading='eager'
@@ -177,7 +177,7 @@ function BhogCollectionSection() {
 
         <header className='px-10 text-center sm:px-16 mt-20'>
           <h2 id='bhog-collection-heading' className='text-2xl font-semibold text-navy-800 md:text-3xl'>
-            56 Bhog – A Divine Collection
+            Chhappan Bhog – A Divine Collection
           </h2>
           <p className='mt-2 text-sm text-body md:text-base'>56 traditional offerings, crafted with purity and love</p>
         </header>

@@ -29,7 +29,7 @@ const BUTTON_PENDING_CLASSES =
 const PRODUCT_LABELS = [
   { text: 'Made with', icon: Heart },
   { text: 'Favourite', icon: Star },
-  { text: '56Bhog', icon: Sparkles },
+  { text: 'ChhappanBhog', icon: Sparkles },
   { text: 'Special Treat', icon: Gift },
   { text: ' for Your Ladli', icon: Heart },
   // { text: 'Taste of Tradition', icon: Star },

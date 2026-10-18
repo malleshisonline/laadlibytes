@@ -16,7 +16,8 @@ import {
 } from 'lucide-react'
 
 import logo from '../../assets/brand/logo.svg'
-import krishnaMascot from '../../assets/illustrations/krishnaavatar.avif'
+import navbarBackground from '../../assets/backgrounds/laadlibytes-navbar-bg.avif'
+import krishnaMascot from '../../assets/illustrations/laadlibytes-chikki-bowl.avif'
 
 import { APP_ROUTES } from '../../constants/appRoutepoints.js'
 import { APP_SETTINGS } from '../../constants/appSettings.js'
@@ -57,7 +58,7 @@ const ICON_PROPS = {
 
 function desktopLinkClasses({ isActive }) {
   const base =
-    'border-b-2 py-1 xl:text-xl text-navy-800 transition'
+    'border-b-2 py-1 whitespace-nowrap text-[0.72rem] font-medium text-navy-800 transition lg:text-sm xl:text-xl'
 
   return isActive
     ? `${base} border-navy-800 font-semibold`
@@ -112,6 +113,8 @@ function Navbar() {
 
   const [isSearchOpen, setIsSearchOpen] = useState(false)
 
+  const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 1024)
+
   const [searchTerm, setSearchTerm] = useState('')
 
   const [showMascot, setShowMascot] = useState(false)
@@ -148,6 +151,26 @@ function Navbar() {
     }, 2000)
 
     return () => window.clearInterval(interval)
+  }, [])
+
+
+  /* ---------------------------------------------------------
+     DESKTOP SEARCH STATE
+     Keep the search field visible on large screens without
+     changing the mobile click-to-open behaviour.
+  --------------------------------------------------------- */
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 1024px)')
+
+    function handleChange(event) {
+      setIsDesktop(event.matches)
+    }
+
+    handleChange(mediaQuery)
+    mediaQuery.addEventListener('change', handleChange)
+
+    return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
 
 
@@ -229,6 +252,8 @@ function Navbar() {
     )
   }
 
+  const shouldShowSearch = isDesktop || isSearchOpen
+
 
   return (
     <header className="sticky top-0 z-40 border-b border-caramel-500 bg-white shadow-sm">
@@ -261,48 +286,38 @@ function Navbar() {
           MAIN NAVBAR
       ===================================================== */}
 
-      <div className="relative flex h-14 items-center justify-between gap-3 px-4 sm:px-6 lg:h-24">
+      <div
+        className="relative flex h-12 items-center justify-between gap-3 bg-cover bg-center px-4 sm:px-6 lg:h-20"
+        style={{ backgroundImage: `url(${navbarBackground})` }}
+      >
 
         <Link
           to={APP_ROUTES.HOME}
           aria-label={`${APP_SETTINGS.SITE_NAME} home`}
-          className="relative flex h-11 w-28 shrink-0 items-center sm:w-32 lg:h-12 lg:w-36"
+          className="relative flex h-11 w-24 shrink-0 items-center sm:w-32 lg:h-12 lg:w-36"
         >
-
-          {/* Logo */}
-
           <img
             src={logo}
             alt={APP_SETTINGS.SITE_NAME}
             className={`
-              absolute left-10 max-h-10 w-auto object-contain
+              absolute left-2 max-h-10 w-auto object-contain
               transition-all duration-500 ease-in-out
-              lg:max-h-20
-              ${showMascot
-                ? 'scale-75 rotate-1 opacity-0'
-                : 'scale-100 rotate-0 opacity-100'
-              }
+              
+              lg:max-h-15
+              ${showMascot ? 'scale-75 rotate-1 opacity-0' : 'scale-100 rotate-0 opacity-100'}
             `}
           />
-
-
-          {/* Krishna Mascot */}
-
           <img
             src={krishnaMascot}
             alt=""
             aria-hidden="true"
             className={`
-              absolute left-10 max-h-11 w-auto object-contain
+              absolute left-2 max-h-11 w-auto object-contain
               transition-all duration-500 ease-in-out
               lg:max-h-20
-              ${showMascot
-                ? 'scale-100 rotate-0 opacity-100'
-                : 'scale-75 -rotate-2 opacity-0'
-              }
+              ${showMascot ? 'scale-100 rotate-0 opacity-100' : 'scale-75 -rotate-2 opacity-0'}
             `}
           />
-
         </Link>
 
 
@@ -312,9 +327,9 @@ function Navbar() {
 
         <nav
           aria-label="Main menu"
-          className="hidden lg:block"
+          className="hidden flex-1 justify-center lg:flex"
         >
-          <ul className="flex items-center gap-8">
+          <ul className="flex items-center justify-center gap-4 lg:gap-6 xl:gap-10">
 
             {NAVIGATION_MENU_ITEMS.map((item) => (
               <li key={item.label}>
@@ -349,7 +364,7 @@ function Navbar() {
                         className='
           pointer-events-none
           absolute
-          left-20
+          left-15
           top-1
           z-20
           -translate-x-1/2
@@ -358,7 +373,7 @@ function Navbar() {
           rounded-full
           bg-navy-950
           px-2
-          py-2
+          py-1
           text-[8px]
           font-bold
           leading-none
@@ -387,10 +402,10 @@ function Navbar() {
                           <span
                             className="
           absolute
-          left-15
+          left-10
           top-1
           z-20
-          translate-y-[-75%]
+          translate-y-[-95%]
           whitespace-nowrap
           rounded-full
           bg-[#d4145a]
@@ -422,7 +437,7 @@ function Navbar() {
             RIGHT NAVBAR
         =================================================== */}
 
-        <div className="flex items-center gap-1">
+        <div className="flex shrink-0 items-center gap-1">
 
 
           {/* =================================================
@@ -435,19 +450,19 @@ function Navbar() {
               type="button"
               aria-label="Search"
               onClick={() => setIsSearchOpen(true)}
-              className={`${ICON_BUTTON_CLASSES} ${isSearchOpen ? 'invisible' : ''
-                }`}
+              className={`${ICON_BUTTON_CLASSES} ${shouldShowSearch ? 'invisible' : ''
+                } lg:hidden`}
             >
               <Search {...ICON_PROPS} />
             </button>
 
 
-            {isSearchOpen && (
+            {shouldShowSearch && (
 
               <form
                 role="search"
                 onSubmit={handleSearchSubmit}
-                className="absolute inset-x-4 top-1/2 z-10 flex -translate-y-1/2 items-center rounded-full bg-white sm:inset-x-auto sm:right-0"
+                className="absolute inset-x-4 top-1/2 z-10 flex -translate-y-1/2 items-center rounded-full bg-white sm:inset-x-auto sm:right-0 lg:static lg:inset-auto lg:translate-y-0 lg:w-auto"
               >
 
                 <label
@@ -485,22 +500,24 @@ function Navbar() {
                     setIsSearchOpen(false)
                   }
                   placeholder="Search chikki, nuts…"
-                  className="h-11 w-full rounded-full border border-line bg-lightblue-50 pr-10 pl-10 text-base text-navy-800 transition outline-none placeholder:text-muted focus:border-navy-600 focus:bg-white focus:ring-2 focus:ring-lightblue-200 sm:h-10 sm:w-72 sm:pr-9 sm:pl-9 sm:text-sm lg:w-56 xl:w-64 [&::-webkit-search-cancel-button]:hidden"
+                  className="h-11 w-full rounded-full border border-line bg-lightblue-50 pr-10 pl-10 text-base text-navy-800 transition outline-none placeholder:text-muted focus:border-navy-600 focus:bg-white focus:ring-2 focus:ring-lightblue-200 sm:h-10 sm:w-72 sm:pr-9 sm:pl-9 sm:text-sm lg:w-44 xl:w-64 [&::-webkit-search-cancel-button]:hidden"
                 />
 
 
-                <button
-                  type="button"
-                  aria-label="Close search"
-                  onClick={() => setIsSearchOpen(false)}
-                  className="absolute right-1 inline-flex size-9 items-center justify-center rounded-full text-muted transition hover:bg-lightblue-100 hover:text-navy-800 sm:size-8"
-                >
-                  <X
-                    size={16}
-                    strokeWidth={1.75}
-                    aria-hidden="true"
-                  />
-                </button>
+                {!isDesktop && (
+                  <button
+                    type="button"
+                    aria-label="Close search"
+                    onClick={() => setIsSearchOpen(false)}
+                    className="absolute right-1 inline-flex size-9 items-center justify-center rounded-full text-muted transition hover:bg-lightblue-100 hover:text-navy-800 sm:size-8"
+                  >
+                    <X
+                      size={16}
+                      strokeWidth={1.75}
+                      aria-hidden="true"
+                    />
+                  </button>
+                )}
 
               </form>
 
@@ -524,7 +541,7 @@ function Navbar() {
 
               <span
                 aria-hidden="true"
-                className={ICON_BUTTON_CLASSES}
+                className={`${ICON_BUTTON_CLASSES} md:!hidden`}
               >
                 <User {...ICON_PROPS} />
               </span>
@@ -542,7 +559,7 @@ function Navbar() {
                     ? 'Go to My Account'
                     : 'Sign in'
                 }
-                className={ICON_BUTTON_CLASSES}
+                className={`${ICON_BUTTON_CLASSES} md:!hidden`}
               >
                 <User {...ICON_PROPS} />
               </Link>
@@ -578,8 +595,8 @@ function Navbar() {
                     <span
                       className={
                         user
-                          ? 'text-sm font-medium text-muted'
-                          : 'text-[11px] font-medium text-muted'
+                          ? 'text-base font-medium text-muted'
+                          : 'text-sm font-medium text-muted'
                       }
                     >
 
@@ -595,7 +612,7 @@ function Navbar() {
 
                     {/* Main account label */}
 
-                    <span className="mt-1 whitespace-nowrap text-xs font-bold text-navy-800 transition group-hover:text-caramel-600">
+                    <span className="mt-1 whitespace-nowrap text-sm font-bold text-navy-800 transition group-hover:text-caramel-600">
 
                       {user
                         ? 'My Account'

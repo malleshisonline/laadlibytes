@@ -393,7 +393,7 @@ function GiftStorePage() {
                   aria-hidden='true'
                 />
 
-                Made with love in Vrindavan
+                Made with devotion, Shared with love
               </span>
 
             </div>

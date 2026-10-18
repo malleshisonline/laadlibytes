@@ -13,7 +13,7 @@ function AboutPage() {
     <div>
       {/* <PageHeroSection title={ABOUT_HERO.title} subtitle={ABOUT_HERO.subtitle} backgroundImage={heroImage} /> */}
       <OurStorySection />
-      <SinceSection />
+      {/* <SinceSection /> */}
       <ValuesRow />
       <ManufacturingSection />
       <OurPromiseSection />
