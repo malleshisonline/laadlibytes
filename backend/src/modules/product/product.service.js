@@ -15,8 +15,6 @@ const SORT_MAP = {
   name_desc: { name: -1 },
 };
 
-const LIST_EXCLUDED_FIELDS = '-__v -description -ingredients -allergenInfo -shelfLife -nutritionPoints';
-
 const OBJECT_ID_PATTERN = /^[0-9a-fA-F]{24}$/;
 
 
@@ -168,14 +166,48 @@ export const productService = {
     if (query.featured) filter.isFeatured = true;
 
     const [items, total] = await Promise.all([
-      Product.find(filter)
-        // A card needs none of the label copy; the detail route still returns all of it.
-        .select(LIST_EXCLUDED_FIELDS)
-        .populate('category', 'name slug')
-        .sort(SORT_MAP[query.sort] ?? SORT_MAP.newest)
-        .skip(skip)
-        .limit(limit)
-        .lean(),
+      Product.aggregate([
+        { $match: filter },
+        {
+          $lookup: {
+            from: Category.collection.name,
+            localField: 'category',
+            foreignField: '_id',
+            as: 'category',
+          },
+        },
+        { $unwind: { path: '$category', preserveNullAndEmptyArrays: true } },
+        {
+          $addFields: {
+            _categoryDisplayOrder: { $ifNull: ['$category.displayOrder', Number.MAX_SAFE_INTEGER] },
+          },
+        },
+        { $sort: { _categoryDisplayOrder: 1, ...(SORT_MAP[query.sort] ?? SORT_MAP.newest) } },
+        { $skip: skip },
+        { $limit: limit },
+        {
+          $unset: [
+            '__v',
+            'description',
+            'ingredients',
+            'allergenInfo',
+            'shelfLife',
+            'nutritionPoints',
+            '_categoryDisplayOrder',
+          ],
+        },
+        {
+          $set: {
+            category: {
+              $cond: [
+                { $ne: ['$category._id', null] },
+                { _id: '$category._id', name: '$category.name', slug: '$category.slug' },
+                null,
+              ],
+            },
+          },
+        },
+      ]),
       Product.countDocuments(filter),
     ]);
 

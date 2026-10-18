@@ -4,7 +4,7 @@ import { APP_ROUTES } from '../constants/appRoutepoints.js'
 export const NAVIGATION_MENU_ITEMS = [
   { label: 'Home', path: APP_ROUTES.HOME },
   { label: 'Best Sellers', path: APP_ROUTES.BEST_SELLERS },
-  { label: 'Ladli ji Store', hasShopMenu: true },
+  { label: 'Laadli ji Store', hasShopMenu: true },
   { label: 'Gift Store', path: APP_ROUTES.GIFT_STORE, isGiftStore: true },
   { label: 'About Us', path: APP_ROUTES.ABOUT },
 ]

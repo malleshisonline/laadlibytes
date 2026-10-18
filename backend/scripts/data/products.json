@@ -6,7 +6,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Aloha to guilt-free indulgence! Mango magic in every millet bite. Ragi-powered tropical escape.",
@@ -44,7 +44,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Krunch into apple orchard bliss! Jowar crunch, apple punch. Daily energy, nature's way.",
@@ -82,7 +82,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Bubble up with banana power! Millet bounce in every bite. Energize your day, bananally.",
@@ -120,7 +120,7 @@
     "mrp": 170,
     "price": 170,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Crush cravings with strawberry zest! Foxtail fun, berry yum. Love at first healthy crush.",
@@ -158,7 +158,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Lime-light your vitality! Zingy chia-millet refresh. Glow from within, lime edition.",
@@ -196,7 +196,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Grape kick for peak power! Bajra blast, grape fast. Fuel your win, naturally.",
@@ -234,7 +234,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Squeeze the day with orange joy! Millet squeeze, pure tease. Vitamin burst in every bar.",
@@ -272,7 +272,7 @@
     "mrp": 220,
     "price": 220,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Twist into berry bliss! Cranberry crunch revolution. Superberry super snack.",
@@ -310,7 +310,7 @@
     "mrp": 180,
     "price": 180,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Fig yum for divine yumminess! Ancient figs, modern fit. Indulge wisely, fig style.",
@@ -348,7 +348,7 @@
     "mrp": 220,
     "price": 220,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Bloom bright with apricot delight! Bajra bloom, apricot boom. Nourish & flourish.",
@@ -386,7 +386,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Guava your snack game! Snack-a-guava, crave no more. Tropical twist daily.",
@@ -424,7 +424,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Palm n pine paradise bite! Coconut pineapple dream team. Tropical millet getaway.",
@@ -456,521 +456,264 @@
     "isFeatured": true
   },
   {
-    "sku": "KW-01",
-    "name": "Mind Vault",
-    "category": "Kids Wellness",
-    "mrp": 150,
-    "price": 150,
+    "sku": "NS-01",
+    "name": "Cashew Candy",
+    "category": "Nuts n Seeds",
+    "mrp": 300,
+    "price": 300,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
-    "description": "Unlock the Power of Young Minds. Smart Nutrition for Bright Futures. Brain Fuel in Every Bite.",
+    "description": "Caramel bliss meets cashew power! Gut-happy crunch in every bite. Ragi magic for all-day vitality.",
     "ingredients": [
-      "Nuts & Seeds (45.0%): Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
-      "Whole Grains (35.0%): Roasted Chana Dal Flour, Roasted Rolled Oats",
-      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
-      "Ayurvedic Herbs / Flavours / Crunchies (0.9%): Moringa Powder, Turmeric Powder, Tulsi Powder, Strawberry Nice"
+      "Nuts & Seeds (57%): Cashew Flakes, Sunflower Seeds",
+      "Whole Grains (20%): Roasted Ragi Flour",
+      "Rest Ingredients (22%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Caramel Flavour (1%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
     "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
-      "Energy: 485.0 kcal",
-      "Protein: 18.5g",
+      "Energy: 437.5 kcal",
+      "Protein: 12.2g",
       "Carbohydrate: 46.0g",
-      "Dietary Fiber: 9.5g",
-      "Total Fat: 28.0g (Saturated: 4.5g)",
-      "Total Sugar: 6.8g (Added: 6.4g)",
-      "Iron: 4.8mg",
-      "Calcium: 120.0mg"
-    ],
-    "taglines": [
-      "Unlock the Power of Young Minds.",
-      "Smart Nutrition for Bright Futures.",
-      "Brain Fuel in Every Bite."
-    ],
-    "stock": 80,
-    "isActive": true,
-    "isFeatured": false
-  },
-  {
-    "sku": "KW-02",
-    "name": "Fresh Flux",
-    "category": "Kids Wellness",
-    "mrp": 170,
-    "price": 170,
-    "packSize": {
-      "value": 100,
-      "unit": "g"
-    },
-    "description": "Fresh Energy. Fresh Thinking. Naturally Active, Naturally Happy. Snack Fresh. Stay Fresh.",
-    "ingredients": [
-      "Nuts & Seeds (45.0%): Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
-      "Whole Grains (35.0%): Roasted Moong Dal Flour, Roasted Rolled Oats",
-      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
-      "Flavour (0.4%): Chocolate"
-    ],
-    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "9 months from Mfg date",
-    "nutritionPoints": [
-      "Energy: 482.0 kcal",
-      "Protein: 18.8g",
-      "Carbohydrate: 46.5g",
-      "Dietary Fiber: 9.2g",
-      "Total Fat: 27.5g (Saturated: 4.4g)",
-      "Total Sugar: 6.8g (Added: 6.4g)",
+      "Dietary Fiber: 16.0g",
+      "Total Fat: 26.2g (Saturated: 4.1g)",
+      "Total Sugar: 11.4g (Added: 8.9g)",
       "Iron: 4.5mg",
-      "Calcium: 115.0mg"
+      "Calcium: 45.0mg"
     ],
     "taglines": [
-      "Fresh Energy. Fresh Thinking.",
-      "Naturally Active, Naturally Happy.",
-      "Snack Fresh. Stay Fresh."
+      "Caramel bliss meets cashew power!",
+      "Gut-happy crunch in every bite.",
+      "Ragi magic for all-day vitality."
     ],
     "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
-    "sku": "KW-03",
-    "name": "Immuno Spark",
-    "category": "Kids Wellness",
-    "mrp": 170,
-    "price": 170,
+    "sku": "NS-02",
+    "name": "Walnut Treat",
+    "category": "Nuts n Seeds",
+    "mrp": 340,
+    "price": 340,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
-    "description": "Spark Stronger Days. Daily Defense in Every Bar. Strong Kids Start Here.",
+    "description": "Chocolate dreams, walnut wisdom. Omega-powered treat for sharp minds. Jowar joy in every choco chunk.",
     "ingredients": [
-      "Nuts & Seeds (44.5%): Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
-      "Whole Grains (35.0%): Roasted Chickpea Flour, Roasted Rolled Oats",
-      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
-      "Ayurvedic Herbs / Flavours / Crunchies (0.9%): Moringa Powder, Turmeric Powder, Tulsi Powder, Strawberry Nice"
+      "Nuts & Seeds (57%): Walnut, Pumpkin Seeds",
+      "Whole Grains (20%): Roasted Jowar Flour",
+      "Rest Ingredients (22%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Chocolate Flavour (1%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
     "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
-      "Energy: 482.0 kcal",
-      "Protein: 18.8g",
+      "Energy: 478.6 kcal",
+      "Protein: 12.6g",
       "Carbohydrate: 46.5g",
-      "Dietary Fiber: 9.4g",
-      "Total Fat: 27.0g (Saturated: 4.3g)",
-      "Total Sugar: 6.8g (Added: 6.4g)",
-      "Iron: 5.2mg",
-      "Calcium: 130.0mg"
-    ],
-    "taglines": [
-      "Spark Stronger Days.",
-      "Daily Defense in Every Bar.",
-      "Strong Kids Start Here."
-    ],
-    "stock": 80,
-    "isActive": true,
-    "isFeatured": false
-  },
-  {
-    "sku": "KW-04",
-    "name": "Brain Bender",
-    "category": "Kids Wellness",
-    "mrp": 150,
-    "price": 150,
-    "packSize": {
-      "value": 100,
-      "unit": "g"
-    },
-    "description": "Twist Your Brain into Action. Crunch Smarter Every Day. The Snack that Thinks Ahead.",
-    "ingredients": [
-      "Nuts & Seeds (44.5%): Fennel Seeds, Flax Seeds, Peanuts Roasted & Crushed",
-      "Whole Grains (35.0%): Roasted Chana Dal Flour, Roasted Rolled Oats",
-      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
-      "Flavours (0.9%): Nutmeg Powder, Poppy Seeds, Vanilla Flavour"
-    ],
-    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "9 months from Mfg date",
-    "nutritionPoints": [
-      "Energy: 488.0 kcal",
-      "Protein: 18.0g",
-      "Carbohydrate: 45.5g",
-      "Dietary Fiber: 9.0g",
-      "Total Fat: 29.0g (Saturated: 4.6g)",
-      "Total Sugar: 6.8g (Added: 6.4g)",
-      "Iron: 4.2mg",
-      "Calcium: 110.0mg"
-    ],
-    "taglines": [
-      "Twist Your Brain into Action.",
-      "Crunch Smarter Every Day.",
-      "The Snack that Thinks Ahead."
-    ],
-    "stock": 80,
-    "isActive": true,
-    "isFeatured": false
-  },
-  {
-    "sku": "KW-05",
-    "name": "Belly Ballet",
-    "category": "Kids Wellness",
-    "mrp": 150,
-    "price": 150,
-    "packSize": {
-      "value": 100,
-      "unit": "g"
-    },
-    "description": "Happy Belly, Happy Child. Gentle Nutrition with Great Taste. Dance Through the Day with Belly Ballet.",
-    "ingredients": [
-      "Nuts & Seeds (45.0%): Pumpkin Seeds, Fennel Seeds, Peanuts Roasted & Crushed",
-      "Whole Grains (35.0%): Roasted Amaranth Flour, Roasted Rolled Oats",
-      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt, Garden Mint Flavour (0.4%)"
-    ],
-    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "9 months from Mfg date",
-    "nutritionPoints": [
-      "Energy: 475.0 kcal",
-      "Protein: 17.5g",
-      "Carbohydrate: 47.0g",
-      "Dietary Fiber: 9.8g",
-      "Total Fat: 27.8g (Saturated: 4.4g)",
-      "Total Sugar: 13.5g (Added: 11.2g)",
-      "Iron: 4.9mg",
-      "Calcium: 125.0mg"
-    ],
-    "taglines": [
-      "Happy Belly, Happy Child.",
-      "Gentle Nutrition with Great Taste.",
-      "Dance Through the Day with Belly Ballet."
-    ],
-    "stock": 80,
-    "isActive": true,
-    "isFeatured": false
-  },
-  {
-    "sku": "KW-06",
-    "name": "ProFocus",
-    "category": "Kids Wellness",
-    "mrp": 170,
-    "price": 170,
-    "packSize": {
-      "value": 100,
-      "unit": "g"
-    },
-    "description": "Fuel Peak Performance. Focus Beyond Limits. Premium Nutrition for Young Achievers.",
-    "ingredients": [
-      "Nuts & Seeds (45.0%): Watermelon Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
-      "Whole Grains (35.0%): Roasted Quinoa Flour, Roasted Rolled Oats",
-      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
-      "Flavour (0.4%): Rose Sweet"
-    ],
-    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "9 months from Mfg date",
-    "nutritionPoints": [
-      "Energy: 482.0 kcal",
-      "Protein: 18.2g",
-      "Carbohydrate: 46.5g",
-      "Dietary Fiber: 9.6g",
-      "Total Fat: 27.8g (Saturated: 4.4g)",
-      "Total Sugar: 12.5g (Added: 10.2g)",
-      "Iron: 5.0mg",
-      "Calcium: 118.0mg"
-    ],
-    "taglines": [
-      "Fuel Peak Performance.",
-      "Focus Beyond Limits.",
-      "Premium Nutrition for Young Achievers."
-    ],
-    "stock": 80,
-    "isActive": true,
-    "isFeatured": false
-  },
-  {
-    "sku": "KW-07",
-    "name": "Sundaze Joy",
-    "category": "Kids Wellness",
-    "mrp": 150,
-    "price": 150,
-    "packSize": {
-      "value": 100,
-      "unit": "g"
-    },
-    "description": "Bring Joy to Every Bite. Sunshine Packed with Nutrition. The Happiest Healthy Snack.",
-    "ingredients": [
-      "Nuts & Seeds (45.0%): Chia Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
-      "Whole Grains (35.0%): Roasted Buckwheat Flour, Roasted Rolled Oats",
-      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
-      "Flavour (0.4%): Vanilla"
-    ],
-    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "9 months from Mfg date",
-    "nutritionPoints": [
-      "Energy: 480.0 kcal",
-      "Protein: 18.0g",
-      "Carbohydrate: 46.8g",
-      "Dietary Fiber: 9.5g",
-      "Total Fat: 27.5g (Saturated: 4.4g)",
-      "Total Sugar: 13.5g (Added: 11.2g)",
-      "Iron: 4.7mg",
-      "Calcium: 116.0mg"
-    ],
-    "taglines": [
-      "Bring Joy to Every Bite.",
-      "Sunshine Packed with Nutrition.",
-      "The Happiest Healthy Snack."
-    ],
-    "stock": 80,
-    "isActive": true,
-    "isFeatured": false
-  },
-  {
-    "sku": "WW-01",
-    "name": "Moringa Magic",
-    "category": "Women Wellness",
-    "mrp": 140,
-    "price": 140,
-    "packSize": {
-      "value": 100,
-      "unit": "g"
-    },
-    "description": "Power your day with Moringa Magic.",
-    "ingredients": [
-      "Nuts & Seeds (44.4%): Roasted Peanut Crushed, Sesame Seeds, Pumpkin Seeds, Flax Seeds, Chia Seeds",
-      "Whole Grains (35%): Roasted Ragi Flour, Roasted Rolled Oats",
-      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
-      "Ayurvedic Herb (1%): Moringa Leaf Powder"
-    ],
-    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "9 months from Mfg date",
-    "nutritionPoints": [
-      "Energy: 485.0 kcal",
-      "Protein: 18.5g",
-      "Carbohydrate: 41.3g",
-      "Dietary Fiber: 9.8g",
-      "Total Fat: not stated on pack (Saturated: 4.8g)",
-      "Total Sugar: 12.5g (Added: 8.0g)",
-      "Iron: 5.2mg",
+      "Dietary Fiber: 16.3g",
+      "Total Fat: 35.8g (Saturated: 3.9g)",
+      "Total Sugar: 10.0g (Added: 8.7g)",
+      "Iron: 2.8mg",
       "Calcium: 85.0mg"
     ],
     "taglines": [
-      "Power your day with Moringa Magic."
+      "Chocolate dreams, walnut wisdom.",
+      "Omega-powered treat for sharp minds.",
+      "Jowar joy in every choco chunk."
     ],
     "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
-    "sku": "WW-02",
-    "name": "Soulful Mellow",
-    "category": "Women Wellness",
-    "mrp": 150,
-    "price": 150,
+    "sku": "NS-03",
+    "name": "Nut Medley",
+    "category": "Nuts n Seeds",
+    "mrp": 280,
+    "price": 280,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
-    "description": "Mellow moments, wholesome bites.",
+    "description": "Three nuts, one happy medley! Vanilla vibe with nutty power. Skin-loving crunch daily.",
     "ingredients": [
-      "Nuts & Seeds (44.4%): Roasted Peanut Crushed, Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
-      "Whole Grains (35%): Roasted Ragi Flour, Roasted Rolled Oats",
-      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
-      "Ayurvedic Herbs & Flavours (1%): Nutmeg Powder, Chamomile Dry Powder"
+      "Nuts & Seeds (55%): Cashew Flakes, Almond Flakes, Peanut Crushed",
+      "Whole Grains (20%): Roasted Ragi Flour",
+      "Rest Ingredients (23%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Vanilla Flavour (2%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
     "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
-      "Energy: 478.0 kcal",
-      "Protein: 18.2g",
-      "Carbohydrate: 42.1g",
-      "Dietary Fiber: 10.2g",
-      "Total Fat: 27.5g (Saturated: 4.5g)",
-      "Total Sugar: 12.5g (Added: 8.0g)",
-      "Iron: 4.8mg",
-      "Calcium: 92.0mg"
+      "Energy: 430.0 kcal",
+      "Protein: 13.5g",
+      "Carbohydrate: 46.5g",
+      "Dietary Fiber: 17.7g",
+      "Total Fat: 26.5g (Saturated: 3.5g)",
+      "Total Sugar: 11.5g (Added: 1.0g)",
+      "Iron: 3.2mg",
+      "Calcium: 60.0mg"
     ],
     "taglines": [
-      "Mellow moments, wholesome bites."
+      "Three nuts, one happy medley!",
+      "Vanilla vibe with nutty power.",
+      "Skin-loving crunch daily."
     ],
     "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
-    "sku": "WW-03",
-    "name": "Hormone Harmony",
-    "category": "Women Wellness",
-    "mrp": 160,
-    "price": 160,
+    "sku": "NS-04",
+    "name": "Almond Harvest",
+    "category": "Nuts n Seeds",
+    "mrp": 300,
+    "price": 300,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
-    "description": "Harmony in every nourishing bite.",
+    "description": "Mango harvest of almond strength. Immunity boost in flaky delight. Stable energy, zero crash.",
     "ingredients": [
-      "Nuts & Seeds (44%): Roasted Peanut Crushed, Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
-      "Whole Grains (35%): Roasted Jowar Flour, Roasted Oats",
-      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
-      "Ayurvedic Herbs & Flavours (1.4%): Cardamom Granules, Shatavari Powder"
+      "Nuts & Seeds (58%): Almond Flakes, Pumpkin Seeds",
+      "Whole Grains (20%): Roasted Jowar Flour",
+      "Rest Ingredients (21%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Mango Flavour (1%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
     "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
-      "Energy: 482.0 kcal",
-      "Protein: 18.0g",
-      "Carbohydrate: 41.8g",
-      "Dietary Fiber: 9.5g",
-      "Total Fat: 27.8g (Saturated: 4.7g)",
-      "Total Sugar: 12.5g (Added: 8.0g)",
-      "Iron: 4.5mg",
-      "Calcium: 78.0mg"
+      "Energy: 448.4 kcal",
+      "Protein: 15.1g",
+      "Carbohydrate: 45.5g",
+      "Dietary Fiber: 19.3g",
+      "Total Fat: 29.5g (Saturated: 2.7g)",
+      "Total Sugar: 10.2g (Added: 8.9g)",
+      "Iron: 3.7mg",
+      "Calcium: 220.0mg"
     ],
     "taglines": [
-      "Harmony in every nourishing bite."
+      "Mango harvest of almond strength.",
+      "Immunity boost in flaky delight.",
+      "Stable energy, zero crash."
     ],
     "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
-    "sku": "WW-04",
-    "name": "Good Gut",
-    "category": "Women Wellness",
-    "mrp": 140,
-    "price": 140,
+    "sku": "NS-05",
+    "name": "Pumpkin Almond Trail",
+    "category": "Nuts n Seeds",
+    "mrp": 250,
+    "price": 250,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
-    "description": "Good for your gut, great for your day.",
+    "description": "Trail-ready pumpkin-almond fire. Ginger zing for bold journeys. Bajra fiber fuels your path.",
     "ingredients": [
-      "Nuts & Seeds (44%): Roasted Peanut Crushed, Fennel Seeds, Flax Seeds",
-      "Whole Grains (35%): Roasted Ragi Flour, Roasted Oats",
-      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
-      "Ayurvedic Herbs & Flavours (1.4%): Dried Amla pieces, Mint Powder, Triphala powder, Moringa Powder"
+      "Nuts & Seeds (50%): Pumpkin Seeds, Almond Flakes",
+      "Whole Grains (25%): Roasted Bajra Flour",
+      "Rest Ingredients (23%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Ginger Powder (2%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
     "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
-      "Energy: 475.0 kcal",
-      "Protein: 19.1g",
-      "Carbohydrate: 40.5g",
-      "Dietary Fiber: 11.5g",
-      "Total Fat: 27.0g (Saturated: 4.6g)",
-      "Total Sugar: 12.8g (Added: 8.0g)",
-      "Iron: 5.5mg",
-      "Calcium: 88.0mg"
+      "Energy: 428.2 kcal",
+      "Protein: 15.6g",
+      "Carbohydrate: 47.0g",
+      "Dietary Fiber: 18.8g",
+      "Total Fat: 26.0g (Saturated: 3.4g)",
+      "Total Sugar: 10.1g (Added: 8.0g)",
+      "Iron: 4.1mg",
+      "Calcium: 180.0mg"
     ],
     "taglines": [
-      "Good for your gut, great for your day."
+      "Trail-ready pumpkin-almond fire.",
+      "Ginger zing for bold journeys.",
+      "Bajra fiber fuels your path."
     ],
     "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
-    "sku": "WW-05",
-    "name": "Immunity Trinity",
-    "category": "Women Wellness",
-    "mrp": 140,
-    "price": 140,
+    "sku": "NS-06",
+    "name": "Seed Stick",
+    "category": "Nuts n Seeds",
+    "mrp": 170,
+    "price": 170,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
-    "description": "Three cheers for daily immunity support.",
+    "description": "Seed symphony with cardamom kiss. Heart-hero stick for zen moments. Chia-flax power, oats embrace.",
     "ingredients": [
-      "Nuts & Seeds (44.8%): Roasted Peanut Crushed, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
-      "Whole Grains (35%): Roasted Jowar Flour, Roasted Rolled Oats",
-      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
-      "Ayurvedic Herbs & Flavours (0.6%): Turmeric Powder, Tulsi Powder, Moringa Powder"
+      "Nuts & Seeds (50%): Sunflower Seeds, Pumpkin Seeds, Flax Seeds, Chia Seeds",
+      "Whole Grains (25%): Rolled Oats",
+      "Rest Ingredients (20.5%): Fructooligosaccharides, Honey, Himalayan Pink Salt, Cardamom Powder (4.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
     "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
-      "Energy: 480.0 kcal",
-      "Protein: 18.8g",
-      "Carbohydrate: 41.0g",
-      "Dietary Fiber: 9.2g",
-      "Total Fat: 28.0g (Saturated: 4.9g)",
-      "Total Sugar: 12.3g (Added: 8.0g)",
-      "Iron: 4.5mg",
-      "Calcium: 82.0mg"
+      "Energy: 421.2 kcal",
+      "Protein: 13.0g",
+      "Carbohydrate: 46.5g",
+      "Dietary Fiber: 25.1g",
+      "Total Fat: 23.1g (Saturated: 2.3g)",
+      "Total Sugar: 8.4g (Added: 6.0g)",
+      "Iron: 5.2mg",
+      "Calcium: 120.0mg"
     ],
     "taglines": [
-      "Three cheers for daily immunity support."
+      "Seed symphony with cardamom kiss.",
+      "Heart-hero stick for zen moments.",
+      "Chia-flax power, oats embrace."
     ],
     "stock": 80,
     "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
-    "sku": "WW-06",
-    "name": "Grow Bone",
-    "category": "Women Wellness",
-    "mrp": 160,
-    "price": 160,
+    "sku": "NS-07",
+    "name": "Raw Radiance",
+    "category": "Nuts n Seeds",
+    "mrp": 190,
+    "price": 190,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
-    "description": "Build strength from the bite up.",
+    "description": "Radiate with raw seed magic. Cinnamon cool for sugar balance. Mint-fresh vitality burst.",
     "ingredients": [
-      "Seeds (44%): Roasted Peanut Crushed, Watermelon Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
-      "Whole Grains (35%): Roasted Ragi Flour, Roasted Rolled Oats",
-      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
-      "Ayurvedic Herbs & Flavours (1.4%): Amla Powder, Moringa Powder"
+      "Nuts & Seeds (50%): Sunflower Seeds, Pumpkin Seeds",
+      "Whole Grains (25%): Roasted Bajra Flour",
+      "Rest Ingredients (22.5%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Cinnamon Powder & Mint Flavour (2.5%)"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
     "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
-      "Energy: 477.0 kcal",
-      "Protein: 18.4g",
-      "Carbohydrate: 41.5g",
-      "Dietary Fiber: 10.8g",
-      "Total Fat: 27.6g (Saturated: 4.4g)",
-      "Total Sugar: 12.5g (Added: 8.0g)",
-      "Iron: 4.9mg",
+      "Energy: 434.6 kcal",
+      "Protein: 15.6g",
+      "Carbohydrate: 46.8g",
+      "Dietary Fiber: 18.7g",
+      "Total Fat: 26.4g (Saturated: 3.5g)",
+      "Total Sugar: 9.7g (Added: 7.5g)",
+      "Iron: 4.0mg",
       "Calcium: 150.0mg"
     ],
     "taglines": [
-      "Build strength from the bite up."
+      "Radiate with raw seed magic.",
+      "Cinnamon cool for sugar balance.",
+      "Mint-fresh vitality burst."
     ],
     "stock": 80,
     "isActive": true,
-    "isFeatured": false
-  },
-  {
-    "sku": "WW-07",
-    "name": "Radiance Flow",
-    "category": "Women Wellness",
-    "mrp": 140,
-    "price": 140,
-    "packSize": {
-      "value": 100,
-      "unit": "g"
-    },
-    "description": "Glow from within, crunch with confidence.",
-    "ingredients": [
-      "Nuts & Seeds (44.4%): Roasted Peanut Crushed, Chia Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
-      "Whole Grains (35%): Roasted Bajra Flour, Roasted Rolled Oats",
-      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
-      "Ayurvedic Herbs & Flavours (1.4%): Aloe Vera Powder, Moringa Powder"
-    ],
-    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "9 months from Mfg date",
-    "nutritionPoints": [
-      "Energy: 483.0 kcal",
-      "Protein: 18.3g",
-      "Carbohydrate: 41.2g",
-      "Dietary Fiber: 10.0g",
-      "Total Fat: 27.9g (Saturated: 4.7g)",
-      "Total Sugar: 12.5g (Added: 8.0g)",
-      "Iron: 5.1mg",
-      "Calcium: 90.0mg"
-    ],
-    "taglines": [
-      "Glow from within, crunch with confidence."
-    ],
-    "stock": 80,
-    "isActive": true,
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "sku": "MN-01",
@@ -979,7 +722,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Power from ragi, crunch from nuts. A millet bar that feels wholesome and satisfying. Your smart snack for active days.",
@@ -1016,7 +759,7 @@
     "mrp": 210,
     "price": 210,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Magic made from ragi and almonds. A premium crunch for mindful snacking. Fuel that tastes elegant.",
@@ -1053,7 +796,7 @@
     "mrp": 140,
     "price": 140,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Jowar meets peanut in every bite. Crunchy, familiar, and nourishing. The millet munch made for busy routines.",
@@ -1090,7 +833,7 @@
     "mrp": 210,
     "price": 210,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Mojo powered by jowar and nuts. A lively crunch with a wholesome core. Snack smart, snack stylish.",
@@ -1127,7 +870,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Punch up your day with bajra. Hearty crunch, steady energy. A strong snack with millet goodness.",
@@ -1164,7 +907,7 @@
     "mrp": 210,
     "price": 210,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Charm in every crunchy layer. Bajra with a premium nut-and-seed story. Wholesome snacking with a touch of elegance.",
@@ -1202,7 +945,7 @@
     "mrp": 160,
     "price": 160,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Brunch better with foxtail. Light millet energy, bold peanut crunch. A smarter snack between meals.",
@@ -1240,7 +983,7 @@
     "mrp": 210,
     "price": 210,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Joy you can crunch into. Foxtail, flax, and almond in perfect harmony. Wholesome happiness in a bar.",
@@ -1277,7 +1020,7 @@
     "mrp": 160,
     "price": 160,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "A ballet of ragi, oats, and peanuts. Balance, crunch, and lasting energy. The everyday bar with a complete feel.",
@@ -1308,265 +1051,523 @@
     "isFeatured": true
   },
   {
-    "sku": "NS-01",
-    "name": "Cashew Candy",
-    "category": "Nuts n Seeds",
-    "mrp": 300,
-    "price": 300,
+    "sku": "KW-01",
+    "name": "Mind Vault",
+    "category": "Kids Wellness",
+    "mrp": 150,
+    "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
-    "description": "Caramel bliss meets cashew power! Gut-happy crunch in every bite. Ragi magic for all-day vitality.",
+    "description": "Unlock the Power of Young Minds. Smart Nutrition for Bright Futures. Brain Fuel in Every Bite.",
     "ingredients": [
-      "Nuts & Seeds (57%): Cashew Flakes, Sunflower Seeds",
-      "Whole Grains (20%): Roasted Ragi Flour",
-      "Rest Ingredients (22%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Caramel Flavour (1%)"
+      "Nuts & Seeds (45.0%): Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
+      "Whole Grains (35.0%): Roasted Chana Dal Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs / Flavours / Crunchies (0.9%): Moringa Powder, Turmeric Powder, Tulsi Powder, Strawberry Nice"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
     "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
-      "Energy: 437.5 kcal",
-      "Protein: 12.2g",
+      "Energy: 485.0 kcal",
+      "Protein: 18.5g",
       "Carbohydrate: 46.0g",
-      "Dietary Fiber: 16.0g",
-      "Total Fat: 26.2g (Saturated: 4.1g)",
-      "Total Sugar: 11.4g (Added: 8.9g)",
-      "Iron: 4.5mg",
-      "Calcium: 45.0mg"
-    ],
-    "taglines": [
-      "Caramel bliss meets cashew power!",
-      "Gut-happy crunch in every bite.",
-      "Ragi magic for all-day vitality."
-    ],
-    "stock": 80,
-    "isActive": true,
-    "isFeatured": true
-  },
-  {
-    "sku": "NS-02",
-    "name": "Walnut Treat",
-    "category": "Nuts n Seeds",
-    "mrp": 340,
-    "price": 340,
-    "packSize": {
-      "value": 100,
-      "unit": "g"
-    },
-    "description": "Chocolate dreams, walnut wisdom. Omega-powered treat for sharp minds. Jowar joy in every choco chunk.",
-    "ingredients": [
-      "Nuts & Seeds (57%): Walnut, Pumpkin Seeds",
-      "Whole Grains (20%): Roasted Jowar Flour",
-      "Rest Ingredients (22%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Chocolate Flavour (1%)"
-    ],
-    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "9 months from Mfg date",
-    "nutritionPoints": [
-      "Energy: 478.6 kcal",
-      "Protein: 12.6g",
-      "Carbohydrate: 46.5g",
-      "Dietary Fiber: 16.3g",
-      "Total Fat: 35.8g (Saturated: 3.9g)",
-      "Total Sugar: 10.0g (Added: 8.7g)",
-      "Iron: 2.8mg",
-      "Calcium: 85.0mg"
-    ],
-    "taglines": [
-      "Chocolate dreams, walnut wisdom.",
-      "Omega-powered treat for sharp minds.",
-      "Jowar joy in every choco chunk."
-    ],
-    "stock": 80,
-    "isActive": true,
-    "isFeatured": true
-  },
-  {
-    "sku": "NS-03",
-    "name": "Nut Medley",
-    "category": "Nuts n Seeds",
-    "mrp": 280,
-    "price": 280,
-    "packSize": {
-      "value": 100,
-      "unit": "g"
-    },
-    "description": "Three nuts, one happy medley! Vanilla vibe with nutty power. Skin-loving crunch daily.",
-    "ingredients": [
-      "Nuts & Seeds (55%): Cashew Flakes, Almond Flakes, Peanut Crushed",
-      "Whole Grains (20%): Roasted Ragi Flour",
-      "Rest Ingredients (23%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Vanilla Flavour (2%)"
-    ],
-    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "9 months from Mfg date",
-    "nutritionPoints": [
-      "Energy: 430.0 kcal",
-      "Protein: 13.5g",
-      "Carbohydrate: 46.5g",
-      "Dietary Fiber: 17.7g",
-      "Total Fat: 26.5g (Saturated: 3.5g)",
-      "Total Sugar: 11.5g (Added: 1.0g)",
-      "Iron: 3.2mg",
-      "Calcium: 60.0mg"
-    ],
-    "taglines": [
-      "Three nuts, one happy medley!",
-      "Vanilla vibe with nutty power.",
-      "Skin-loving crunch daily."
-    ],
-    "stock": 80,
-    "isActive": true,
-    "isFeatured": true
-  },
-  {
-    "sku": "NS-04",
-    "name": "Almond Harvest",
-    "category": "Nuts n Seeds",
-    "mrp": 300,
-    "price": 300,
-    "packSize": {
-      "value": 100,
-      "unit": "g"
-    },
-    "description": "Mango harvest of almond strength. Immunity boost in flaky delight. Stable energy, zero crash.",
-    "ingredients": [
-      "Nuts & Seeds (58%): Almond Flakes, Pumpkin Seeds",
-      "Whole Grains (20%): Roasted Jowar Flour",
-      "Rest Ingredients (21%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Mango Flavour (1%)"
-    ],
-    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "9 months from Mfg date",
-    "nutritionPoints": [
-      "Energy: 448.4 kcal",
-      "Protein: 15.1g",
-      "Carbohydrate: 45.5g",
-      "Dietary Fiber: 19.3g",
-      "Total Fat: 29.5g (Saturated: 2.7g)",
-      "Total Sugar: 10.2g (Added: 8.9g)",
-      "Iron: 3.7mg",
-      "Calcium: 220.0mg"
-    ],
-    "taglines": [
-      "Mango harvest of almond strength.",
-      "Immunity boost in flaky delight.",
-      "Stable energy, zero crash."
-    ],
-    "stock": 80,
-    "isActive": true,
-    "isFeatured": true
-  },
-  {
-    "sku": "NS-05",
-    "name": "Pumpkin Almond Trail",
-    "category": "Nuts n Seeds",
-    "mrp": 250,
-    "price": 250,
-    "packSize": {
-      "value": 100,
-      "unit": "g"
-    },
-    "description": "Trail-ready pumpkin-almond fire. Ginger zing for bold journeys. Bajra fiber fuels your path.",
-    "ingredients": [
-      "Nuts & Seeds (50%): Pumpkin Seeds, Almond Flakes",
-      "Whole Grains (25%): Roasted Bajra Flour",
-      "Rest Ingredients (23%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt, Ginger Powder (2%)"
-    ],
-    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "9 months from Mfg date",
-    "nutritionPoints": [
-      "Energy: 428.2 kcal",
-      "Protein: 15.6g",
-      "Carbohydrate: 47.0g",
-      "Dietary Fiber: 18.8g",
-      "Total Fat: 26.0g (Saturated: 3.4g)",
-      "Total Sugar: 10.1g (Added: 8.0g)",
-      "Iron: 4.1mg",
-      "Calcium: 180.0mg"
-    ],
-    "taglines": [
-      "Trail-ready pumpkin-almond fire.",
-      "Ginger zing for bold journeys.",
-      "Bajra fiber fuels your path."
-    ],
-    "stock": 80,
-    "isActive": true,
-    "isFeatured": true
-  },
-  {
-    "sku": "NS-06",
-    "name": "Seed Stick",
-    "category": "Nuts n Seeds",
-    "mrp": 170,
-    "price": 170,
-    "packSize": {
-      "value": 100,
-      "unit": "g"
-    },
-    "description": "Seed symphony with cardamom kiss. Heart-hero stick for zen moments. Chia-flax power, oats embrace.",
-    "ingredients": [
-      "Nuts & Seeds (50%): Sunflower Seeds, Pumpkin Seeds, Flax Seeds, Chia Seeds",
-      "Whole Grains (25%): Rolled Oats",
-      "Rest Ingredients (20.5%): Fructooligosaccharides, Honey, Himalayan Pink Salt, Cardamom Powder (4.5%)"
-    ],
-    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
-    "shelfLife": "9 months from Mfg date",
-    "nutritionPoints": [
-      "Energy: 421.2 kcal",
-      "Protein: 13.0g",
-      "Carbohydrate: 46.5g",
-      "Dietary Fiber: 25.1g",
-      "Total Fat: 23.1g (Saturated: 2.3g)",
-      "Total Sugar: 8.4g (Added: 6.0g)",
-      "Iron: 5.2mg",
+      "Dietary Fiber: 9.5g",
+      "Total Fat: 28.0g (Saturated: 4.5g)",
+      "Total Sugar: 6.8g (Added: 6.4g)",
+      "Iron: 4.8mg",
       "Calcium: 120.0mg"
     ],
     "taglines": [
-      "Seed symphony with cardamom kiss.",
-      "Heart-hero stick for zen moments.",
-      "Chia-flax power, oats embrace."
+      "Unlock the Power of Young Minds.",
+      "Smart Nutrition for Bright Futures.",
+      "Brain Fuel in Every Bite."
     ],
     "stock": 80,
     "isActive": true,
-    "isFeatured": true
+    "isFeatured": false
   },
   {
-    "sku": "NS-07",
-    "name": "Raw Radiance",
-    "category": "Nuts n Seeds",
-    "mrp": 190,
-    "price": 190,
+    "sku": "KW-02",
+    "name": "Fresh Flux",
+    "category": "Kids Wellness",
+    "mrp": 170,
+    "price": 170,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
-    "description": "Radiate with raw seed magic. Cinnamon cool for sugar balance. Mint-fresh vitality burst.",
+    "description": "Fresh Energy. Fresh Thinking. Naturally Active, Naturally Happy. Snack Fresh. Stay Fresh.",
     "ingredients": [
-      "Nuts & Seeds (50%): Sunflower Seeds, Pumpkin Seeds",
-      "Whole Grains (25%): Roasted Bajra Flour",
-      "Rest Ingredients (22.5%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
-      "Cinnamon Powder & Mint Flavour (2.5%)"
+      "Nuts & Seeds (45.0%): Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
+      "Whole Grains (35.0%): Roasted Moong Dal Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
+      "Flavour (0.4%): Chocolate"
     ],
     "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
     "shelfLife": "9 months from Mfg date",
     "nutritionPoints": [
-      "Energy: 434.6 kcal",
-      "Protein: 15.6g",
-      "Carbohydrate: 46.8g",
-      "Dietary Fiber: 18.7g",
-      "Total Fat: 26.4g (Saturated: 3.5g)",
-      "Total Sugar: 9.7g (Added: 7.5g)",
-      "Iron: 4.0mg",
-      "Calcium: 150.0mg"
+      "Energy: 482.0 kcal",
+      "Protein: 18.8g",
+      "Carbohydrate: 46.5g",
+      "Dietary Fiber: 9.2g",
+      "Total Fat: 27.5g (Saturated: 4.4g)",
+      "Total Sugar: 6.8g (Added: 6.4g)",
+      "Iron: 4.5mg",
+      "Calcium: 115.0mg"
     ],
     "taglines": [
-      "Radiate with raw seed magic.",
-      "Cinnamon cool for sugar balance.",
-      "Mint-fresh vitality burst."
+      "Fresh Energy. Fresh Thinking.",
+      "Naturally Active, Naturally Happy.",
+      "Snack Fresh. Stay Fresh."
     ],
     "stock": 80,
     "isActive": true,
-    "isFeatured": true
+    "isFeatured": false
   },
+  {
+    "sku": "KW-03",
+    "name": "Immuno Spark",
+    "category": "Kids Wellness",
+    "mrp": 170,
+    "price": 170,
+    "packSize": {
+      "value": 120,
+      "unit": "g"
+    },
+    "description": "Spark Stronger Days. Daily Defense in Every Bar. Strong Kids Start Here.",
+    "ingredients": [
+      "Nuts & Seeds (44.5%): Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
+      "Whole Grains (35.0%): Roasted Chickpea Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs / Flavours / Crunchies (0.9%): Moringa Powder, Turmeric Powder, Tulsi Powder, Strawberry Nice"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "9 months from Mfg date",
+    "nutritionPoints": [
+      "Energy: 482.0 kcal",
+      "Protein: 18.8g",
+      "Carbohydrate: 46.5g",
+      "Dietary Fiber: 9.4g",
+      "Total Fat: 27.0g (Saturated: 4.3g)",
+      "Total Sugar: 6.8g (Added: 6.4g)",
+      "Iron: 5.2mg",
+      "Calcium: 130.0mg"
+    ],
+    "taglines": [
+      "Spark Stronger Days.",
+      "Daily Defense in Every Bar.",
+      "Strong Kids Start Here."
+    ],
+    "stock": 80,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "KW-04",
+    "name": "Brain Bender",
+    "category": "Kids Wellness",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 120,
+      "unit": "g"
+    },
+    "description": "Twist Your Brain into Action. Crunch Smarter Every Day. The Snack that Thinks Ahead.",
+    "ingredients": [
+      "Nuts & Seeds (44.5%): Fennel Seeds, Flax Seeds, Peanuts Roasted & Crushed",
+      "Whole Grains (35.0%): Roasted Chana Dal Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
+      "Flavours (0.9%): Nutmeg Powder, Poppy Seeds, Vanilla Flavour"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "9 months from Mfg date",
+    "nutritionPoints": [
+      "Energy: 488.0 kcal",
+      "Protein: 18.0g",
+      "Carbohydrate: 45.5g",
+      "Dietary Fiber: 9.0g",
+      "Total Fat: 29.0g (Saturated: 4.6g)",
+      "Total Sugar: 6.8g (Added: 6.4g)",
+      "Iron: 4.2mg",
+      "Calcium: 110.0mg"
+    ],
+    "taglines": [
+      "Twist Your Brain into Action.",
+      "Crunch Smarter Every Day.",
+      "The Snack that Thinks Ahead."
+    ],
+    "stock": 80,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "KW-05",
+    "name": "Belly Ballet",
+    "category": "Kids Wellness",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 120,
+      "unit": "g"
+    },
+    "description": "Happy Belly, Happy Child. Gentle Nutrition with Great Taste. Dance Through the Day with Belly Ballet.",
+    "ingredients": [
+      "Nuts & Seeds (45.0%): Pumpkin Seeds, Fennel Seeds, Peanuts Roasted & Crushed",
+      "Whole Grains (35.0%): Roasted Amaranth Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt, Garden Mint Flavour (0.4%)"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "9 months from Mfg date",
+    "nutritionPoints": [
+      "Energy: 475.0 kcal",
+      "Protein: 17.5g",
+      "Carbohydrate: 47.0g",
+      "Dietary Fiber: 9.8g",
+      "Total Fat: 27.8g (Saturated: 4.4g)",
+      "Total Sugar: 13.5g (Added: 11.2g)",
+      "Iron: 4.9mg",
+      "Calcium: 125.0mg"
+    ],
+    "taglines": [
+      "Happy Belly, Happy Child.",
+      "Gentle Nutrition with Great Taste.",
+      "Dance Through the Day with Belly Ballet."
+    ],
+    "stock": 80,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "KW-06",
+    "name": "ProFocus",
+    "category": "Kids Wellness",
+    "mrp": 170,
+    "price": 170,
+    "packSize": {
+      "value": 120,
+      "unit": "g"
+    },
+    "description": "Fuel Peak Performance. Focus Beyond Limits. Premium Nutrition for Young Achievers.",
+    "ingredients": [
+      "Nuts & Seeds (45.0%): Watermelon Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
+      "Whole Grains (35.0%): Roasted Quinoa Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
+      "Flavour (0.4%): Rose Sweet"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "9 months from Mfg date",
+    "nutritionPoints": [
+      "Energy: 482.0 kcal",
+      "Protein: 18.2g",
+      "Carbohydrate: 46.5g",
+      "Dietary Fiber: 9.6g",
+      "Total Fat: 27.8g (Saturated: 4.4g)",
+      "Total Sugar: 12.5g (Added: 10.2g)",
+      "Iron: 5.0mg",
+      "Calcium: 118.0mg"
+    ],
+    "taglines": [
+      "Fuel Peak Performance.",
+      "Focus Beyond Limits.",
+      "Premium Nutrition for Young Achievers."
+    ],
+    "stock": 80,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "KW-07",
+    "name": "Sundaze Joy",
+    "category": "Kids Wellness",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 120,
+      "unit": "g"
+    },
+    "description": "Bring Joy to Every Bite. Sunshine Packed with Nutrition. The Happiest Healthy Snack.",
+    "ingredients": [
+      "Nuts & Seeds (45.0%): Chia Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds, Peanuts Roasted & Crushed",
+      "Whole Grains (35.0%): Roasted Buckwheat Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Honey, Fructooligosaccharides, Gum Acacia, Himalayan Pink Salt",
+      "Flavour (0.4%): Vanilla"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "9 months from Mfg date",
+    "nutritionPoints": [
+      "Energy: 480.0 kcal",
+      "Protein: 18.0g",
+      "Carbohydrate: 46.8g",
+      "Dietary Fiber: 9.5g",
+      "Total Fat: 27.5g (Saturated: 4.4g)",
+      "Total Sugar: 13.5g (Added: 11.2g)",
+      "Iron: 4.7mg",
+      "Calcium: 116.0mg"
+    ],
+    "taglines": [
+      "Bring Joy to Every Bite.",
+      "Sunshine Packed with Nutrition.",
+      "The Happiest Healthy Snack."
+    ],
+    "stock": 80,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "WW-01",
+    "name": "Moringa Magic",
+    "category": "Women Wellness",
+    "mrp": 140,
+    "price": 140,
+    "packSize": {
+      "value": 120,
+      "unit": "g"
+    },
+    "description": "Power your day with Moringa Magic.",
+    "ingredients": [
+      "Nuts & Seeds (44.4%): Roasted Peanut Crushed, Sesame Seeds, Pumpkin Seeds, Flax Seeds, Chia Seeds",
+      "Whole Grains (35%): Roasted Ragi Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herb (1%): Moringa Leaf Powder"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "9 months from Mfg date",
+    "nutritionPoints": [
+      "Energy: 485.0 kcal",
+      "Protein: 18.5g",
+      "Carbohydrate: 41.3g",
+      "Dietary Fiber: 9.8g",
+      "Total Fat: not stated on pack (Saturated: 4.8g)",
+      "Total Sugar: 12.5g (Added: 8.0g)",
+      "Iron: 5.2mg",
+      "Calcium: 85.0mg"
+    ],
+    "taglines": [
+      "Power your day with Moringa Magic."
+    ],
+    "stock": 80,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "WW-02",
+    "name": "Soulful Mellow",
+    "category": "Women Wellness",
+    "mrp": 150,
+    "price": 150,
+    "packSize": {
+      "value": 120,
+      "unit": "g"
+    },
+    "description": "Mellow moments, wholesome bites.",
+    "ingredients": [
+      "Nuts & Seeds (44.4%): Roasted Peanut Crushed, Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
+      "Whole Grains (35%): Roasted Ragi Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs & Flavours (1%): Nutmeg Powder, Chamomile Dry Powder"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "9 months from Mfg date",
+    "nutritionPoints": [
+      "Energy: 478.0 kcal",
+      "Protein: 18.2g",
+      "Carbohydrate: 42.1g",
+      "Dietary Fiber: 10.2g",
+      "Total Fat: 27.5g (Saturated: 4.5g)",
+      "Total Sugar: 12.5g (Added: 8.0g)",
+      "Iron: 4.8mg",
+      "Calcium: 92.0mg"
+    ],
+    "taglines": [
+      "Mellow moments, wholesome bites."
+    ],
+    "stock": 80,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "WW-03",
+    "name": "Hormone Harmony",
+    "category": "Women Wellness",
+    "mrp": 160,
+    "price": 160,
+    "packSize": {
+      "value": 120,
+      "unit": "g"
+    },
+    "description": "Harmony in every nourishing bite.",
+    "ingredients": [
+      "Nuts & Seeds (44%): Roasted Peanut Crushed, Sesame Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
+      "Whole Grains (35%): Roasted Jowar Flour, Roasted Oats",
+      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs & Flavours (1.4%): Cardamom Granules, Shatavari Powder"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "9 months from Mfg date",
+    "nutritionPoints": [
+      "Energy: 482.0 kcal",
+      "Protein: 18.0g",
+      "Carbohydrate: 41.8g",
+      "Dietary Fiber: 9.5g",
+      "Total Fat: 27.8g (Saturated: 4.7g)",
+      "Total Sugar: 12.5g (Added: 8.0g)",
+      "Iron: 4.5mg",
+      "Calcium: 78.0mg"
+    ],
+    "taglines": [
+      "Harmony in every nourishing bite."
+    ],
+    "stock": 80,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "WW-04",
+    "name": "Good Gut",
+    "category": "Women Wellness",
+    "mrp": 140,
+    "price": 140,
+    "packSize": {
+      "value": 120,
+      "unit": "g"
+    },
+    "description": "Good for your gut, great for your day.",
+    "ingredients": [
+      "Nuts & Seeds (44%): Roasted Peanut Crushed, Fennel Seeds, Flax Seeds",
+      "Whole Grains (35%): Roasted Ragi Flour, Roasted Oats",
+      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs & Flavours (1.4%): Dried Amla pieces, Mint Powder, Triphala powder, Moringa Powder"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "9 months from Mfg date",
+    "nutritionPoints": [
+      "Energy: 475.0 kcal",
+      "Protein: 19.1g",
+      "Carbohydrate: 40.5g",
+      "Dietary Fiber: 11.5g",
+      "Total Fat: 27.0g (Saturated: 4.6g)",
+      "Total Sugar: 12.8g (Added: 8.0g)",
+      "Iron: 5.5mg",
+      "Calcium: 88.0mg"
+    ],
+    "taglines": [
+      "Good for your gut, great for your day."
+    ],
+    "stock": 80,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "WW-05",
+    "name": "Immunity Trinity",
+    "category": "Women Wellness",
+    "mrp": 140,
+    "price": 140,
+    "packSize": {
+      "value": 120,
+      "unit": "g"
+    },
+    "description": "Three cheers for daily immunity support.",
+    "ingredients": [
+      "Nuts & Seeds (44.8%): Roasted Peanut Crushed, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
+      "Whole Grains (35%): Roasted Jowar Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs & Flavours (0.6%): Turmeric Powder, Tulsi Powder, Moringa Powder"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "9 months from Mfg date",
+    "nutritionPoints": [
+      "Energy: 480.0 kcal",
+      "Protein: 18.8g",
+      "Carbohydrate: 41.0g",
+      "Dietary Fiber: 9.2g",
+      "Total Fat: 28.0g (Saturated: 4.9g)",
+      "Total Sugar: 12.3g (Added: 8.0g)",
+      "Iron: 4.5mg",
+      "Calcium: 82.0mg"
+    ],
+    "taglines": [
+      "Three cheers for daily immunity support."
+    ],
+    "stock": 80,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "WW-06",
+    "name": "Grow Bone",
+    "category": "Women Wellness",
+    "mrp": 160,
+    "price": 160,
+    "packSize": {
+      "value": 120,
+      "unit": "g"
+    },
+    "description": "Build strength from the bite up.",
+    "ingredients": [
+      "Seeds (44%): Roasted Peanut Crushed, Watermelon Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
+      "Whole Grains (35%): Roasted Ragi Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs & Flavours (1.4%): Amla Powder, Moringa Powder"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "9 months from Mfg date",
+    "nutritionPoints": [
+      "Energy: 477.0 kcal",
+      "Protein: 18.4g",
+      "Carbohydrate: 41.5g",
+      "Dietary Fiber: 10.8g",
+      "Total Fat: 27.6g (Saturated: 4.4g)",
+      "Total Sugar: 12.5g (Added: 8.0g)",
+      "Iron: 4.9mg",
+      "Calcium: 150.0mg"
+    ],
+    "taglines": [
+      "Build strength from the bite up."
+    ],
+    "stock": 80,
+    "isActive": true,
+    "isFeatured": false
+  },
+  {
+    "sku": "WW-07",
+    "name": "Radiance Flow",
+    "category": "Women Wellness",
+    "mrp": 140,
+    "price": 140,
+    "packSize": {
+      "value": 120,
+      "unit": "g"
+    },
+    "description": "Glow from within, crunch with confidence.",
+    "ingredients": [
+      "Nuts & Seeds (44.4%): Roasted Peanut Crushed, Chia Seeds, Pumpkin Seeds, Flax Seeds, Sunflower Seeds",
+      "Whole Grains (35%): Roasted Bajra Flour, Roasted Rolled Oats",
+      "Rest Ingredients (19.6%): Fructooligosaccharides, Honey, Gum Acacia, Himalayan Pink Salt",
+      "Ayurvedic Herbs & Flavours (1.4%): Aloe Vera Powder, Moringa Powder"
+    ],
+    "allergenInfo": "Contains peanuts, made in facility that processes milk solids, wheat and soy, may contain trace elements.",
+    "shelfLife": "9 months from Mfg date",
+    "nutritionPoints": [
+      "Energy: 483.0 kcal",
+      "Protein: 18.3g",
+      "Carbohydrate: 41.2g",
+      "Dietary Fiber: 10.0g",
+      "Total Fat: 27.9g (Saturated: 4.7g)",
+      "Total Sugar: 12.5g (Added: 8.0g)",
+      "Iron: 5.1mg",
+      "Calcium: 90.0mg"
+    ],
+    "taglines": [
+      "Glow from within, crunch with confidence."
+    ],
+    "stock": 80,
+    "isActive": true,
+    "isFeatured": false
+  },
+  
   {
     "sku": "PC-01",
     "name": "Chocolate Peanut Chikki",
@@ -1574,7 +1575,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Chocolate crunch that fuels your day! Peanut power meets cocoa bliss. Guilt-free chikki revolution.",
@@ -1612,7 +1613,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Mango magic in every bite! Sunny energy from peanuts. Taste India's orchards.",
@@ -1650,7 +1651,7 @@
     "mrp": 160,
     "price": 160,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Rose-kissed sweetness, pure health. Traditional twist, modern nutrition. Blissful bite of wellness.",
@@ -1688,7 +1689,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Coffee kick without the crash! Brewed energy in chikki form. Wake up to peanut power.",
@@ -1726,7 +1727,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Vanilla dreams, peanut reality. Smooth, satisfying fuel. Pure indulgence, zero guilt.",
@@ -1764,7 +1765,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Coconut crunch heaven! Island vibes in every bar. Hydrate inside with peanuts.",
@@ -1802,7 +1803,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Zesty lemon lift-off! Tangy power snack. Energize like sunshine.",
@@ -1831,7 +1832,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Masala magic, cumin kick! Spicy snack salvation. Desi health in every chew.",
@@ -1869,7 +1870,7 @@
     "mrp": 160,
     "price": 160,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Strawberry fields crunch! Berry blast of nutrition. Sweet strawberry strength.",
@@ -1907,7 +1908,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Minty fresh fuel! Garden cool in chikki. Breathe easy, snack smart.",
@@ -1945,7 +1946,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Butter bliss, health win! Creamy peanut perfection. Indulge without compromise.",
@@ -1983,7 +1984,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Milky smoothness, mighty peanuts. Nourish like home. Dairy dream snack.",
@@ -2021,7 +2022,7 @@
     "mrp": 150,
     "price": 150,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Jeera fizz crunch! Soda sparkle, real power. Digestive delight bar.",
@@ -2059,7 +2060,7 @@
     "mrp": 140,
     "price": 140,
     "packSize": {
-      "value": 100,
+      "value": 120,
       "unit": "g"
     },
     "description": "Unflavored, unbeatable nutrition. Pure peanut potency. Clean chikki, true energy.",

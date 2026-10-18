@@ -46,7 +46,7 @@ function ManufacturingSection() {
               Small batches
             </li>
             <li className="rounded-full border border-caramel-500/30 bg-cream-50/95 px-4 py-2.5">
-              Jaggery &amp; nuts
+              Honey &amp; nuts
             </li>
             <li className="rounded-full border border-peacock-600/25 bg-lightblue-50/95 px-4 py-2.5">
               Traditional flavour

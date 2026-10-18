@@ -190,15 +190,14 @@ function ProductPromiseStrip() {
         />
 
         <p className='font-display text-[11px] font-semibold tracking-wide text-caramel-700 sm:text-xs'>
-          From Vrindavan, with love
+          Made with devotion, Shared with love
         </p>
 
         <Sparkles
           size={12}
-          aria-hidden='true'
+          aria-hidden='true'  
           className='text-caramel-500'
         />
-
         <span className='h-px w-8 bg-caramel-500/30 sm:w-14' />
       </div>
     </div>

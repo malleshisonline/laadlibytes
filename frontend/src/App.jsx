@@ -18,12 +18,15 @@ const AccountPage = lazy(() => import('./pages/AccountPage.jsx'))
 const CartPage = lazy(() => import('./pages/CartPage.jsx'))
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage.jsx'))
 const ContactPage = lazy(() => import('./pages/ContactPage.jsx'))
+const FaqPage = lazy(() => import('./pages/FaqPage.jsx'))
 const HomePage = lazy(() => import('./pages/HomePage.jsx'))
 const GiftStorePage = lazy(() => import('./pages/GiftStorePage.jsx'))
 const IdentifyPage = lazy(() => import('./pages/IdentifyPage.jsx'))
 const LoginPage = lazy(() => import('./pages/LoginPage.jsx'))
 const ProductDetailsPage = lazy(() => import('./pages/ProductDetailsPage.jsx'))
 const ProductsPage = lazy(() => import('./pages/ProductsPage.jsx'))
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage.jsx'))
+const TermsPage = lazy(() => import('./pages/TermsPage.jsx'))
 const RegisterPage = lazy(() => import('./pages/RegisterPage.jsx'))
 const VerifyOtpPage = lazy(() => import('./pages/VerifyOtpPage.jsx'))
 const BestSellers = lazy(() => import('./pages/BestSellers.jsx'))
@@ -60,6 +63,9 @@ function App() {
             <Route path={APP_ROUTES.HOME} element={<HomePage />} />
             <Route path={APP_ROUTES.ABOUT} element={<AboutPage />} />
             <Route path={APP_ROUTES.CONTACT} element={<ContactPage />} />
+            <Route path={APP_ROUTES.PRIVACY_POLICY} element={<PrivacyPolicyPage />} />
+            <Route path={APP_ROUTES.TERMS} element={<TermsPage />} />
+            <Route path={APP_ROUTES.FAQ} element={<FaqPage />} />
             <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
             <Route path={APP_ROUTES.PRODUCT_DETAILS} element={<ProductDetailsPage />} />
             <Route path={APP_ROUTES.CART} element={<CartPage />} />

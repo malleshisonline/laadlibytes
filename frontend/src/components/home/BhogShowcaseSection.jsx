@@ -91,7 +91,7 @@ function PlaceholderCard() {
 }
 
 /**
- * Home "56 Bhog" showcase band, as in design-reference/finaLaadliBytesUI.png, on the navy Vrindavan scene.
+ * Home "Chhappan Bhog" showcase band, as in design-reference/finaLaadliBytesUI.png, on the navy Vrindavan scene.
  * Shows the products that are not best sellers, so it doesn't repeat the Best Sellers row above.
  */
 function BhogShowcaseSection() {
@@ -142,7 +142,7 @@ function BhogShowcaseSection() {
       <div className='relative z-10 mx-auto max-w-7xl px-3 sm:px-6 xl:max-w-none xl:px-10 2xl:px-16'>
         <header className='mx-auto max-w-xl text-center'>
           <h2 id='bhog-showcase-heading' className='text-3xl font-semibold text-white md:text-4xl'>
-            56 Bhog
+            Chhappan Bhog
           </h2>
           <p className='mt-3 text-sm leading-relaxed text-white/90 md:text-base'>
             A divine collection of 56 traditional bhogs,

@@ -160,8 +160,8 @@ const BestSellers = () => {
                 A Little Extra Goodness
               </span>
 
-              <span className='mt-1 block text-4xl font-semibold text-amber-500 drop-shadow-[0_2px_3px_rgba(0,0,0,0.35)] sm:text-5xl md:text-6xl xl:text-7xl'>
-                for Laadli Ji
+              <span className='mt-1 block text-4xl font-semibold text-amber-500 drop-shadow-[0_2px_3px_rgba(0,0,0,0.35)] sm:text-5xl  xl:text-7xl'>
+                from Laadli Ji
               </span>
 
             </h2>
