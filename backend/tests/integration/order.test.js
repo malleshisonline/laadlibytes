@@ -552,6 +552,132 @@ describe('Razorpay checkout and verification', () => {
   });
 });
 
+describe('guest checkout (no account)', () => {
+  const guestAddress = {
+    name: 'Guest Shopper',
+    phone: '9876501234',
+    pincode: '500081',
+    line1: 'House 12, Lake Road',
+    city: 'Hyderabad',
+    state: 'Telangana',
+  };
+  const asGuest = (path = '') => request(app).post(api(`/orders/guest${path}`));
+  const guestCartToken = 'g'.repeat(43);
+  const guestCartHash = crypto.createHash('sha256').update(guestCartToken).digest('hex');
+
+  test('Buy Now: saves the address and contact on an order with no user', async () => {
+    const product = await makeProduct({ stock: 5 });
+    const checkoutKey = crypto.randomUUID();
+
+    const res = await asGuest().send({
+      checkoutKey,
+      address: guestAddress,
+      email: 'Guest@Example.com',
+      buyNow: { productId: product.id, quantity: 2 },
+    });
+
+    expect(res.status).toBe(201);
+    expect(res.body.data).toMatchObject({
+      total: 200,
+      paymentStatus: 'pending',
+      address: { name: 'Guest Shopper', phone: '+919876501234', city: 'Hyderabad' },
+      contact: { phone: '+919876501234', email: 'guest@example.com' },
+      checkout: { amount: 20_000, prefill: { name: 'Guest Shopper', contact: '+919876501234' } },
+    });
+    expect(res.body.data).not.toHaveProperty('checkoutKey');
+    expect(res.body.data).not.toHaveProperty('user');
+    expect(await stockOf(product)).toBe(3);
+    const saved = await Order.findById(res.body.data.id).lean();
+    expect(saved.user).toBeUndefined();
+  });
+
+  test('orders the guest cart from the cartId cookie and clears it only after payment', async () => {
+    const product = await makeProduct();
+    await Cart.create({ guestToken: guestCartHash, items: [{ product: product._id, quantity: 3 }] });
+    const checkoutKey = crypto.randomUUID();
+
+    const placed = await asGuest()
+      .set('Cookie', `cartId=${guestCartToken}`)
+      .send({ checkoutKey, address: guestAddress });
+
+    expect(placed.status).toBe(201);
+    expect(placed.body.data.items[0]).toMatchObject({ sku: product.sku, quantity: 3 });
+    expect(placed.body.data.contact.email).toBeNull();
+    expect((await Cart.findOne({ guestToken: guestCartHash }).lean()).items).toHaveLength(1);
+
+    const verified = await asGuest(`/${placed.body.data.id}/payment/verify`).send({
+      checkoutKey,
+      ...paymentDetailsFor(placed.body.data, 'pay_guest_cart'),
+    });
+
+    expect(verified.status).toBe(200);
+    expect(verified.body.data).toMatchObject({ paymentStatus: 'paid', paymentReference: 'pay_guest_cart' });
+    expect((await Cart.findOne({ guestToken: guestCartHash }).lean()).items).toHaveLength(0);
+  });
+
+  test('a guest with no cart cookie and no Buy Now has an empty cart', async () => {
+    const res = await asGuest().send({ checkoutKey: crypto.randomUUID(), address: guestAddress });
+
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe('CART_EMPTY');
+  });
+
+  test('verifying needs the same checkoutKey, and never reaches a signed-in customer\'s order', async () => {
+    const product = await makeProduct();
+    const placed = await asGuest().send({
+      checkoutKey: crypto.randomUUID(),
+      address: guestAddress,
+      buyNow: { productId: product.id },
+    });
+    const wrongKey = await asGuest(`/${placed.body.data.id}/payment/verify`).send({
+      checkoutKey: crypto.randomUUID(),
+      ...paymentDetailsFor(placed.body.data, 'pay_wrong_key'),
+    });
+    expect(wrongKey.status).toBe(404);
+    expect(wrongKey.body.code).toBe('ORDER_NOT_FOUND');
+
+    const customer = await makeCustomer();
+    const customerKey = crypto.randomUUID();
+    const theirs = await asCustomer(customer.userId, 'post').send({
+      addressId: customer.addressId,
+      checkoutKey: customerKey,
+      buyNow: { productId: product.id },
+    });
+    const asGuestOnTheirs = await asGuest(`/${theirs.body.data.id}/payment/verify`).send({
+      checkoutKey: customerKey,
+      ...paymentDetailsFor(theirs.body.data, 'pay_not_theirs'),
+    });
+    expect(asGuestOnTheirs.status).toBe(404);
+  });
+
+  test('validates the guest details', async () => {
+    const res = await asGuest().send({
+      checkoutKey: 'not-a-uuid',
+      address: { ...guestAddress, phone: '123', state: 'Atlantis' },
+      email: 'nope',
+    });
+
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe('VALIDATION_ERROR');
+    expect(await Order.countDocuments()).toBe(0);
+  });
+
+  test('the admin sees a guest order with its contact details and no user', async () => {
+    const placed = await asGuest().send({
+      checkoutKey: crypto.randomUUID(),
+      address: guestAddress,
+      buyNow: { productId: (await makeProduct()).id },
+    });
+
+    const res = await asAdmin('get', `/${placed.body.data.id}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.user).toBeUndefined();
+    expect(res.body.data.address.name).toBe('Guest Shopper');
+    expect((await asAdmin('get', '?search=9876501234')).body.meta.total).toBe(1);
+  });
+});
+
 describe("a customer's own orders", () => {
   test('lists only their orders, newest first, without admin-only history fields', async () => {
     const me = await makeCustomer();

@@ -5,12 +5,14 @@ import { RotateCw, ShoppingBag } from 'lucide-react'
 
 import { orderApi } from '../api/orderApi.js'
 import DeliveryAddressBox from '../components/cart/DeliveryAddressBox.jsx'
+import GuestDeliveryDetails from '../components/checkout/GuestDeliveryDetails.jsx'
 import OrderSummaryView from '../components/checkout/OrderSummaryView.jsx'
 import { APP_ROUTES, orderDetailsPath, productDetailsPath } from '../constants/appRoutepoints.js'
 import { APP_SETTINGS } from '../constants/appSettings.js'
 import { pickAddress, useAddresses } from '../hooks/useAddresses.js'
 import { useAuth } from '../hooks/useAuth.js'
 import { useCart } from '../hooks/useCart.js'
+import { useGuestDeliveryDetails } from '../hooks/useGuestDeliveryDetails.js'
 import { useProduct } from '../hooks/useProduct.js'
 import { formatAddressLine, formatIndianMobile } from '../utils/addressValidation.js'
 import { maxQuantityFor } from '../utils/productStock.js'
@@ -42,28 +44,41 @@ function placeOrderErrorMessage(error) {
   return 'Sorry, we couldn’t place your order. Please try again.'
 }
 
+/** A guest's saved details as the guest order request wants them: the address, and the email apart. */
+function toGuestOrderPayload({ email, ...address }) {
+  return { address, email: email || undefined }
+}
+
 /**
- * Returns placeOrder({ addressId, buyNow }, onFailure). On success it opens the new order (replacing the Order
- * Summary in history, so Back doesn't offer to place it again); on failure it shows a toast and calls
- * `onFailure`, which reloads whatever may have changed (stock, the cart, the addresses).
+ * Returns placeOrder(payload, onFailure). A signed-in user sends { addressId, buyNow }; a guest sends
+ * { address, email, buyNow }. On success it opens the new order, or for a guest the Order Confirmed page
+ * (replacing the Order Summary in history, so Back doesn't offer to place it again); on failure it shows a toast
+ * and calls `onFailure`, which reloads whatever may have changed (stock, the cart, the addresses).
  */
 function usePlaceOrder() {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const checkoutKey = useRef(globalThis.crypto.randomUUID())
 
   return useCallback(
     async (payload, onFailure) => {
-      console.log("payload", payload)
+      const key = checkoutKey.current
       try {
-        const checkout = await orderApi.place({ ...payload, checkoutKey: checkoutKey.current })
+        const checkout = user
+          ? await orderApi.place({ ...payload, checkoutKey: key })
+          : await orderApi.placeGuest({ ...payload, checkoutKey: key })
         const order = await openRazorpayCheckout(checkout.checkout, (details) =>
-          orderApi.verifyPayment(checkout.id, details),
+          user ? orderApi.verifyPayment(checkout.id, details) : orderApi.verifyGuestPayment(checkout.id, key, details),
         )
         if (!order) {
           toast.error('Payment was cancelled. The order remains placed; you can try again.')
           return null
         }
-        navigate(orderDetailsPath(order.id), { replace: true, state: { justPlaced: true } })
+        if (user) {
+          navigate(orderDetailsPath(order.id), { replace: true, state: { justPlaced: true } })
+        } else {
+          navigate(APP_ROUTES.ORDER_CONFIRMED, { replace: true, state: { order } })
+        }
         return order
       } catch (error) {
         toast.error(error.status ? placeOrderErrorMessage(error) : error.message || placeOrderErrorMessage(error))
@@ -71,7 +86,7 @@ function usePlaceOrder() {
         return null
       }
     },
-    [navigate],
+    [navigate, user],
   )
 }
 
@@ -159,11 +174,16 @@ function buyNowOrder(product, requestedQuantity) {
   return { items: [item], itemCount: quantity, subtotal, mrpTotal, savings: mrpTotal - subtotal }
 }
 
-/** The whole cart, delivered to the address chosen in the cart (the default when none was passed). */
+/**
+ * The whole cart, delivered to the address chosen in the cart (the default when none was passed). A guest
+ * types their delivery details here instead.
+ */
 function CartOrderSummary() {
   const location = useLocation()
+  const { user } = useAuth()
   const { cart, status: cartStatus, reload } = useCart()
-  const { addresses, status: addressStatus, retry } = useAddresses()
+  const { addresses, status: addressStatus, retry } = useAddresses(Boolean(user))
+  const guest = useGuestDeliveryDetails()
   const placeOrder = usePlaceOrder()
 
   if ((cartStatus === 'loading' && !cart) || addressStatus === 'loading') return <SummarySkeleton />
@@ -186,6 +206,22 @@ function CartOrderSummary() {
         text='Add a few chikkis to your cart and come back to place the order.'
         linkTo={APP_ROUTES.PRODUCTS}
         linkText='Browse products'
+      />
+    )
+  }
+
+  if (!user) {
+    return (
+      <OrderSummaryView
+        order={cart}
+        onPlaceOrder={() => placeOrder(toGuestOrderPayload(guest.details), () => reload())}
+        address={<GuestDeliveryDetails details={guest.details} onSave={guest.saveDetails} returnTo={APP_ROUTES.CHECKOUT} />}
+        itemsAction={
+          <Link to={APP_ROUTES.CART} className={HEADER_LINK_CLASSES}>
+            Edit
+          </Link>
+        }
+        canPlaceOrder={Boolean(guest.details)}
       />
     )
   }
@@ -233,9 +269,11 @@ function CartOrderSummary() {
  * isn't part of this path, so the address is chosen (or added) right here.
  */
 function BuyNowOrderSummary({ slug, quantity }) {
+  const location = useLocation()
   const { user } = useAuth()
   const { product, status: productStatus, retry: retryProduct } = useProduct(slug)
-  const addressState = useAddresses()
+  const addressState = useAddresses(Boolean(user))
+  const guest = useGuestDeliveryDetails()
   const [chosenAddressId, setChosenAddressId] = useState(null)
   const placeOrder = usePlaceOrder()
 
@@ -269,6 +307,7 @@ function BuyNowOrderSummary({ slug, quantity }) {
   // Buy Now never touches the cart. A failure reloads the product, so a sold-out one shows as out of stock.
   function handlePlaceOrder() {
     const buyNow = { productId: product.id, quantity: order.items[0].quantity }
+    if (!user) return placeOrder({ ...toGuestOrderPayload(guest.details), buyNow }, () => retryProduct())
     return placeOrder({ addressId: selectedAddress.id, buyNow }, (error) => {
       if (error.code === 'ADDRESS_NOT_FOUND') addressState.retry()
       else retryProduct()
@@ -280,34 +319,43 @@ function BuyNowOrderSummary({ slug, quantity }) {
       order={order}
       onPlaceOrder={handlePlaceOrder}
       address={
-        <DeliveryAddressBox
-          bare
-          user={user}
-          addresses={addressState.addresses}
-          status={addressState.status}
-          onRetry={addressState.retry}
-          onCreateAddress={addressState.createAddress}
-          selectedId={selectedAddress?.id}
-          onSelect={setChosenAddressId}
-        />
+        user ? (
+          <DeliveryAddressBox
+            bare
+            user={user}
+            addresses={addressState.addresses}
+            status={addressState.status}
+            onRetry={addressState.retry}
+            onCreateAddress={addressState.createAddress}
+            selectedId={selectedAddress?.id}
+            onSelect={setChosenAddressId}
+          />
+        ) : (
+          <GuestDeliveryDetails
+            details={guest.details}
+            onSave={guest.saveDetails}
+            returnTo={`${location.pathname}${location.search}`}
+          />
+        )
       }
       itemsAction={
         <Link to={productDetailsPath(product.slug)} className={HEADER_LINK_CLASSES}>
           Edit
         </Link>
       }
-      canPlaceOrder={Boolean(selectedAddress)}
+      canPlaceOrder={user ? Boolean(selectedAddress) : Boolean(guest.details)}
     />
   )
 }
 
 /**
- * Order Summary (behind RequireAuth). `?buyNow=<slug>&qty=<n>` (Buy Now on a product not in the cart) shows
+ * Order Summary, for signed-in users and guests alike (guests type their delivery details). `?buyNow=<slug>&qty=<n>` (Buy Now on a product not in the cart) shows
  * that product alone; otherwise it is the whole cart, from the cart's Continue or Buy Now on a product already
  * in the cart.
  */
 function CheckoutPage() {
   const [searchParams] = useSearchParams()
+  const { isRestoringSession } = useAuth()
   const buyNowSlug = searchParams.get('buyNow')?.trim()
   const buyNowQuantity = Number.parseInt(searchParams.get('qty') ?? '1', 10)
 
@@ -323,7 +371,10 @@ function CheckoutPage() {
     <div className='bg-linear-to-b from-cream-50 via-surface to-surface'>
       <div className={PAGE_CLASSES}>
         <h1 className='mb-6 text-center text-3xl font-semibold text-navy-800 md:mb-8 md:text-4xl'>Order Summary</h1>
-        {buyNowSlug ? (
+        {/* Wait for the session restore, so a signed-in shopper never sees the guest form flash first. */}
+        {isRestoringSession ? (
+          <SummarySkeleton />
+        ) : buyNowSlug ? (
           <BuyNowOrderSummary
             key={buyNowSlug}
             slug={buyNowSlug}

@@ -7,16 +7,28 @@ import { orderController } from './order.controller.js';
 import {
   listMyOrdersQuerySchema,
   orderIdParamSchema,
+  placeGuestOrderSchema,
   placeOrderSchema,
+  verifyGuestPaymentSchema,
   verifyRazorpayPaymentSchema,
 } from './order.validation.js';
 
 /**
- * The signed-in user's own orders. Guests shop with a cart but must sign in to order. Customers
- * cannot cancel (the shop takes no cancellations); delivery-status changes are handled by admins
- * under /admin/orders, while payment status comes only from Razorpay verification and webhooks.
+ * Orders. Guests can order without an account through /orders/guest; everything else is the signed-in
+ * user's own orders. Customers cannot cancel (the shop takes no cancellations); delivery-status changes
+ * are handled by admins under /admin/orders, while payment status comes only from Razorpay
+ * verification and webhooks.
  */
 const router = Router();
+
+// Guest checkout: no account. The order's own checkoutKey, which only the guest's browser holds, is
+// what lets the guest verify its payment.
+router.post('/guest', validate({ body: placeGuestOrderSchema }), orderController.placeGuest);
+router.post(
+  '/guest/:id/payment/verify',
+  validate({ params: orderIdParamSchema, body: verifyGuestPaymentSchema }),
+  orderController.verifyGuestPayment
+);
 
 router.use(authenticate);
 

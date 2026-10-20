@@ -80,7 +80,8 @@ const orderSchema = new mongoose.Schema(
   {
     // What the customer and the shop quote, e.g. LB-20261003-7K3QX.
     orderNumber: { type: String, required: true, uppercase: true, trim: true },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    // Empty for a guest order: the guest's details live only in `address` and `contact`.
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     items: {
       type: [orderItemSchema],
       validate: [(items) => items.length > 0, 'An order needs at least one item'],
@@ -105,6 +106,8 @@ const orderSchema = new mongoose.Schema(
     razorpayOrderId: { type: String, trim: true, select: false },
     checkoutKey: { type: String, trim: true, select: false },
     checkoutUsesCart: { type: Boolean, default: false, select: false },
+    // sha256 of the guest's `cartId` cookie, for a guest cart order: the paid lines leave that cart.
+    guestCartToken: { type: String, select: false },
     history: { type: [orderHistorySchema], default: [] },
   },
   {

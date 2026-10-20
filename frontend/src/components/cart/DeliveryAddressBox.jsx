@@ -11,7 +11,8 @@ import AddressForm from '../address/AddressForm.jsx'
 const BOX_CLASSES = 'rounded-2xl border bg-surface p-4 shadow-card sm:p-5'
 
 /**
- * The cart's "Deliver to" box, like Flipkart's. A guest is asked to sign in (addresses belong to an account).
+ * The cart's "Deliver to" box, like Flipkart's. A guest is told they'll add delivery details at checkout, with an
+ * optional sign-in for saved addresses (addresses belong to an account).
  * A signed-in user picks one saved address with a radio button (the default starts selected) or adds a new
  * one, which is then selected; with no saved address the form is open straight away. `error` is shown when
  * Continue was pressed without an address. The ref lets the cart scroll here. `bare` drops the box's frame and
@@ -37,16 +38,17 @@ const DeliveryAddressBox = forwardRef(function DeliveryAddressBox(
 
   let content
   if (!user) {
+    // Guests can order without an account: they type the delivery details on the order summary.
     content = (
       <div className='flex flex-wrap items-center justify-between gap-3'>
-        <p className='text-sm text-body'>Sign in to choose or add a delivery address.</p>
+        <p className='text-sm text-body'>No account needed. You’ll add your delivery details on the next step.</p>
         <Link
           to={APP_ROUTES.IDENTIFY}
           state={{ returnTo: APP_ROUTES.CART }}
           className='inline-flex min-h-11 items-center gap-2 rounded-full border border-navy-800 px-5 text-sm font-semibold text-navy-800 transition hover:bg-lightblue-100'
         >
           <Lock size={16} strokeWidth={1.75} aria-hidden='true' />
-          Sign in
+          Sign in to use saved addresses
         </Link>
       </div>
     )

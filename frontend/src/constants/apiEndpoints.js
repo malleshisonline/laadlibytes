@@ -38,6 +38,9 @@ export const API_ENDPOINTS = {
     ITEM: (id) => `/orders/${encodeURIComponent(id)}`,
     CHECKOUT: (id) => `/orders/${encodeURIComponent(id)}/payment/checkout`,
     VERIFY_PAYMENT: (id) => `/orders/${encodeURIComponent(id)}/payment/verify`,
+    // Guest checkout: no sign-in. The order's checkoutKey proves it is the guest's.
+    GUEST: '/orders/guest',
+    GUEST_VERIFY_PAYMENT: (id) => `/orders/guest/${encodeURIComponent(id)}/payment/verify`,
   },
   // Everything under /admin needs an admin token; the backend checks the role once for the whole surface.
   ADMIN: {

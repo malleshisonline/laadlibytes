@@ -243,7 +243,8 @@ function AdminOrderDetailsPage() {
 
         <div className="space-y-4 xl:col-span-4">
           <Section title="Customer">
-            <p className="font-semibold text-navy-800">{customer?.name ?? 'Deleted account'}</p>
+            {/* An order with no user is a guest checkout: deleting an account deletes its orders too. */}
+            <p className="font-semibold text-navy-800">{customer?.name ?? 'Guest (no account)'}</p>
             {customer?.email && <p className="text-sm break-all text-body">{customer.email}</p>}
             {customer?.phone && <p className="text-sm text-body">{formatIndianMobile(customer.phone)}</p>}
             <p className="mt-3 text-xs font-bold tracking-wide text-muted uppercase">Contact for this order</p>

@@ -152,10 +152,14 @@ function expectedWebhookSignature(rawBody) {
   return crypto.createHmac('sha256', env.RAZORPAY_WEBHOOK_SECRET).update(rawBody).digest('hex');
 }
 
+/**
+ * `owner` is `{ userId }` for a signed-in customer or `{ guestCheckoutKey }` for a guest order; see
+ * ownerFilter in order.service.js.
+ */
 export const paymentService = {
-  async resumeCheckout(userId, orderId) {
+  async resumeCheckout(owner, orderId) {
     assertApiCredentials();
-    const order = await orderService.getCheckoutForUser(orderId, userId);
+    const order = await orderService.getCheckoutFor(owner, orderId);
     if (!order) throw ApiError.notFound('Order not found', { code: 'ORDER_NOT_FOUND' });
     if (
       order.status !== 'placed' ||
@@ -164,12 +168,13 @@ export const paymentService = {
     ) {
       throw ApiError.conflict('This order is not available for payment', { code: 'CHECKOUT_CLOSED' });
     }
-    return logCheckoutReady(await orderService.getMine(userId, order.id), order.razorpayOrderId, 'resumed');
+    return logCheckoutReady(await orderService.getFor(owner, order.id), order.razorpayOrderId, 'resumed');
   },
 
-  async createCheckout(userId, payload) {
+  /** `guestCartToken` is the guest's raw `cartId` cookie, used only for a guest cart order. */
+  async createCheckout(owner, payload, guestCartToken = null) {
     assertApiCredentials();
-    const existing = await orderService.findCheckout(userId, payload.checkoutKey);
+    const existing = await orderService.findCheckout(owner, payload.checkoutKey);
     if (existing) {
       if (existing.status !== 'placed' || existing.paymentStatus === 'paid') {
         throw ApiError.conflict('This checkout can no longer accept payment', { code: 'CHECKOUT_CLOSED' });
@@ -179,17 +184,17 @@ export const paymentService = {
           code: 'CHECKOUT_IN_PROGRESS',
         });
       }
-      return logCheckoutReady(await orderService.getMine(userId, existing.id), existing.razorpayOrderId, 'reused');
+      return logCheckoutReady(await orderService.getFor(owner, existing.id), existing.razorpayOrderId, 'reused');
     }
 
     let order;
     try {
-      order = await orderService.placeOrder(userId, payload, { deferCartRemoval: true });
+      order = await orderService.placeFor(owner, payload, guestCartToken);
     } catch (error) {
       if (error?.code !== 11000) throw error;
-      const raced = await orderService.findCheckout(userId, payload.checkoutKey);
+      const raced = await orderService.findCheckout(owner, payload.checkoutKey);
       if (raced?.razorpayOrderId) {
-        return logCheckoutReady(await orderService.getMine(userId, raced.id), raced.razorpayOrderId, 'reused');
+        return logCheckoutReady(await orderService.getFor(owner, raced.id), raced.razorpayOrderId, 'reused');
       }
       throw ApiError.conflict('Checkout is already being created. Please retry shortly.', {
         code: 'CHECKOUT_IN_PROGRESS',
@@ -216,15 +221,15 @@ export const paymentService = {
         throw paymentError('The payment provider returned order details that do not match');
       }
 
-      const linkedOrder = await orderService.attachRazorpayOrder(order.id, userId, providerOrder.id);
+      const linkedOrder = await orderService.attachRazorpayOrder(order.id, owner, providerOrder.id);
       if (!linkedOrder) {
         throw ApiError.conflict('The order changed while checkout was being created', { code: 'ORDER_CHANGED' });
       }
 
-      return logCheckoutReady(await orderService.getMine(userId, order.id), linkedOrder.razorpayOrderId, 'created');
+      return logCheckoutReady(await orderService.getFor(owner, order.id), linkedOrder.razorpayOrderId, 'created');
     } catch (error) {
       try {
-        await orderService.discardUnpaidCheckout(order.id, userId);
+        await orderService.discardUnpaidCheckout(order.id, owner);
       } catch (cleanupError) {
         logger.error('Could not release stock for a failed Razorpay checkout setup', {
           orderId: order.id,
@@ -235,9 +240,9 @@ export const paymentService = {
     }
   },
 
-  async verifyCheckoutPayment(userId, localOrderId, details) {
+  async verifyCheckoutPayment(owner, localOrderId, details) {
     assertApiCredentials();
-    const order = await orderService.getCheckoutForUser(localOrderId, userId);
+    const order = await orderService.getCheckoutFor(owner, localOrderId);
     if (!order) throw ApiError.notFound('Order not found', { code: 'ORDER_NOT_FOUND' });
     if (!order.razorpayOrderId || details.razorpay_order_id !== order.razorpayOrderId) {
       throw ApiError.badRequest('The Razorpay order does not match this checkout', { code: 'PAYMENT_ORDER_MISMATCH' });
@@ -248,8 +253,8 @@ export const paymentService = {
       throw ApiError.badRequest('Razorpay payment signature is invalid', { code: 'PAYMENT_SIGNATURE_INVALID' });
     }
     if (order.paymentStatus === 'paid' && order.paymentReference === details.razorpay_payment_id) {
-      const paidOrder = await orderService.getMine(userId, localOrderId);
-      if (order.checkoutUsesCart) await orderService.removeOrderedCartItems(userId, paidOrder.items);
+      const paidOrder = await orderService.getFor(owner, localOrderId);
+      if (order.checkoutUsesCart) await orderService.removeOrderedCartItems(order);
       logger.info('Razorpay payment verification reused', {
         orderId: localOrderId,
         razorpayOrderId: order.razorpayOrderId,
@@ -268,7 +273,7 @@ export const paymentService = {
 
     const removeFromCart = order.checkoutUsesCart;
     const paidOrder = await orderService.markPaymentPaid(order, details.razorpay_payment_id);
-    if (removeFromCart) await orderService.removeOrderedCartItems(userId, paidOrder.items);
+    if (removeFromCart) await orderService.removeOrderedCartItems(order);
     logger.info('Razorpay payment verified', {
       orderId: localOrderId,
       razorpayOrderId: order.razorpayOrderId,
@@ -318,7 +323,7 @@ export const paymentService = {
         throw ApiError.badRequest('Razorpay capture event is not captured', { code: 'INVALID_PAYMENT_EVENT' });
       }
       await orderService.markPaymentPaid(order, payment.id);
-      if (order.checkoutUsesCart) await orderService.removeOrderedCartItems(order.user, order.items);
+      if (order.checkoutUsesCart) await orderService.removeOrderedCartItems(order);
       logger.info('Razorpay webhook payment marked paid', {
         event: type,
         orderId: order.id,

@@ -27,6 +27,25 @@ const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 // 404 for another user's order too, so the response never reveals that it exists.
 const orderNotFound = () => ApiError.notFound('Order not found', { code: 'ORDER_NOT_FOUND' });
 
+const hashToken = (token) => crypto.createHash('sha256').update(token).digest('hex');
+
+/**
+ * Whose order it is. `owner` is `{ userId }` for a signed-in customer, or `{ guestCheckoutKey }` for a
+ * guest: a guest order has no user, and only the browser holding its random checkoutKey can reach it.
+ */
+function ownerFilter({ userId, guestCheckoutKey }) {
+  if (userId) return { user: userId };
+  if (guestCheckoutKey) return { user: null, checkoutKey: guestCheckoutKey };
+  throw new Error('An order owner needs a userId or a guestCheckoutKey');
+}
+
+/** The cart an order's lines came from: the user's, or the guest cart found by its hashed cookie. */
+function cartFilterOf(order) {
+  if (order.user) return { user: order.user };
+  if (order.guestCartToken) return { guestToken: order.guestCartToken };
+  return null;
+}
+
 const orderChanged = () =>
   ApiError.conflict('This order was just changed by someone else. Reload it and try again.', { code: 'ORDER_CHANGED' });
 
@@ -51,6 +70,7 @@ function toCustomerView(order) {
   delete view.razorpayOrderId;
   delete view.checkoutKey;
   delete view.checkoutUsesCart;
+  delete view.guestCartToken;
   return view;
 }
 
@@ -59,14 +79,14 @@ function toCustomerView(order) {
  * otherwise it is the cart, minus products that were unpublished since they were added (the cart
  * page already hides those, so the shopper never saw them).
  */
-async function resolveLines(userId, buyNow) {
+async function resolveLines(cartFilter, buyNow) {
   if (buyNow) {
     const product = await Product.findOne({ _id: buyNow.productId, isActive: true }).select(PRODUCT_FIELDS).lean();
     if (!product) throw ApiError.notFound('Product not found', { code: 'PRODUCT_NOT_FOUND' });
     return [{ product, quantity: buyNow.quantity }];
   }
 
-  const cart = await Cart.findOne({ user: userId }).lean();
+  const cart = cartFilter ? await Cart.findOne(cartFilter).lean() : null;
   const cartItems = cart?.items ?? [];
   const products = await Product.find({ _id: { $in: cartItems.map((item) => item.product) }, isActive: true })
     .select(PRODUCT_FIELDS)
@@ -151,6 +171,37 @@ async function reserveStock(lines) {
   return reserved;
 }
 
+/**
+ * Prices the lines, takes the stock and saves the order, or saves nothing and puts the stock back.
+ * Shared by signed-in and guest orders; `fields` is everything else on the order.
+ */
+async function createOrder(lines, fields) {
+  const items = lines.map(toOrderItem);
+  const totals = totalsOf(items);
+  const reserved = await reserveStock(lines);
+
+  try {
+    return await createWithUniqueNumber({ ...fields, items, ...totals });
+  } catch (error) {
+    await releaseStock(reserved);
+    throw error;
+  }
+}
+
+/** The order's copy of an address: editing or deleting the saved one later never changes it. */
+function addressCopy(address) {
+  return {
+    name: address.name,
+    phone: address.phone,
+    pincode: address.pincode,
+    line1: address.line1,
+    line2: address.line2,
+    landmark: address.landmark,
+    city: address.city,
+    state: address.state,
+  };
+}
+
 async function createWithUniqueNumber(payload) {
   for (let attempt = 1; ; attempt++) {
     try {
@@ -177,68 +228,80 @@ export const orderService = {
     if (!user) throw ApiError.unauthorized('Your account could not be found. Please sign in again.');
     if (!address) throw ApiError.notFound('Address not found', { code: 'ADDRESS_NOT_FOUND' });
 
-    const lines = await resolveLines(userId, buyNow);
-    const items = lines.map(toOrderItem);
-    const totals = totalsOf(items);
-    const reserved = await reserveStock(lines);
-
-    let order;
-    try {
-      order = await createWithUniqueNumber({
-        user: userId,
-        items,
-        address: {
-          name: address.name,
-          phone: address.phone,
-          pincode: address.pincode,
-          line1: address.line1,
-          line2: address.line2,
-          landmark: address.landmark,
-          city: address.city,
-          state: address.state,
-        },
-        contact: { phone: address.phone, email: user.email ?? null },
-        ...totals,
-        checkoutKey,
-        checkoutUsesCart: !buyNow,
-        history: [{ event: 'status', value: 'placed', by: userId, at: new Date() }],
-      });
-    } catch (error) {
-      if (order) await Order.deleteOne({ _id: order._id });
-      await releaseStock(reserved);
-      throw error;
-    }
+    const lines = await resolveLines({ user: userId }, buyNow);
+    const order = await createOrder(lines, {
+      user: userId,
+      address: addressCopy(address),
+      contact: { phone: address.phone, email: user.email ?? null },
+      checkoutKey,
+      checkoutUsesCart: !buyNow,
+      history: [{ event: 'status', value: 'placed', by: userId, at: new Date() }],
+    });
 
     if (!buyNow && !deferCartRemoval) {
-      await Cart.updateOne({ user: userId }, { $pull: { items: { product: { $in: items.map((item) => item.product) } } } });
+      await orderService.removeOrderedCartItems(order);
     }
 
     return toCustomerView(order);
   },
 
-  async findCheckout(userId, checkoutKey) {
-    return Order.findOne({ user: userId, checkoutKey }).select('+razorpayOrderId +checkoutKey');
+  /**
+   * Places an order for a guest, who has no account: the address and email come with the request and
+   * are saved only on the order. Without `buyNow` it orders the guest cart named by the `cartId` cookie
+   * (`guestCartToken` is the raw cookie value, or null). The cart lines are removed after payment.
+   */
+  async placeGuestOrder({ address, email, buyNow, checkoutKey }, guestCartToken) {
+    const guestCartHash = guestCartToken ? hashToken(guestCartToken) : null;
+    const lines = await resolveLines(guestCartHash ? { guestToken: guestCartHash } : null, buyNow);
+    const order = await createOrder(lines, {
+      address: addressCopy(address),
+      contact: { phone: address.phone, email: email ?? null },
+      checkoutKey,
+      checkoutUsesCart: !buyNow,
+      ...(buyNow ? {} : { guestCartToken: guestCartHash }),
+      history: [{ event: 'status', value: 'placed', at: new Date() }],
+    });
+    return toCustomerView(order);
   },
 
-  async attachRazorpayOrder(orderId, userId, razorpayOrderId) {
+  /** Signed-in orders go through placeOrder, guest orders through placeGuestOrder. */
+  async placeFor(owner, payload, guestCartToken) {
+    return owner.userId
+      ? orderService.placeOrder(owner.userId, payload, { deferCartRemoval: true })
+      : orderService.placeGuestOrder(payload, guestCartToken);
+  },
+
+  async findCheckout(owner, checkoutKey) {
+    return Order.findOne({ ...ownerFilter(owner), checkoutKey }).select('+razorpayOrderId +checkoutKey');
+  },
+
+  async attachRazorpayOrder(orderId, owner, razorpayOrderId) {
     return Order.findOneAndUpdate(
-      { _id: orderId, user: userId, status: 'placed', paymentStatus: 'pending', razorpayOrderId: { $exists: false } },
+      {
+        _id: orderId,
+        ...ownerFilter(owner),
+        status: 'placed',
+        paymentStatus: 'pending',
+        razorpayOrderId: { $exists: false },
+      },
       { $set: { razorpayOrderId } },
       { returnDocument: 'after' }
     ).select('+razorpayOrderId');
   },
 
-  async removeOrderedCartItems(userId, items) {
-    const productIds = items.map((item) => item.product);
-    if (productIds.length) {
-      await Cart.updateOne({ user: userId }, { $pull: { items: { product: { $in: productIds } } } });
+  /** Removes a paid cart order's lines from the cart they came from. Needs `user` / `guestCartToken` loaded. */
+  async removeOrderedCartItems(order) {
+    const cartFilter = cartFilterOf(order);
+    const productIds = order.items.map((item) => item.product);
+    if (cartFilter && productIds.length) {
+      await Cart.updateOne(cartFilter, { $pull: { items: { product: { $in: productIds } } } });
     }
   },
 
-  async discardUnpaidCheckout(orderId, userId) {
+  async discardUnpaidCheckout(orderId, owner) {
     const order = await Order.findOneAndDelete({
       _id: orderId,
-      user: userId,
+      ...ownerFilter(owner),
       status: 'placed',
       paymentStatus: 'pending',
     });
@@ -249,11 +312,13 @@ export const orderService = {
   },
 
   async checkoutForRazorpayOrder(razorpayOrderId) {
-    return Order.findOne({ razorpayOrderId }).select('+razorpayOrderId +checkoutUsesCart');
+    return Order.findOne({ razorpayOrderId }).select('+razorpayOrderId +checkoutUsesCart +guestCartToken');
   },
 
-  async getCheckoutForUser(orderId, userId) {
-    return Order.findOne({ _id: orderId, user: userId }).select('+razorpayOrderId +checkoutUsesCart');
+  async getCheckoutFor(owner, orderId) {
+    return Order.findOne({ _id: orderId, ...ownerFilter(owner) }).select(
+      '+razorpayOrderId +checkoutUsesCart +guestCartToken'
+    );
   },
 
   async markPaymentPaid(order, paymentId) {
@@ -332,7 +397,12 @@ export const orderService = {
   },
 
   async getMine(userId, orderId) {
-    const order = await Order.findOne({ _id: orderId, user: userId });
+    return orderService.getFor({ userId }, orderId);
+  },
+
+  /** One order as its owner sees it: a signed-in customer's own, or a guest's by checkoutKey. */
+  async getFor(owner, orderId) {
+    const order = await Order.findOne({ _id: orderId, ...ownerFilter(owner) });
     if (!order) throw orderNotFound();
     return toCustomerView(order);
   },

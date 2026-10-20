@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
-import { Lock, RotateCw, ShoppingBag } from 'lucide-react'
+import { RotateCw, ShoppingBag } from 'lucide-react'
 
 import CartItemRow from '../components/cart/CartItemRow.jsx'
 import DeliveryAddressBox from '../components/cart/DeliveryAddressBox.jsx'
@@ -81,10 +81,11 @@ function CartPage() {
     setAddressError('')
   }
 
-  // Continue needs a signed-in shopper and a delivery address; the order summary gets the chosen one.
+  // A guest goes straight to the order summary and types the delivery details there. A signed-in shopper needs
+  // a delivery address first; the order summary gets the chosen one.
   function handleContinue() {
     if (!user) {
-      navigate(APP_ROUTES.IDENTIFY, { state: { returnTo: APP_ROUTES.CART } })
+      navigate(APP_ROUTES.CHECKOUT)
       return
     }
     if (!selectedAddress) {
@@ -171,10 +172,11 @@ function CartPage() {
                 disabled={hasIssues || isLoadingAddresses}
                 className={PRIMARY_BUTTON_CLASSES}
               >
-                {!user && <Lock size={16} strokeWidth={2} aria-hidden='true' />}
                 Continue
               </button>
-              {!user && <p className='mt-2 text-center text-xs text-muted'>You’ll sign in before choosing an address.</p>}
+              {!user && (
+                <p className='mt-2 text-center text-xs text-muted'>No account needed. You’ll add delivery details next.</p>
+              )}
               {hasIssues && (
                 <p className='mt-2 text-center text-xs font-semibold text-error'>
                   Fix the items marked above to continue.

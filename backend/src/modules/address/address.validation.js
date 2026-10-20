@@ -4,8 +4,8 @@ import { indianMobileSchema, pincodeSchema } from '../../utils/validators.js';
 
 import { INDIAN_STATES } from './address.model.js';
 
-// line2 and landmark are optional; an empty string clears them on update.
-const addressFields = {
+// line2 and landmark are optional; an empty string clears them on update. Also used for a guest order's address.
+export const addressFields = {
   name: z.string().trim().min(2, 'Name must be at least 2 characters').max(60),
   phone: indianMobileSchema,
   pincode: pincodeSchema,

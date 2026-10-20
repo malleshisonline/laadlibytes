@@ -24,6 +24,7 @@ const HomePage = lazy(() => import('./pages/HomePage.jsx'))
 const GiftStorePage = lazy(() => import('./pages/GiftStorePage.jsx'))
 const IdentifyPage = lazy(() => import('./pages/IdentifyPage.jsx'))
 const LoginPage = lazy(() => import('./pages/LoginPage.jsx'))
+const OrderConfirmedPage = lazy(() => import('./pages/OrderConfirmedPage.jsx'))
 const ProductDetailsPage = lazy(() => import('./pages/ProductDetailsPage.jsx'))
 const ProductsPage = lazy(() => import('./pages/ProductsPage.jsx'))
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage.jsx'))
@@ -88,10 +89,12 @@ function App() {
             <Route path={APP_ROUTES.CART} element={<CartPage />} />
             <Route path={APP_ROUTES.BEST_SELLERS} element={<BestSellers />} />
             <Route path={APP_ROUTES.GIFT_STORE} element={<GiftStorePage />} />
+            {/* Checkout works without an account: a guest types the delivery details there. */}
+            <Route path={APP_ROUTES.CHECKOUT} element={<CheckoutPage />} />
+            <Route path={APP_ROUTES.ORDER_CONFIRMED} element={<OrderConfirmedPage />} />
 
             {/* Signed-in only: a guest is sent to sign in and brought back. */}
             <Route element={<RequireAuth />}>
-              <Route path={APP_ROUTES.CHECKOUT} element={<CheckoutPage />} />
               <Route path={APP_ROUTES.ACCOUNT} element={<AccountPage />}>
                 <Route index element={<ProfileSection />} />
                 <Route path={APP_ROUTES.ACCOUNT_ORDERS} element={<OrdersSection />} />

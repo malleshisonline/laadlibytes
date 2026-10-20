@@ -15,6 +15,8 @@ export const APP_ROUTES = {
   PRODUCT_DETAILS: '/products/:slug',
   CART: '/cart',
   CHECKOUT: '/checkout',
+  // Thank-you page after a guest (not signed in) pays; signed-in users land on their order instead.
+  ORDER_CONFIRMED: '/order-confirmed',
   // My Account: one path per section rather than ?tab=.
   ACCOUNT: '/account',
   ACCOUNT_ORDERS: '/account/orders',
