@@ -23,7 +23,7 @@ const drivers = {
 
   resend: async ({ to, subject, text, html }) => {
     const { data, error } = await getResend().emails.send({
-      from: email.EMAIL_FROM,
+      from: env.EMAIL_FROM,
       to,
       subject,
       text,
