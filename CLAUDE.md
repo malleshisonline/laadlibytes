@@ -16,6 +16,7 @@ npm run seed         # upsert catalogue from scripts/data/*.json (idempotent)
 npm run seed -- --dry-run   # validate the seed files, write nothing
 npm run seed -- --fresh     # wipe products + categories (and their Cloudinary images) first
 npm run seed -- --replace-images   # re-upload local images over existing ones
+npm run update-prices -- --dry-run   # copy only mrp + price from products.json to the DB, by SKU (drop --dry-run to write)
 npm run promote-admin -- <email|phone>   # give an existing account the admin role
 npm test             # jest (ESM) + supertest, NODE_ENV=test, --runInBand
 npm test -- tests/unit/foo.test.js     # single file

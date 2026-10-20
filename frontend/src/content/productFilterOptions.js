@@ -1,7 +1,8 @@
 // Products page filters, as in the "Product Listing" design. Each option's `value` is what goes in the URL.
 
-// Whole-rupee prices (₹140–₹340 across the catalogue). `max` is inclusive; a missing bound means open-ended.
+// Whole-rupee prices (₹170–₹420 across the catalogue). `max` is inclusive; a missing bound means open-ended.
 export const PRICE_RANGES = [
+  { value: '150-200', label: '₹150 – ₹200', minPrice: 150, maxPrice: 200 },
   { value: '201-300', label: '₹201 – ₹300', minPrice: 201, maxPrice: 300 },
   { value: 'above-300', label: 'Above ₹300', minPrice: 301 },
 ]

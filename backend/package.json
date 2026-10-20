@@ -12,6 +12,7 @@
     "start": "node src/server.js",
     "seed": "node scripts/seedCatalogue.js",
     "promote-admin": "node scripts/promoteUserToAdmin.js",
+    "update-prices": "node scripts/updateCataloguePrices.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{js,json,md}\"",

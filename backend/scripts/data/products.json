@@ -3,8 +3,8 @@
     "sku": "FV-01",
     "name": "Mango Alohas",
     "category": "Fruit Variant",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 190,
+    "price": 190,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -41,8 +41,8 @@
     "sku": "FV-02",
     "name": "Apple Krnch",
     "category": "Fruit Variant",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 190,
+    "price": 190,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -79,8 +79,8 @@
     "sku": "FV-03",
     "name": "Banana Bubble",
     "category": "Fruit Variant",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 190,
+    "price": 190,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -117,8 +117,8 @@
     "sku": "FV-04",
     "name": "Strawberry Crush",
     "category": "Fruit Variant",
-    "mrp": 170,
-    "price": 170,
+    "mrp": 190,
+    "price": 190,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -155,8 +155,8 @@
     "sku": "FV-05",
     "name": "Lime Light",
     "category": "Fruit Variant",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 175,
+    "price": 175,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -193,8 +193,8 @@
     "sku": "FV-06",
     "name": "Grape Kick",
     "category": "Fruit Variant",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 190,
+    "price": 190,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -231,8 +231,8 @@
     "sku": "FV-07",
     "name": "Orange Squeeze",
     "category": "Fruit Variant",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 190,
+    "price": 190,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -269,8 +269,8 @@
     "sku": "FV-08",
     "name": "Berry Twist",
     "category": "Fruit Variant",
-    "mrp": 220,
-    "price": 220,
+    "mrp": 280,
+    "price": 280,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -307,8 +307,8 @@
     "sku": "FV-09",
     "name": "Fig Yum",
     "category": "Fruit Variant",
-    "mrp": 180,
-    "price": 180,
+    "mrp": 220,
+    "price": 220,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -383,8 +383,8 @@
     "sku": "FV-11",
     "name": "Snack-a-Guava",
     "category": "Fruit Variant",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 190,
+    "price": 190,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -421,8 +421,8 @@
     "sku": "FV-12",
     "name": "Palm n Pine",
     "category": "Fruit Variant",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 190,
+    "price": 190,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -459,8 +459,8 @@
     "sku": "NS-01",
     "name": "Cashew Candy",
     "category": "Nuts n Seeds",
-    "mrp": 300,
-    "price": 300,
+    "mrp": 350,
+    "price": 350,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -496,8 +496,8 @@
     "sku": "NS-02",
     "name": "Walnut Treat",
     "category": "Nuts n Seeds",
-    "mrp": 340,
-    "price": 340,
+    "mrp": 420,
+    "price": 420,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -533,8 +533,8 @@
     "sku": "NS-03",
     "name": "Nut Medley",
     "category": "Nuts n Seeds",
-    "mrp": 280,
-    "price": 280,
+    "mrp": 360,
+    "price": 360,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -570,8 +570,8 @@
     "sku": "NS-04",
     "name": "Almond Harvest",
     "category": "Nuts n Seeds",
-    "mrp": 300,
-    "price": 300,
+    "mrp": 420,
+    "price": 420,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -607,8 +607,8 @@
     "sku": "NS-05",
     "name": "Pumpkin Almond Trail",
     "category": "Nuts n Seeds",
-    "mrp": 250,
-    "price": 250,
+    "mrp": 390,
+    "price": 390,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -644,8 +644,8 @@
     "sku": "NS-06",
     "name": "Seed Stick",
     "category": "Nuts n Seeds",
-    "mrp": 170,
-    "price": 170,
+    "mrp": 190,
+    "price": 190,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -681,8 +681,8 @@
     "sku": "NS-07",
     "name": "Raw Radiance",
     "category": "Nuts n Seeds",
-    "mrp": 190,
-    "price": 190,
+    "mrp": 250,
+    "price": 250,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -719,8 +719,8 @@
     "sku": "MN-01",
     "name": "Ragi Peanut Crunch",
     "category": "Millets n Nuts",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 170,
+    "price": 170,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -756,8 +756,8 @@
     "sku": "MN-02",
     "name": "Ragi Almond Magic",
     "category": "Millets n Nuts",
-    "mrp": 210,
-    "price": 210,
+    "mrp": 270,
+    "price": 270,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -793,8 +793,8 @@
     "sku": "MN-03",
     "name": "Jowar Peanut Munch",
     "category": "Millets n Nuts",
-    "mrp": 140,
-    "price": 140,
+    "mrp": 170,
+    "price": 170,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -830,8 +830,8 @@
     "sku": "MN-04",
     "name": "Jowar Almond Mojo",
     "category": "Millets n Nuts",
-    "mrp": 210,
-    "price": 210,
+    "mrp": 270,
+    "price": 270,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -867,8 +867,8 @@
     "sku": "MN-05",
     "name": "Bajra Peanut Punch",
     "category": "Millets n Nuts",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 170,
+    "price": 170,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -904,8 +904,8 @@
     "sku": "MN-06",
     "name": "Bajra Almond Charm",
     "category": "Millets n Nuts",
-    "mrp": 210,
-    "price": 210,
+    "mrp": 270,
+    "price": 270,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -942,8 +942,8 @@
     "sku": "MN-07",
     "name": "Foxtail Peanut Brunch",
     "category": "Millets n Nuts",
-    "mrp": 160,
-    "price": 160,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -980,8 +980,8 @@
     "sku": "MN-08",
     "name": "Foxtail Almond Joy",
     "category": "Millets n Nuts",
-    "mrp": 210,
-    "price": 210,
+    "mrp": 270,
+    "price": 270,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1017,8 +1017,8 @@
     "sku": "MN-09",
     "name": "Ragi-Oats-Peanut Ballet",
     "category": "Millets n Nuts",
-    "mrp": 160,
-    "price": 160,
+    "mrp": 170,
+    "price": 170,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1054,8 +1054,8 @@
     "sku": "KW-01",
     "name": "Mind Vault",
     "category": "Kids Wellness",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 190,
+    "price": 190,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1092,8 +1092,8 @@
     "sku": "KW-02",
     "name": "Fresh Flux",
     "category": "Kids Wellness",
-    "mrp": 170,
-    "price": 170,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1130,8 +1130,8 @@
     "sku": "KW-03",
     "name": "Immuno Spark",
     "category": "Kids Wellness",
-    "mrp": 170,
-    "price": 170,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1168,8 +1168,8 @@
     "sku": "KW-04",
     "name": "Brain Bender",
     "category": "Kids Wellness",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 175,
+    "price": 175,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1206,8 +1206,8 @@
     "sku": "KW-05",
     "name": "Belly Ballet",
     "category": "Kids Wellness",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 190,
+    "price": 190,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1243,8 +1243,8 @@
     "sku": "KW-06",
     "name": "ProFocus",
     "category": "Kids Wellness",
-    "mrp": 170,
-    "price": 170,
+    "mrp": 190,
+    "price": 190,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1281,8 +1281,8 @@
     "sku": "KW-07",
     "name": "Sundaze Joy",
     "category": "Kids Wellness",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 175,
+    "price": 175,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1319,8 +1319,8 @@
     "sku": "WW-01",
     "name": "Moringa Magic",
     "category": "Women Wellness",
-    "mrp": 140,
-    "price": 140,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1355,8 +1355,8 @@
     "sku": "WW-02",
     "name": "Soulful Mellow",
     "category": "Women Wellness",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1391,8 +1391,8 @@
     "sku": "WW-03",
     "name": "Hormone Harmony",
     "category": "Women Wellness",
-    "mrp": 160,
-    "price": 160,
+    "mrp": 200,
+    "price": 200,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1427,8 +1427,8 @@
     "sku": "WW-04",
     "name": "Good Gut",
     "category": "Women Wellness",
-    "mrp": 140,
-    "price": 140,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1463,8 +1463,8 @@
     "sku": "WW-05",
     "name": "Immunity Trinity",
     "category": "Women Wellness",
-    "mrp": 140,
-    "price": 140,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1499,8 +1499,8 @@
     "sku": "WW-06",
     "name": "Grow Bone",
     "category": "Women Wellness",
-    "mrp": 160,
-    "price": 160,
+    "mrp": 190,
+    "price": 190,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1535,8 +1535,8 @@
     "sku": "WW-07",
     "name": "Radiance Flow",
     "category": "Women Wellness",
-    "mrp": 140,
-    "price": 140,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1572,8 +1572,8 @@
     "sku": "PC-01",
     "name": "Chocolate Peanut Chikki",
     "category": "Peanut Chikki",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1610,8 +1610,8 @@
     "sku": "PC-02",
     "name": "Mango Peanut Chikki",
     "category": "Peanut Chikki",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1648,8 +1648,8 @@
     "sku": "PC-03",
     "name": "Rose Sweet Peanut Chikki",
     "category": "Peanut Chikki",
-    "mrp": 160,
-    "price": 160,
+    "mrp": 185,
+    "price": 185,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1686,8 +1686,8 @@
     "sku": "PC-04",
     "name": "Coffee Peanut Chikki",
     "category": "Peanut Chikki",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1724,8 +1724,8 @@
     "sku": "PC-05",
     "name": "Vanilla Peanut Chikki",
     "category": "Peanut Chikki",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1762,8 +1762,8 @@
     "sku": "PC-06",
     "name": "Coconut Peanut Chikki",
     "category": "Peanut Chikki",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1800,8 +1800,8 @@
     "sku": "PC-07",
     "name": "Lemon Peanut Chikki",
     "category": "Peanut Chikki",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1829,8 +1829,8 @@
     "sku": "PC-08",
     "name": "Masala Cumin Peanut Chikki",
     "category": "Peanut Chikki",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1867,8 +1867,8 @@
     "sku": "PC-09",
     "name": "Strawberry Peanut Chikki",
     "category": "Peanut Chikki",
-    "mrp": 160,
-    "price": 160,
+    "mrp": 185,
+    "price": 185,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1905,8 +1905,8 @@
     "sku": "PC-10",
     "name": "Garden Mint Peanut Chikki",
     "category": "Peanut Chikki",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1943,8 +1943,8 @@
     "sku": "PC-11",
     "name": "Butter Peanut Chikki",
     "category": "Peanut Chikki",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 185,
+    "price": 185,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -1981,8 +1981,8 @@
     "sku": "PC-12",
     "name": "Milk Peanut Chikki",
     "category": "Peanut Chikki",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 185,
+    "price": 185,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -2019,8 +2019,8 @@
     "sku": "PC-13",
     "name": "Jeera Soda Peanut Chikki",
     "category": "Peanut Chikki",
-    "mrp": 150,
-    "price": 150,
+    "mrp": 180,
+    "price": 180,
     "packSize": {
       "value": 120,
       "unit": "g"
@@ -2057,8 +2057,8 @@
     "sku": "PC-14",
     "name": "No Flavour Peanut Chikki",
     "category": "Peanut Chikki",
-    "mrp": 140,
-    "price": 140,
+    "mrp": 170,
+    "price": 170,
     "packSize": {
       "value": 120,
       "unit": "g"
