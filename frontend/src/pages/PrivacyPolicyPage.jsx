@@ -11,13 +11,11 @@ import {
   UserRound,
 } from 'lucide-react'
 
+import policyBackground from '../assets/illustrations/pages_bottom.avif'
 import { APP_ROUTES } from '../constants/appRoutepoints.js'
-import { APP_SETTINGS } from '../constants/appSettings.js'
 
 const POLICY_SECTIONS = [
   {
-    id: 'information',
-    number: '01',
     title: 'Information we collect',
     icon: UserRound,
     paragraphs: [
@@ -26,8 +24,6 @@ const POLICY_SECTIONS = [
     ],
   },
   {
-    id: 'use',
-    number: '02',
     title: 'How we use your information',
     icon: HeartHandshake,
     paragraphs: [
@@ -36,8 +32,6 @@ const POLICY_SECTIONS = [
     ],
   },
   {
-    id: 'cookies',
-    number: '03',
     title: 'Cookies and essential storage',
     icon: Cookie,
     paragraphs: [
@@ -46,8 +40,6 @@ const POLICY_SECTIONS = [
     ],
   },
   {
-    id: 'payments',
-    number: '04',
     title: 'Payments',
     icon: CreditCard,
     paragraphs: [
@@ -56,8 +48,6 @@ const POLICY_SECTIONS = [
     ],
   },
   {
-    id: 'sharing',
-    number: '05',
     title: 'When information is shared',
     icon: ShieldCheck,
     paragraphs: [
@@ -66,8 +56,6 @@ const POLICY_SECTIONS = [
     ],
   },
   {
-    id: 'retention',
-    number: '06',
     title: 'Storage and retention',
     icon: FileText,
     paragraphs: [
@@ -75,8 +63,6 @@ const POLICY_SECTIONS = [
     ],
   },
   {
-    id: 'security',
-    number: '07',
     title: 'Keeping information safe',
     icon: LockKeyhole,
     paragraphs: [
@@ -84,9 +70,7 @@ const POLICY_SECTIONS = [
     ],
   },
   {
-    id: 'choices',
-    number: '08',
-    title: 'Your choices and contacting us',
+    title: 'Your choices',
     icon: Mail,
     paragraphs: [
       'You can review and update some account details from your account. To ask a question about this policy or request help with your information, please contact us through our Contact page.',
@@ -96,96 +80,70 @@ const POLICY_SECTIONS = [
 
 function PrivacyPolicyPage() {
   return (
-    <div className='relative isolate overflow-hidden bg-linear-to-b from-cream-50 via-white to-lightblue-50/70'>
+    <main className='relative isolate overflow-hidden bg-cream-50'>
       <div
         aria-hidden='true'
-        className='pointer-events-none absolute -top-28 right-[-8rem] -z-10 size-80 rounded-full bg-blush-100/70 blur-3xl sm:size-112'
-      />
+        className='pointer-events-none absolute inset-0 -z-10 overflow-hidden'
+      >
+        <img
+          src={policyBackground}
+          alt=''
+          className='size-full object-cover opacity-20'
+        />
+      </div>
       <div
         aria-hidden='true'
-        className='pointer-events-none absolute top-[34rem] left-[-10rem] -z-10 size-80 rounded-full bg-lightblue-100/70 blur-3xl'
+        className='pointer-events-none absolute inset-0 -z-10 bg-linear-to-b from-cream-50/55 via-white/35 to-lightblue-50/65'
       />
 
-      <header className='relative border-b border-caramel-200/60'>
-        <div className='mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20'>
-          <div className='mx-auto max-w-3xl text-center'>
-            <span className='inline-flex items-center gap-2 rounded-full border border-caramel-300/70 bg-white/80 px-4 py-2 text-xs font-bold tracking-[0.14em] text-caramel-700 uppercase shadow-sm'>
-              <ShieldCheck size={16} aria-hidden='true' />
-              Your privacy matters
-            </span>
-            <h1 className='mt-5 font-display text-3xl leading-tight font-semibold text-navy-900 sm:text-4xl md:text-5xl'>
-              Privacy Policy
-            </h1>
-            <p className='mx-auto mt-4 max-w-2xl text-base leading-7 text-body sm:text-lg'>
-              A clear guide to how {APP_SETTINGS.SITE_NAME} handles information when you browse,
-              shop, or get in touch with us.
-            </p>
-            <p className='mt-5 text-sm font-semibold text-muted'>Last updated: October 2026</p>
-          </div>
-        </div>
-      </header>
-
-      <main className='mx-auto grid max-w-6xl gap-8 px-4 py-8 sm:px-6 sm:py-12 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-12 lg:py-16'>
-        <aside className='h-fit rounded-2xl border border-lightblue-200 bg-white/85 p-5 shadow-sm lg:sticky lg:top-28'>
-          <h2 className='font-display text-lg font-semibold text-navy-900'>On this page</h2>
-          <nav aria-label='Privacy policy sections' className='mt-3'>
-            <ul className='grid grid-cols-2 gap-1 sm:grid-cols-4 lg:grid-cols-1'>
-              {POLICY_SECTIONS.map((section) => (
-                <li key={section.id}>
-                  <a
-                    href={`#${section.id}`}
-                    className='block rounded-lg px-2.5 py-2 text-sm font-medium text-body transition hover:bg-lightblue-50 hover:text-navy-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600'
-                  >
-                    {section.number}. {section.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </aside>
-
-        <div>
-          <div className='mb-6 rounded-2xl border border-caramel-200/70 bg-linear-to-r from-cream-100/80 to-white p-5 sm:p-6'>
-            <p className='text-sm leading-6 text-body sm:text-base'>
-              We collect only the information needed to help you browse, manage your account, and
-              receive your orders. This policy explains the main ways that information is used.
-            </p>
-          </div>
-
-          <div className='space-y-4 sm:space-y-5'>
-            {POLICY_SECTIONS.map(({ id, number, title, icon: Icon, paragraphs }) => (
-              <section
-                key={id}
-                id={id}
-                aria-labelledby={`${id}-heading`}
-                className='scroll-mt-28 rounded-2xl border border-lightblue-200/80 bg-white/90 p-5 shadow-sm shadow-navy-900/5 sm:p-7'
-              >
-                <div className='flex items-start gap-4'>
-                  <span className='inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-lightblue-100 text-navy-800'>
+      <div className='relative mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:py-16'>
+        <div className='overflow-hidden rounded-3xl border border-white/90 bg-white/90 shadow-xl shadow-navy-900/10 ring-1 ring-navy-900/5 backdrop-blur-md'>
+          <div className='divide-y divide-line/70 px-5 sm:px-8'>
+            {POLICY_SECTIONS.map(({ title, icon: Icon, paragraphs }, index) => (
+              <section key={title} className='py-6 sm:py-7'>
+                <div className='flex items-start gap-4 sm:gap-5'>
+                  <span className='inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-cream-100 text-caramel-700 ring-1 ring-caramel-500/20 sm:size-11'>
                     <Icon size={20} strokeWidth={1.8} aria-hidden='true' />
                   </span>
-                  <div className='min-w-0'>
-                    <p className='text-xs font-extrabold tracking-[0.14em] text-caramel-700'>
-                      {number}
-                    </p>
-                    <h2 id={`${id}-heading`} className='mt-1 font-display text-xl font-semibold text-navy-900 sm:text-2xl'>
-                      {title}
-                    </h2>
-                    <div className='mt-3 space-y-3 text-sm leading-7 text-body sm:text-base'>
-                      {paragraphs.map((paragraph) => (
-                        <p key={paragraph}>{paragraph}</p>
-                      ))}
+                  <div className='min-w-0 flex-1'>
+                    <div className='flex items-baseline gap-3'>
+                      <span className='text-xs font-bold tabular-nums tracking-wider text-caramel-700'>
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      <h2 className='font-display text-lg font-semibold text-navy-900 sm:text-xl'>
+                        {title}
+                      </h2>
                     </div>
+                    <ul className='mt-3 space-y-2.5'>
+                      {paragraphs.map((paragraph) => (
+                        <li key={paragraph} className='flex gap-3 text-sm leading-7 text-body sm:text-base'>
+                          <span aria-hidden='true' className='mt-[0.8rem] size-1.5 shrink-0 rounded-full bg-caramel-500/80' />
+                          <span>{paragraph}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </section>
             ))}
           </div>
 
-          
+          <div className='border-t border-line/70 bg-cream-50/70 px-5 py-5 sm:px-8'>
+            <p className='text-sm leading-7 text-body sm:text-base'>
+              For help with your information or account,{' '}
+              <Link
+                to={APP_ROUTES.CONTACT}
+                className='inline-flex items-center gap-1 font-bold text-navy-800 underline decoration-caramel-500 decoration-2 underline-offset-4 hover:text-caramel-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-800'
+              >
+                contact us
+                <ArrowRight size={16} aria-hidden='true' />
+              </Link>
+              .
+            </p>
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   )
 }
 

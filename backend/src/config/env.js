@@ -33,9 +33,12 @@ const envSchema = z.object({
   RAZORPAY_WEBHOOK_SECRET: z.string().trim().optional(),
 
   // "console" only logs messages (development); real providers need the credentials below.
-  EMAIL_PROVIDER: z.enum(['console', 'smtp']).default('console'),
+  EMAIL_PROVIDER: z.enum(['console', 'smtp', 'resend']).default('console'),
   SMTP_URL: z.string().trim().optional(),
   EMAIL_FROM: z.string().trim().optional(),
+  RESEND_API_KEY: z.string().trim().optional(),
+
+  
   // Where Contact Us messages are emailed. Unset: they are still saved, just not emailed.
   // A blank line copied from .env.example counts as unset.
   ENQUIRY_NOTIFY_EMAIL: z.preprocess(
@@ -68,9 +71,10 @@ const envSchema = z.object({
       if (!cfg[name]) ctx.addIssue({ code: 'custom', path: [name], message: `${name} is required when ${provider}` });
     }
   };
-
+   if (cfg.EMAIL_PROVIDER === 'resend') requireFor('EMAIL_PROVIDER=resend', ['RESEND_API_KEY', 'EMAIL_FROM']);
   if (cfg.EMAIL_PROVIDER === 'smtp') requireFor('EMAIL_PROVIDER=smtp', ['SMTP_URL', 'EMAIL_FROM']);
   if (cfg.SMS_PROVIDER === 'msg91') requireFor('SMS_PROVIDER=msg91', ['MSG91_AUTH_KEY', 'MSG91_OTP_TEMPLATE_ID']);
+
   if (Boolean(cfg.RAZORPAY_KEY_ID) !== Boolean(cfg.RAZORPAY_KEY_SECRET)) {
     ctx.addIssue({
       code: 'custom',

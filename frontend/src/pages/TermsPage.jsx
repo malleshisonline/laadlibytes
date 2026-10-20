@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 
+import policyBackground from '../assets/illustrations/pages_bottom.avif'
 import { APP_ROUTES } from '../constants/appRoutepoints.js'
 import { APP_SETTINGS } from '../constants/appSettings.js'
 
@@ -56,127 +56,74 @@ const TERMS_SECTIONS = [
 ]
 
 function TermsPage() {
-  const [activeId, setActiveId] = useState(TERMS_SECTIONS[0].id)
-
-  // Highlight the section currently being read in the contents list
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.find((entry) => entry.isIntersecting)
-        if (visible) setActiveId(visible.target.id)
-      },
-      { rootMargin: '-20% 0px -70% 0px' },
-    )
-
-    TERMS_SECTIONS.forEach(({ id }) => {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    })
-
-    return () => observer.disconnect()
-  }, [])
-
   return (
-    <div className='min-h-screen bg-cream-50 text-navy-900'>
-      {/* Header */}
-      <header className='border-b border-caramel-200/60'>
-        <div className='mx-auto max-w-5xl px-5 py-12 sm:px-8 sm:py-16'>
-          <h1 className='font-display text-4xl font-semibold text-navy-900 sm:text-5xl'>
-            Terms &amp; Conditions
-          </h1>
-          <p className='mt-4 max-w-2xl text-base leading-7 text-body'>
-            The details that apply when you use our website, place an order, pay, or receive a
-            delivery.
-          </p>
-          <p className='mt-4 text-sm text-muted'>Last updated: October 2026</p>
-        </div>
-      </header>
+    <main className='relative isolate overflow-hidden bg-cream-50'>
+      <div aria-hidden='true' className='pointer-events-none absolute inset-0 -z-10 overflow-hidden'>
+        <img src={policyBackground} alt='' className='size-full object-cover opacity-20' />
+      </div>
+      <div
+        aria-hidden='true'
+        className='pointer-events-none absolute inset-0 -z-10 bg-linear-to-b from-cream-50/55 via-white/35 to-lightblue-50/65'
+      />
 
-      <div className='mx-auto max-w-5xl px-5 py-10 sm:px-8 sm:py-14 lg:grid lg:grid-cols-[210px_minmax(0,1fr)] lg:gap-16'>
-        {/* Contents (desktop only) */}
-        <aside className='hidden lg:block'>
-          <nav aria-label='On this page' className='sticky top-28'>
-            <p className='mb-3 text-sm font-semibold text-navy-900'>On this page</p>
-            <ul className='space-y-1 border-l border-caramel-200'>
-              {TERMS_SECTIONS.map(({ id, title }) => {
-                const isActive = activeId === id
-                return (
-                  <li key={id}>
-                    <a
-                      href={`#${id}`}
-                      aria-current={isActive ? 'true' : undefined}
-                      className={`-ml-px block border-l-2 py-1.5 pl-4 text-sm leading-5 transition-colors ${
-                        isActive
-                          ? 'border-caramel-500 font-semibold text-navy-900'
-                          : 'border-transparent text-muted hover:text-navy-900'
-                      }`}
-                    >
-                      {title}
-                    </a>
-                  </li>
-                )
-              })}
-            </ul>
-          </nav>
-        </aside>
-
-        {/* Content */}
-        <main className='max-w-2xl'>
-          <p className='text-base leading-7 text-body'>
+      <div className='relative mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:py-16'>
+        <div className='overflow-hidden rounded-3xl border border-white/90 bg-white/90 shadow-xl shadow-navy-900/10 ring-1 ring-navy-900/5 backdrop-blur-md'>
+          <div className='px-5 py-5 text-sm leading-7 text-body sm:px-8 sm:py-6 sm:text-base'>
             These terms apply when you access our website or place an order. Please read them
             together with our{' '}
             <Link
               to={APP_ROUTES.PRIVACY_POLICY}
-              className='font-semibold text-navy-800 underline decoration-caramel-500 decoration-2 underline-offset-4 hover:text-caramel-700'
+              className='font-bold text-navy-800 underline decoration-caramel-500 decoration-2 underline-offset-4 hover:text-caramel-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-800'
             >
               Privacy Policy
             </Link>
             .
-          </p>
+          </div>
 
-          <div className='mt-10 space-y-10'>
+          <div className='divide-y divide-line/70 border-t border-line/70 px-5 sm:px-8'>
             {TERMS_SECTIONS.map(({ id, title, paragraphs }, index) => (
-              <section
-                key={id}
-                id={id}
-                aria-labelledby={`${id}-heading`}
-                className='scroll-mt-28'
-              >
-                <h2
-                  id={`${id}-heading`}
-                  className='font-display text-xl font-semibold text-navy-900 sm:text-2xl'
-                >
-                  {index + 1}. {title}
-                </h2>
-
-                <div className='mt-3 space-y-3 text-base leading-7 text-body'>
-                  {paragraphs.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
+              <section key={id} aria-labelledby={`${id}-heading`} className='py-6 sm:py-7'>
+                <div className='flex items-baseline gap-3'>
+                  <span className='text-xs font-bold tabular-nums tracking-wider text-caramel-700'>
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <h2
+                    id={`${id}-heading`}
+                    className='font-display text-lg font-semibold text-navy-900 sm:text-xl'
+                  >
+                    {title}
+                  </h2>
                 </div>
+                <ul className='mt-3 space-y-2.5 pl-7'>
+                  {paragraphs.map((paragraph) => (
+                    <li key={paragraph} className='flex gap-3 text-sm leading-7 text-body sm:text-base'>
+                      <span
+                        aria-hidden='true'
+                        className='mt-[0.8rem] size-1.5 shrink-0 rounded-full bg-caramel-500/80'
+                      />
+                      <span>{paragraph}</span>
+                    </li>
+                  ))}
+                </ul>
               </section>
             ))}
           </div>
 
-          {/* Contact */}
-          <div className='mt-14 border-t border-caramel-200 pt-8'>
-            <h2 className='font-display text-xl font-semibold text-navy-900'>
-              Questions about these terms?
-            </h2>
-            <p className='mt-2 text-base leading-7 text-body'>
+          <div className='border-t border-line/70 bg-cream-50/70 px-5 py-5 sm:px-8'>
+            <p className='text-sm leading-7 text-body sm:text-base'>
               If something is unclear, or you need help with an order,{' '}
               <Link
                 to={APP_ROUTES.CONTACT}
-                className='font-semibold text-navy-800 underline decoration-caramel-500 decoration-2 underline-offset-4 hover:text-caramel-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-800'
+                className='font-bold text-navy-800 underline decoration-caramel-500 decoration-2 underline-offset-4 hover:text-caramel-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-800'
               >
                 contact us
               </Link>
               .
             </p>
           </div>
-        </main>
+        </div>
       </div>
-    </div>
+    </main>
   )
 }
 

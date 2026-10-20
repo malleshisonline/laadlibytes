@@ -1,4 +1,5 @@
 import { lazy, Suspense, useLayoutEffect } from 'react'
+import { LoaderCircle } from 'lucide-react'
 import { Route, Routes, useLocation } from 'react-router'
 
 import RequireAdmin from './components/auth/RequireAdmin.jsx'
@@ -56,7 +57,23 @@ function App() {
   return (
     <>
       <ScrollToTop />
-      <Suspense fallback={<div role="status" className="py-16 text-center text-body">Loading page…</div>}>
+      <Suspense
+        fallback={
+          <div
+            role="status"
+            aria-live="polite"
+            className="grid min-h-[55vh] place-items-center bg-linear-to-b from-cream-50 via-white to-lightblue-50 px-4 py-16"
+          >
+            <div className="flex flex-col items-center rounded-3xl border border-white/90 bg-white/85 px-10 py-9 text-center shadow-xl shadow-navy-900/10 ring-1 ring-navy-900/5 backdrop-blur-sm">
+              <span className="mb-5 grid size-16 place-items-center rounded-2xl bg-cream-100 text-caramel-700 ring-1 ring-caramel-500/20">
+                <LoaderCircle size={32} strokeWidth={1.75} aria-hidden="true" className="motion-safe:animate-spin" />
+              </span>
+              <p className="font-display text-lg font-semibold text-navy-900">Preparing your page</p>
+              <p className="mt-1 text-sm text-muted">Just a moment…</p>
+            </div>
+          </div>
+        }
+      >
         <Routes>
           {/* Storefront: navbar and footer on every page. */}
           <Route element={<MainLayout />}>

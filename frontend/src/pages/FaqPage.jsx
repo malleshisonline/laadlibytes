@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { Link } from 'react-router'
 import { ArrowRight, ChevronDown, CircleHelp, MessageCircle, PackageSearch } from 'lucide-react'
 
+import policyBackground from '../assets/illustrations/pages_bottom.avif'
 import { APP_ROUTES } from '../constants/appRoutepoints.js'
-import { APP_SETTINGS } from '../constants/appSettings.js'
 
 const FAQ_GROUPS = [
   {
@@ -78,128 +78,94 @@ function FaqPage() {
   const [openQuestion, setOpenQuestion] = useState('shopping-0')
 
   return (
-    <div className='relative isolate overflow-hidden bg-linear-to-b from-cream-50 via-white to-lightblue-50/70'>
+    <main className='relative isolate overflow-hidden bg-cream-50'>
       <div
         aria-hidden='true'
-        className='pointer-events-none absolute -top-28 right-[-8rem] -z-10 size-80 rounded-full bg-blush-100/70 blur-3xl sm:size-112'
-      />
+        className='pointer-events-none absolute inset-0 -z-10 overflow-hidden'
+      >
+        <img src={policyBackground} alt='' className='size-full object-cover opacity-20' />
+      </div>
       <div
         aria-hidden='true'
-        className='pointer-events-none absolute top-[42rem] left-[-10rem] -z-10 size-80 rounded-full bg-lightblue-100/70 blur-3xl'
+        className='pointer-events-none absolute inset-0 -z-10 bg-linear-to-b from-cream-50/55 via-white/35 to-lightblue-50/65'
       />
 
-      <header className='relative border-b border-caramel-200/60'>
-        <div className='mx-auto max-w-6xl px-4 py-12 text-center sm:px-6 sm:py-16 lg:py-20'>
-          <span className='inline-flex items-center gap-2 rounded-full border border-caramel-300/70 bg-white/85 px-4 py-2 text-xs font-bold tracking-[0.14em] text-caramel-700 uppercase shadow-sm'>
-            <CircleHelp size={16} aria-hidden='true' />
-            A little help, made simple
-          </span>
-          <h1 className='mt-5 font-display text-3xl leading-tight font-semibold text-navy-900 sm:text-4xl md:text-5xl'>
-            Frequently Asked Questions
-          </h1>
-          <p className='mx-auto mt-4 max-w-2xl text-base leading-7 text-body sm:text-lg'>
-            Quick answers for shopping with {APP_SETTINGS.SITE_NAME}, from finding a treat to
-            checking out.
-          </p>
-        </div>
-      </header>
+      <div className='relative mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:py-16'>
+        <div className='overflow-hidden rounded-3xl border border-white/90 bg-white/90 shadow-xl shadow-navy-900/10 ring-1 ring-navy-900/5 backdrop-blur-md'>
+          <div className='divide-y divide-line/70 px-5 sm:px-8'>
+            {FAQ_GROUPS.map(({ id, title, icon: Icon, questions }) => (
+              <section key={id} id={id} aria-labelledby={`${id}-heading`} className='py-6 sm:py-7'>
+                <div className='mb-2 flex items-center gap-3'>
+                  <span className='inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-cream-100 text-caramel-700 ring-1 ring-caramel-500/20'>
+                    <Icon size={19} aria-hidden='true' />
+                  </span>
+                  <h2 id={`${id}-heading`} className='font-display text-lg font-semibold text-navy-900 sm:text-xl'>
+                    {title}
+                  </h2>
+                </div>
 
-      <main className='mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:py-16'>
-        <div className='mb-7 grid gap-3 sm:grid-cols-3'>
-          {FAQ_GROUPS.map(({ id, title, icon: Icon }) => (
-            <a
-              key={id}
-              href={`#${id}`}
-              className='flex min-h-14 items-center gap-3 rounded-xl border border-lightblue-200 bg-white/85 px-4 py-3 text-sm font-bold text-navy-800 shadow-sm transition hover:-translate-y-0.5 hover:border-caramel-300 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600'
-            >
-              <span className='inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-lightblue-100 text-navy-800'>
-                <Icon size={18} aria-hidden='true' />
-              </span>
-              {title}
-            </a>
-          ))}
-        </div>
+                <div className='ml-0 divide-y divide-line/60 sm:ml-[3.25rem]'>
+                  {questions.map(({ question, answer }, index) => {
+                    const questionId = `${id}-${index}`
+                    const isOpen = openQuestion === questionId
 
-        <div className='space-y-8'>
-          {FAQ_GROUPS.map(({ id, title, icon: Icon, questions }) => (
-            <section key={id} id={id} aria-labelledby={`${id}-heading`} className='scroll-mt-28'>
-              <div className='mb-3 flex items-center gap-3'>
-                <span className='inline-flex size-10 items-center justify-center rounded-xl bg-caramel-100 text-caramel-800'>
-                  <Icon size={19} aria-hidden='true' />
-                </span>
-                <h2 id={`${id}-heading`} className='font-display text-xl font-semibold text-navy-900 sm:text-2xl'>
-                  {title}
-                </h2>
-              </div>
-
-              <div className='space-y-3'>
-                {questions.map(({ question, answer }, index) => {
-                  const questionId = `${id}-${index}`
-                  const isOpen = openQuestion === questionId
-
-                  return (
-                    <article
-                      key={question}
-                      className={`overflow-hidden rounded-2xl border bg-white/90 transition-colors ${
-                        isOpen ? 'border-caramel-300 shadow-md shadow-navy-900/5' : 'border-lightblue-200/80 shadow-sm'
-                      }`}
-                    >
-                      <h3>
-                        <button
-                          type='button'
-                          aria-expanded={isOpen}
-                          aria-controls={`${questionId}-answer`}
-                          onClick={() => setOpenQuestion(isOpen ? '' : questionId)}
-                          className='flex min-h-14 w-full items-center justify-between gap-4 px-4 py-4 text-left text-sm font-bold text-navy-900 sm:px-5 sm:text-base'
+                    return (
+                      <article key={question}>
+                        <h3>
+                          <button
+                            type='button'
+                            aria-expanded={isOpen}
+                            aria-controls={`${questionId}-answer`}
+                            onClick={() => setOpenQuestion(isOpen ? '' : questionId)}
+                            className='flex min-h-14 w-full items-center justify-between gap-4 py-4 text-left text-sm font-bold text-navy-900 transition-colors hover:text-caramel-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-800 sm:text-base'
+                          >
+                            <span>{question}</span>
+                            <ChevronDown
+                              size={19}
+                              aria-hidden='true'
+                              className={`shrink-0 text-caramel-700 transition-transform duration-300 ${
+                                isOpen ? 'rotate-180' : ''
+                              }`}
+                            />
+                          </button>
+                        </h3>
+                        <div
+                          id={`${questionId}-answer`}
+                          aria-hidden={!isOpen}
+                          className={`grid transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none ${
+                            isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                          }`}
                         >
-                          <span>{question}</span>
-                          <ChevronDown
-                            size={19}
-                            aria-hidden='true'
-                            className={`shrink-0 text-caramel-700 transition-transform duration-300 ${
-                              isOpen ? 'rotate-180' : ''
-                            }`}
-                          />
-                        </button>
-                      </h3>
-                      <div
-                        id={`${questionId}-answer`}
-                        aria-hidden={!isOpen}
-                        className={`grid transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none ${
-                          isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
-                        }`}
-                      >
-                        <div className='min-h-0 overflow-hidden'>
-                          <p className='border-t border-cream-200 px-4 py-4 text-sm leading-7 text-body sm:px-5 sm:text-base'>
-                            {answer}
-                          </p>
+                          <div className='min-h-0 overflow-hidden'>
+                            <p className='pb-4 pr-8 text-sm leading-7 text-body sm:text-base'>
+                              {answer}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </article>
-                  )
-                })}
-              </div>
-            </section>
-          ))}
-        </div>
+                      </article>
+                    )
+                  })}
+                </div>
+              </section>
+            ))}
+          </div>
 
-        <div className='mt-9 flex flex-col gap-4 rounded-2xl bg-navy-900 p-5 text-white sm:flex-row sm:items-center sm:justify-between sm:p-7'>
-          <div>
-            <h2 className='font-display text-xl font-semibold'>Still have a question?</h2>
-            <p className='mt-1 text-sm leading-6 text-lightblue-100'>
-              Send us a note and we’ll help point you in the right direction.
+          <div className='border-t border-line/70 bg-cream-50/70 px-5 py-5 sm:px-8'>
+            <p className='text-sm leading-7 text-body sm:text-base'>
+              Still need help?{' '}
+              <Link
+                to={APP_ROUTES.CONTACT}
+                className='inline-flex items-center gap-1 font-bold text-navy-800 underline decoration-caramel-500 decoration-2 underline-offset-4 hover:text-caramel-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-800'
+              >
+                Contact us
+                <ArrowRight size={16} aria-hidden='true' />
+              </Link>
+              .
             </p>
           </div>
-          <Link
-            to={APP_ROUTES.CONTACT}
-            className='inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-caramel-500 px-5 text-sm font-bold text-navy-950 transition hover:bg-caramel-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white'
-          >
-            Contact us
-            <ArrowRight size={16} aria-hidden='true' />
-          </Link>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   )
 }
 
