@@ -33,7 +33,7 @@ function ManufacturingSection() {
             Tradition in every batch
           </h2>
           <p className="mt-5 text-base leading-relaxed font-semibold text-navy-900 sm:text-lg md:text-xl">
-            Our chikkis are slow-cooked in small batches with jaggery, roasted
+            Our chikkis are prepared in small batches with honey, roasted
             nuts and seeds. We give each batch the time and attention it needs,
             following the traditional flavours that inspired Laadli Bytes.
           </p>
