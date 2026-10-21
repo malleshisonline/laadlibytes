@@ -101,7 +101,7 @@ const SlideOne = () => {
             />
 
             {/* Content */}
-            <div className='relative z-10 w-full px-3 mt-20 md:mt-0 pb-5 text-center sm:px-4 md:mb-12 md:px-6 md:pb-0 lg:mb-0 lg:pb-12'>
+            <div className='relative z-10 w-full px-3 mt-15 lg:-mt-4 pb-5 text-center sm:px-4 md:mb-12 md:px-6 md:pb-0 lg:mb-0 lg:pb-12'>
 
                 {/* Revolution banner - unchanged */}
                 <img
@@ -124,7 +124,7 @@ const SlideOne = () => {
                          One Love for Tradition.
                     </h1>
 
-                    <p className='mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-[#fffcf6]
+                    <p className='mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-[#fffcf6]
                      md:text-navy-950 font-bold md:text-lg min-[1025px]:mt-5 sm:text-sm sm:font-extrabold'>
                         Discover our unique collection of traditionally crafted chikkis,
                         millets n Nuts , Nuts & Seeds, made with honey for an authentic taste.
