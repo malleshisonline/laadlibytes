@@ -378,7 +378,8 @@ There was no approved design, so it uses the same tokens in a plain sidebar layo
   - The client-side checks for SKU, price ≤ MRP and the rest also mirror the backend.
 - **Categories:** list in display order, plus a form with one image. A new file replaces the stored one, and Remove sends `image: null`. Deleting a category that still has products shows the backend's `CATEGORY_NOT_EMPTY` message.
 - **Customers** (`/admin/users`):
-  - Search, role filter and sort, plus switches for **Active** and **Make/Remove admin**.
+  - Search, type filter (Registered / Guest checkout), role filter and sort, plus switches for **Active** and **Make/Remove admin**.
+  - Guest customers (`isGuest`, saved by a guest checkout) show a **Guest** badge and have neither switch: they cannot sign in until they sign up with that phone.
   - Your own row is locked.
   - There is deliberately no delete, because orders reference the account.
   - The list API returns `_id` (lean query), so rows are keyed by `id ?? _id`.

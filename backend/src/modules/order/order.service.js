@@ -1,11 +1,14 @@
 import crypto from 'node:crypto';
 
+import { logger } from '../../config/logger.js';
 import { ApiError } from '../../utils/ApiError.js';
 import { buildMeta, getPagination } from '../../utils/pagination.js';
 import { Address } from '../address/address.model.js';
+import { addressService } from '../address/address.service.js';
 import { Cart } from '../cart/cart.model.js';
 import { Product } from '../product/product.model.js';
 import { User } from '../user/user.model.js';
+import { userService } from '../user/user.service.js';
 
 import { Order, ORDER_STATUS_TRANSITIONS } from './order.model.js';
 
@@ -67,6 +70,7 @@ function toCustomerView(order) {
   const view = order.toJSON();
   view.history = view.history.map(({ event, value, at }) => ({ event, value, at }));
   delete view.user;
+  delete view.guestCustomer;
   delete view.razorpayOrderId;
   delete view.checkoutKey;
   delete view.checkoutUsesCart;
@@ -202,6 +206,28 @@ function addressCopy(address) {
   };
 }
 
+/**
+ * Saves a guest order's buyer as a guest customer with the delivery address, so the admin has them
+ * under Customers. Best-effort: the order is already placed, so a failure here is logged, never thrown.
+ */
+async function recordGuestCustomerFor(order) {
+  try {
+    const { address, contact } = order;
+    const guestCustomerId = await userService.recordGuestCustomer({
+      name: address.name,
+      phone: contact.phone,
+      email: contact.email,
+    });
+    if (!guestCustomerId) return;
+
+    await Order.updateOne({ _id: order._id }, { $set: { guestCustomer: guestCustomerId } });
+    order.guestCustomer = guestCustomerId;
+    await addressService.saveGuestAddress(guestCustomerId, address);
+  } catch (error) {
+    logger.error('Could not save the guest customer for an order', { orderId: order.id, message: error.message });
+  }
+}
+
 async function createWithUniqueNumber(payload) {
   for (let attempt = 1; ; attempt++) {
     try {
@@ -247,7 +273,9 @@ export const orderService = {
 
   /**
    * Places an order for a guest, who has no account: the address and email come with the request and
-   * are saved only on the order. Without `buyNow` it orders the guest cart named by the `cartId` cookie
+   * are copied onto the order. The buyer is also kept as a guest customer with that address (see
+   * recordGuestCustomerFor), while the order itself stays a guest order with no `user`. Without
+   * `buyNow` it orders the guest cart named by the `cartId` cookie
    * (`guestCartToken` is the raw cookie value, or null). The cart lines are removed after payment.
    */
   async placeGuestOrder({ address, email, buyNow, checkoutKey }, guestCartToken) {
@@ -261,6 +289,7 @@ export const orderService = {
       ...(buyNow ? {} : { guestCartToken: guestCartHash }),
       history: [{ event: 'status', value: 'placed', at: new Date() }],
     });
+    await recordGuestCustomerFor(order);
     return toCustomerView(order);
   },
 
@@ -433,7 +462,10 @@ export const orderService = {
 
   /** Admin detail, with the customer and who made each change. */
   async getById(orderId) {
-    const order = await Order.findById(orderId).populate('user', 'name email phone').populate('history.by', 'name');
+    const order = await Order.findById(orderId)
+      .populate('user', 'name email phone')
+      .populate('guestCustomer', 'name email phone')
+      .populate('history.by', 'name');
     if (!order) throw orderNotFound();
     return order;
   },

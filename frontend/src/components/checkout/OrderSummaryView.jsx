@@ -33,7 +33,17 @@ function SummarySection({ step, title, Icon, action, children }) {
  * `addressAction` is given it sits in the section header. `onPlaceOrder` is awaited; the button stays disabled
  * meanwhile, so a double click never places two orders.
  */
-function OrderSummaryView({ order, address, addressAction, itemsAction, canPlaceOrder = true, onPlaceOrder }) {
+function OrderSummaryView({
+  order,
+  address,
+  addressAction,
+  itemsAction,
+  canPlaceOrder = true,
+  onPlaceOrder,
+  onQuantityChange,
+  onRemoveItem,
+  maxQuantity,
+}) {
   const [isPlacing, setIsPlacing] = useState(false)
   const hasIssues = order.items.some((item) => item.issue)
 
@@ -60,7 +70,12 @@ function OrderSummaryView({ order, address, addressAction, itemsAction, canPlace
               Some items are out of stock or have less stock than you picked. Update them to continue.
             </p>
           )}
-          <OrderItemsSummary items={order.items} />
+          <OrderItemsSummary
+            items={order.items}
+            onQuantityChange={onQuantityChange}
+            onRemove={onRemoveItem}
+            maxQuantity={maxQuantity}
+          />
         </SummarySection>
 
       </div>

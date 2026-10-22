@@ -24,11 +24,15 @@ export const USER_SORTS = [
   'last_login_asc',
 ];
 
+// 'guest' is a guest customer (User.isGuest), made by a guest checkout; 'registered' is everyone else.
+export const ACCOUNT_TYPES = ['registered', 'guest'];
+
 export const listUsersQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
   search: z.string().trim().max(100).optional(),
   role: z.enum(USER_ROLES).optional(),
+  accountType: z.enum(ACCOUNT_TYPES).optional(),
   // 'newest' is the previous '-createdAt' default under the new vocabulary.
   sort: z.enum(USER_SORTS).default('newest'),
 });

@@ -4,12 +4,19 @@ import { env } from '../../config/env.js';
 import { ApiError } from '../../utils/ApiError.js';
 import { identifierFilter } from '../../utils/identifier.js';
 import { hashToken, signAccessToken, signRefreshToken, verifyRefreshToken } from '../../utils/token.js';
+import { Order } from '../order/order.model.js';
 import { otpService } from '../otp/otp.service.js';
 import { User } from '../user/user.model.js';
 
 const MAX_SESSIONS = 5;
 
 const VERIFIED_AT_FIELD = { email: 'emailVerifiedAt', phone: 'phoneVerifiedAt' };
+
+const OTHER_CHANNEL = { email: 'phone', phone: 'email' };
+
+// A guest customer (made by a guest checkout) is not an account: it cannot sign in, and signing up with
+// its phone is allowed. Every sign-in lookup goes through this filter.
+const accountFilter = (identifier) => ({ ...identifierFilter(identifier), isGuest: { $ne: true } });
 
 const issueTokens = (user) => {
   const payload = { sub: user.id, role: user.role };
@@ -46,12 +53,12 @@ const accountNotFound = () =>
 export const authService = {
   /** Sign-in step 1: tells the client whether to ask for a password or offer account creation. */
   async identify(identifier) {
-    const exists = await User.exists(identifierFilter(identifier));
+    const exists = await User.exists(accountFilter(identifier));
     return { channel: identifier.channel, identifier: identifier.value, exists: Boolean(exists) };
   },
 
   async login({ identifier, password }) {
-    const user = await User.findOne(identifierFilter(identifier)).select('+password');
+    const user = await User.findOne(accountFilter(identifier)).select('+password');
     // Same message either way, so a wrong password and an unknown account look alike here.
     if (!user || !(await user.comparePassword(password))) {
       throw ApiError.unauthorized('Invalid email, mobile number or password', { code: 'INVALID_CREDENTIALS' });
@@ -62,7 +69,7 @@ export const authService = {
   },
 
   async requestLoginOtp({ identifier }) {
-    const user = await User.findOne(identifierFilter(identifier)).select('isActive').lean();
+    const user = await User.findOne(accountFilter(identifier)).select('isActive').lean();
     if (!user) throw accountNotFound();
     // Checked before sending, so a deactivated account never costs an SMS.
     assertActive(user);
@@ -72,7 +79,7 @@ export const authService = {
 
   /** Sign-up step 1: holds the form data with the OTP challenge. No User exists until verification. */
   async startRegistration({ identifier, name, password }) {
-    if (await User.exists(identifierFilter(identifier))) throw accountExists();
+    if (await User.exists(accountFilter(identifier))) throw accountExists();
 
     const passwordHash = await bcrypt.hash(password, env.BCRYPT_SALT_ROUNDS);
 
@@ -95,7 +102,7 @@ export const authService = {
     const verifiedField = VERIFIED_AT_FIELD[channel];
 
     if (purpose === 'login') {
-      const user = await User.findOne(filter);
+      const user = await User.findOne({ ...filter, isGuest: { $ne: true } });
       if (!user) throw accountNotFound();
       assertActive(user);
 
@@ -107,13 +114,19 @@ export const authService = {
     }
 
     // Someone else may have finished signing up with this identifier since the code was sent.
-    if (await User.exists(filter)) throw accountExists();
+    if (await User.exists({ ...filter, isGuest: { $ne: true } })) throw accountExists();
 
-    const user = new User({
+    // A guest customer with this identifier becomes the account, keeping its addresses and orders. Its
+    // other identifier was typed at a guest checkout, never proven, so it is dropped: kept, it would let
+    // whoever typed it sign in to this account with an OTP sent to them.
+    const guest = await User.findOne({ ...filter, isGuest: true });
+    const user = guest ?? new User({ [channel]: identifier });
+    user.set({
       name: pendingUser.name,
       password: pendingUser.passwordHash,
-      [channel]: identifier,
       [verifiedField]: new Date(),
+      isGuest: false,
+      [OTHER_CHANNEL[channel]]: undefined,
     });
     user.$locals.passwordIsHashed = true;
 
@@ -122,6 +135,10 @@ export const authService = {
     } catch (err) {
       if (err?.code === 11000) throw accountExists();
       throw err;
+    }
+
+    if (guest) {
+      await Order.updateMany({ guestCustomer: user._id }, { $set: { user: user._id }, $unset: { guestCustomer: 1 } });
     }
 
     return { purpose, ...(await startSession(user)) };

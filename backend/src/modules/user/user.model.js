@@ -46,9 +46,15 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    // A guest customer has no password: it is a record of someone who checked out without an account.
     password: {
       type: String,
-      required: [true, 'Password is required'],
+      required: [
+        function passwordRequired() {
+          return !this.isGuest;
+        },
+        'Password is required',
+      ],
       minlength: 8,
       select: false, // never comes back unless explicitly asked for
     },
@@ -60,6 +66,12 @@ const userSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true,
+    },
+    // Made by a guest checkout, found by phone. It cannot sign in; signing up with that phone and
+    // verifying the OTP turns it into a normal account (auth.service.js), keeping its orders and addresses.
+    isGuest: {
+      type: Boolean,
+      default: false,
     },
     lastLoginAt: Date,
     // sha256 hashes of issued refresh tokens, so a DB dump cannot be replayed
@@ -98,7 +110,9 @@ userSchema.pre('save', async function hashPassword() {
   this.password = await bcrypt.hash(this.password, env.BCRYPT_SALT_ROUNDS);
 });
 
-userSchema.methods.comparePassword = function comparePassword(candidate) {
+userSchema.methods.comparePassword = async function comparePassword(candidate) {
+  // A guest customer has no password, so nothing matches it.
+  if (!this.password) return false;
   return bcrypt.compare(candidate, this.password);
 };
 

@@ -37,6 +37,9 @@ const userIdOf = (user) => user.id ?? user._id
  * /admin/users: every account, with the two switches an admin needs: active (a deactivated account cannot sign
  * in) and admin role. There is no delete: orders point at the account, so deactivating is the safe way out.
  * Your own row is locked, so you cannot take your own admin access away by accident.
+ *
+ * Guest customers (`isGuest`) are listed too: saved by a guest checkout, they cannot sign in, so their rows have
+ * neither switch. Signing up with the same phone turns one into a normal account.
  */
 function AdminUsersPage() {
   useDocumentTitle('Customers')
@@ -44,6 +47,7 @@ function AdminUsersPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const params = {
     search: searchParams.get('search') ?? '',
+    accountType: searchParams.get('accountType') ?? '',
     role: searchParams.get('role') ?? '',
     sort: searchParams.get('sort') ?? 'newest',
     page: Number(searchParams.get('page')) || 1,
@@ -79,13 +83,16 @@ function AdminUsersPage() {
 
   return (
     <>
-      <AdminPageHeader title="Customers" description="Accounts that signed up on the store." />
+      <AdminPageHeader
+        title="Customers"
+        description="Accounts that signed up on the store, and guests who checked out without one."
+      />
 
       <div className={`${ADMIN_CARD} mb-4`}>
         <div className="grid gap-3 md:grid-cols-12">
           <form
             role="search"
-            className="md:col-span-6"
+            className="md:col-span-4"
             onSubmit={(event) => {
               event.preventDefault()
               updateParams({ search: searchText.trim() })
@@ -109,6 +116,21 @@ function AdminUsersPage() {
             </div>
           </form>
           <div className="md:col-span-3">
+            <label htmlFor="user-account-type" className={ADMIN_LABEL}>
+              Type
+            </label>
+            <select
+              id="user-account-type"
+              value={params.accountType}
+              onChange={(event) => updateParams({ accountType: event.target.value })}
+              className={ADMIN_INPUT}
+            >
+              <option value="">All</option>
+              <option value="registered">Registered</option>
+              <option value="guest">Guest checkout</option>
+            </select>
+          </div>
+          <div className="md:col-span-2">
             <label htmlFor="user-role" className={ADMIN_LABEL}>
               Role
             </label>
@@ -164,6 +186,7 @@ function AdminUsersPage() {
                     const isSelf = id === currentUser.id
                     const isBusy = busyId === id
                     const isAdmin = user.role === 'admin'
+                    const isGuest = Boolean(user.isGuest)
                     return (
                       <tr key={id} className={user.isActive ? '' : 'bg-cream-50'}>
                         <td className={ADMIN_TD}>
@@ -177,14 +200,22 @@ function AdminUsersPage() {
                         <td className={ADMIN_TD}>
                           {formatOrderDate(user.createdAt)}
                           <span className="block text-xs text-muted">
-                            {user.lastLoginAt ? `Last sign-in ${formatOrderDate(user.lastLoginAt)}` : 'Never signed in'}
+                            {isGuest
+                              ? 'Checked out as a guest'
+                              : user.lastLoginAt
+                                ? `Last sign-in ${formatOrderDate(user.lastLoginAt)}`
+                                : 'Never signed in'}
                           </span>
                         </td>
                         <td className={ADMIN_TD}>
-                          <span className={`${ADMIN_BADGE} ${isAdmin ? 'bg-navy-800 text-white' : 'bg-lightblue-100 text-navy-800'}`}>
-                            {isAdmin ? 'Admin' : 'Customer'}
-                          </span>
-                          {!isSelf && (
+                          {isGuest ? (
+                            <span className={`${ADMIN_BADGE} bg-cream-100 text-caramel-700`}>Guest</span>
+                          ) : (
+                            <span className={`${ADMIN_BADGE} ${isAdmin ? 'bg-navy-800 text-white' : 'bg-lightblue-100 text-navy-800'}`}>
+                              {isAdmin ? 'Admin' : 'Customer'}
+                            </span>
+                          )}
+                          {!isSelf && !isGuest && (
                             <button
                               type="button"
                               disabled={isBusy}
@@ -205,28 +236,32 @@ function AdminUsersPage() {
                           )}
                         </td>
                         <td className={ADMIN_TD}>
-                          <label className={`inline-flex items-center gap-2 ${isSelf ? '' : 'cursor-pointer'}`}>
-                            <input
-                              type="checkbox"
-                              role="switch"
-                              checked={user.isActive}
-                              disabled={isSelf || isBusy}
-                              onChange={() =>
-                                updateUser(
-                                  user,
-                                  { isActive: !user.isActive },
-                                  user.isActive ? `${user.name} is deactivated` : `${user.name} is active again`,
-                                  user.isActive ? `Deactivate ${user.name}? They will not be able to sign in.` : undefined,
-                                )
-                              }
-                              className="size-4 accent-navy-800"
-                            />
-                            <span
-                              className={`${ADMIN_BADGE} ${user.isActive ? 'bg-leaf-600/10 text-success' : 'bg-cream-100 text-error'}`}
-                            >
-                              {user.isActive ? 'Active' : 'Deactivated'}
-                            </span>
-                          </label>
+                          {isGuest ? (
+                            <span className="text-xs text-muted">No account yet</span>
+                          ) : (
+                            <label className={`inline-flex items-center gap-2 ${isSelf ? '' : 'cursor-pointer'}`}>
+                              <input
+                                type="checkbox"
+                                role="switch"
+                                checked={user.isActive}
+                                disabled={isSelf || isBusy}
+                                onChange={() =>
+                                  updateUser(
+                                    user,
+                                    { isActive: !user.isActive },
+                                    user.isActive ? `${user.name} is deactivated` : `${user.name} is active again`,
+                                    user.isActive ? `Deactivate ${user.name}? They will not be able to sign in.` : undefined,
+                                  )
+                                }
+                                className="size-4 accent-navy-800"
+                              />
+                              <span
+                                className={`${ADMIN_BADGE} ${user.isActive ? 'bg-leaf-600/10 text-success' : 'bg-cream-100 text-error'}`}
+                              >
+                                {user.isActive ? 'Active' : 'Deactivated'}
+                              </span>
+                            </label>
+                          )}
                         </td>
                       </tr>
                     )

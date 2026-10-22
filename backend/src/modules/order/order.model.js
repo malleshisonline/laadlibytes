@@ -80,8 +80,11 @@ const orderSchema = new mongoose.Schema(
   {
     // What the customer and the shop quote, e.g. LB-20261003-7K3QX.
     orderNumber: { type: String, required: true, uppercase: true, trim: true },
-    // Empty for a guest order: the guest's details live only in `address` and `contact`.
+    // Empty for a guest order: the guest's details live in `address` and `contact`.
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    // A guest order's guest customer (User.isGuest), found by phone. Empty when that phone belongs to a
+    // registered account. Signing up with the phone moves the order to `user` (auth.service.js).
+    guestCustomer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     items: {
       type: [orderItemSchema],
       validate: [(items) => items.length > 0, 'An order needs at least one item'],
@@ -134,6 +137,8 @@ orderSchema.index(
   { unique: true, partialFilterExpression: { checkoutKey: { $type: 'string' } } }
 );
 orderSchema.index({ razorpayOrderId: 1 }, { unique: true, sparse: true });
+// A guest customer's orders, moved to `user` when they sign up.
+orderSchema.index({ guestCustomer: 1 }, { sparse: true });
 
 export const Order = mongoose.model('Order', orderSchema);
 

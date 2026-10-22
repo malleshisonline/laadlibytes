@@ -12,6 +12,10 @@ const addressNotFound = () => ApiError.notFound('Address not found', { code: 'AD
 const clearDefault = (userId) => Address.updateMany({ user: userId, isDefault: true }, { $set: { isDefault: false } });
 
 async function saveAccountPhoneIfMissing(userId, phone) {
+  // A guest checkout with this number made a guest customer for it. Neither side has proven the number,
+  // so the account phone just stays empty rather than refusing the address.
+  if (await User.exists({ phone, isGuest: true })) return;
+
   try {
     await User.updateOne(
       { _id: userId, $or: [{ phone: { $exists: false } }, { phone: null }] },
@@ -51,6 +55,19 @@ export const addressService = {
     await Address.create({ ...fields, user: userId, isDefault: makeDefault });
 
     return addressService.list(userId);
+  },
+
+  /**
+   * Keeps a guest order's delivery address on its guest customer, so the admin sees it under Customers.
+   * The same address is saved once, and nothing more after MAX_ADDRESSES; the first becomes the default.
+   */
+  async saveGuestAddress(userId, { name, phone, pincode, line1, line2, landmark, city, state }) {
+    if (await Address.exists({ user: userId, name, phone, pincode, line1, city, state })) return;
+
+    const count = await Address.countDocuments({ user: userId });
+    if (count >= MAX_ADDRESSES) return;
+
+    await Address.create({ user: userId, name, phone, pincode, line1, line2, landmark, city, state, isDefault: count === 0 });
   },
 
   async update(userId, addressId, payload) {

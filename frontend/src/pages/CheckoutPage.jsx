@@ -7,7 +7,7 @@ import { orderApi } from '../api/orderApi.js'
 import DeliveryAddressBox from '../components/cart/DeliveryAddressBox.jsx'
 import GuestDeliveryDetails from '../components/checkout/GuestDeliveryDetails.jsx'
 import OrderSummaryView from '../components/checkout/OrderSummaryView.jsx'
-import { APP_ROUTES, orderDetailsPath, productDetailsPath } from '../constants/appRoutepoints.js'
+import { APP_ROUTES, orderDetailsPath } from '../constants/appRoutepoints.js'
 import { APP_SETTINGS } from '../constants/appSettings.js'
 import { pickAddress, useAddresses } from '../hooks/useAddresses.js'
 import { useAuth } from '../hooks/useAuth.js'
@@ -266,16 +266,29 @@ function CartOrderSummary() {
 
 /**
  * Buy Now on a product that isn't in the cart: that product alone, and the cart is left as it is. The cart page
- * isn't part of this path, so the address is chosen (or added) right here.
+ * isn't part of this path, so the address is chosen (or added) right here, and the quantity is changed here too.
  */
 function BuyNowOrderSummary({ slug, quantity }) {
   const location = useLocation()
+  const [, setSearchParams] = useSearchParams()
   const { user } = useAuth()
   const { product, status: productStatus, retry: retryProduct } = useProduct(slug)
   const addressState = useAddresses(Boolean(user))
   const guest = useGuestDeliveryDetails()
   const [chosenAddressId, setChosenAddressId] = useState(null)
   const placeOrder = usePlaceOrder()
+
+  // `?qty=0`: the shopper removed the product, which leaves nothing to order (like an emptied cart).
+  if (quantity === 0) {
+    return (
+      <SummaryNotice
+        title='Nothing to order'
+        text='You removed the product from this order. Have a look at the rest of our collection.'
+        linkTo={APP_ROUTES.PRODUCTS}
+        linkText='Browse products'
+      />
+    )
+  }
 
   if (productStatus === 'loading' || addressState.status === 'loading') return <SummarySkeleton />
 
@@ -303,6 +316,18 @@ function BuyNowOrderSummary({ slug, quantity }) {
 
   const selectedAddress = pickAddress(addressState.addresses, chosenAddressId)
   const order = buyNowOrder(product, quantity)
+
+  // The quantity lives in `?qty=`, so a reload keeps it; replace, so each step isn't a Back entry. 0 removes it.
+  function handleQuantityChange(nextQuantity) {
+    setSearchParams(
+      (current) => {
+        const next = new URLSearchParams(current)
+        next.set('qty', String(nextQuantity))
+        return next
+      },
+      { replace: true },
+    )
+  }
 
   // Buy Now never touches the cart. A failure reloads the product, so a sold-out one shows as out of stock.
   function handlePlaceOrder() {
@@ -338,11 +363,9 @@ function BuyNowOrderSummary({ slug, quantity }) {
           />
         )
       }
-      itemsAction={
-        <Link to={productDetailsPath(product.slug)} className={HEADER_LINK_CLASSES}>
-          Edit
-        </Link>
-      }
+      onQuantityChange={product.inStock ? handleQuantityChange : undefined}
+      onRemoveItem={() => handleQuantityChange(0)}
+      maxQuantity={maxQuantityFor(product)}
       canPlaceOrder={user ? Boolean(selectedAddress) : Boolean(guest.details)}
     />
   )
@@ -378,7 +401,7 @@ function CheckoutPage() {
           <BuyNowOrderSummary
             key={buyNowSlug}
             slug={buyNowSlug}
-            quantity={Number.isInteger(buyNowQuantity) && buyNowQuantity > 0 ? buyNowQuantity : 1}
+            quantity={Number.isInteger(buyNowQuantity) && buyNowQuantity >= 0 ? buyNowQuantity : 1}
           />
         ) : (
           <CartOrderSummary />

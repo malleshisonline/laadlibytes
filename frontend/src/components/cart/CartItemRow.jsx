@@ -63,11 +63,15 @@ function CartItemRow({ item, onQuantityChange, onRemove, isPending = false }) {
           {item.issue === 'OUT_OF_STOCK' ? (
             <span />
           ) : (
+            // min 0: going below 1 removes the line, like the Remove button.
             <QuantityStepper
               value={quantity}
-              min={1}
+              min={0}
               max={maxQuantity}
-              onChange={(next) => next !== quantity && onQuantityChange(product.id, next)}
+              onChange={(next) => {
+                if (next === 0) onRemove(product.id)
+                else if (next !== quantity) onQuantityChange(product.id, next)
+              }}
               label={`Quantity of ${product.name}`}
               disabled={isPending}
             />

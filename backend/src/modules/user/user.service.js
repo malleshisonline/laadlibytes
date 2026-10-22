@@ -32,6 +32,8 @@ export const userService = {
     const filter = {};
 
     if (query.role) filter.role = query.role;
+    if (query.accountType === 'guest') filter.isGuest = true;
+    if (query.accountType === 'registered') filter.isGuest = { $ne: true };
     if (query.search) filter.$or = [
       { name: { $regex: query.search, $options: 'i' } },
       { email: { $regex: query.search, $options: 'i' } },
@@ -58,6 +60,11 @@ export const userService = {
   },
 
   async update(id, payload) {
+    // A guest customer cannot sign in, so an admin role on it would mean nothing.
+    if (payload.role === 'admin' && (await User.exists({ _id: id, isGuest: true }))) {
+      throw ApiError.badRequest('A guest customer cannot be made an admin', { code: 'GUEST_CANNOT_BE_ADMIN' });
+    }
+
     const user = await User.findByIdAndUpdate(id, payload, { new: true, runValidators: true });
     if (!user) throw ApiError.notFound('User not found');
     return user;
@@ -87,6 +94,39 @@ export const userService = {
     await user.save();
   },
 
+  /**
+   * The guest customer behind a guest order, found by phone: created on their first order, and given
+   * the email later if it had none and no other account uses it. Returns its id, or null when the phone
+   * belongs to a registered account: a guest has not proven they own the number, so nothing is attached.
+   */
+  async recordGuestCustomer({ name, phone, email }) {
+    // Two attempts: a second order with the same phone may create the record between our find and create.
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      const existing = await User.findOne({ phone }).select('isGuest email').lean();
+      if (existing && !existing.isGuest) return null;
+
+      const emailIsFree = Boolean(email) && !(await User.exists({ email }));
+
+      if (existing) {
+        if (emailIsFree && !existing.email) {
+          // An email taken in the meantime just stays off the record.
+          await User.updateOne({ _id: existing._id, email: null }, { $set: { email } }).catch((err) => {
+            if (err?.code !== 11000) throw err;
+          });
+        }
+        return existing._id;
+      }
+
+      try {
+        const user = await User.create({ name, phone, ...(emailIsFree ? { email } : {}), isGuest: true });
+        return user._id;
+      } catch (err) {
+        if (err?.code !== 11000) throw err;
+      }
+    }
+    return null;
+  },
+
   async remove(id) {
     const user = await User.findById(id).select('email phone').lean();
     const identifiers = [user?.email, user?.phone].filter(Boolean);
@@ -97,8 +137,11 @@ export const userService = {
 
     const deletion = await User.deleteOne({ _id: id });
 
+    // A guest customer's orders point at it through guestCustomer rather than user.
+    const ownOrders = { $or: [{ user: id }, { guestCustomer: id }] };
+
     const unpaidUnshippedOrders = await Order.find({
-      user: id,
+      ...ownOrders,
       status: { $in: ['placed', 'packed'] },
       paymentStatus: { $in: ['pending', 'failed'] },
     })
@@ -122,7 +165,7 @@ export const userService = {
     await Promise.all([
       Address.deleteMany({ user: id }),
       Cart.deleteMany({ user: id }),
-      Order.deleteMany({ user: id }),
+      Order.deleteMany(ownOrders),
       Order.updateMany(
         { 'history.by': id },
         { $unset: { 'history.$[entry].by': 1 } },
