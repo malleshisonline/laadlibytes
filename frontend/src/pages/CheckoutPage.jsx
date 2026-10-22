@@ -327,6 +327,8 @@ function BuyNowOrderSummary({ slug, quantity }) {
       },
       { replace: true },
     )
+    // Removed: the short "Nothing to order" message replaces the page, so start it from the top, not the footer.
+    if (nextQuantity === 0) window.scrollTo({ top: 0 })
   }
 
   // Buy Now never touches the cart. A failure reloads the product, so a sold-out one shows as out of stock.

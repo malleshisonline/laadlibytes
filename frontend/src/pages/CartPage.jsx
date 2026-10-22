@@ -74,6 +74,15 @@ function CartPage() {
     }
   }, [])
 
+  // Removing the last item shrinks the page to the empty-cart message, which would leave the shopper looking at
+  // the footer, so go back to the top when the cart goes from having items to empty.
+  const itemCount = cart?.items.length ?? 0
+  const previousItemCount = useRef(itemCount)
+  useEffect(() => {
+    if (previousItemCount.current > 0 && itemCount === 0) window.scrollTo({ top: 0 })
+    previousItemCount.current = itemCount
+  }, [itemCount])
+
   const hasIssues = cart?.items.some((item) => item.issue) ?? false
 
   function handleSelectAddress(id) {
