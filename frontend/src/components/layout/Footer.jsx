@@ -1,10 +1,15 @@
 import { Link } from 'react-router'
+import { MapPin } from 'lucide-react'
 
 import flowersBottomLeft from '../../assets/footer/footerflowerleft.avif'
 import flowersBottomRight from '../../assets/footer/footerflower.avif'
 import whiteLogo from '../../assets/footer/white_logo.avif'
 import { APP_SETTINGS } from '../../constants/appSettings.js'
+import { CONTACT_DETAILS } from '../../content/contactDetails.js'
 import GoldenDivider from '../common/GoldenDivider.jsx'
+
+// The same office address as the Contact page, so the two never drift apart.
+const OFFICE_ADDRESS_LINES = CONTACT_DETAILS.find((detail) => detail.icon === MapPin)?.lines ?? []
 
 const QUICK_LINKS = [
   { label: 'Home', path: '/' },
@@ -38,11 +43,11 @@ function SocialIcon({ children }) {
   )
 }
 
-// Real profile URLs are not known yet, so every link points to "#" for now.
+// YouTube has no channel yet, so it points to "#" for now.
 const SOCIAL_LINKS = [
   {
     label: 'Instagram',
-    href: '#',
+    href: 'https://www.instagram.com/laadlibytes',
     icon: (
       <SocialIcon>
         <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -53,7 +58,7 @@ const SOCIAL_LINKS = [
   },
   {
     label: 'Facebook',
-    href: '#',
+    href: 'https://www.facebook.com/profile.php?id=61595361946524&sk=about',
     icon: (
       <SocialIcon>
         <path d="M15 3h-2a4 4 0 0 0-4 4v3H7v4h2v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h2z" />
@@ -71,12 +76,25 @@ const SOCIAL_LINKS = [
     ),
   },
   {
-    label: 'WhatsApp',
-    href: '#',
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/laadlibytes/',
     icon: (
       <SocialIcon>
-        <path d="M3 21l1.6-4.8A8.5 8.5 0 1 1 8 19.6z" />
-        <path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1a4 4 0 0 1-2-2l1-1-1-2z" />
+        <rect x="3" y="3" width="18" height="18" rx="3" />
+        <path d="M8 10v7" />
+        <circle cx="8" cy="7" r="0.5" fill="currentColor" />
+        <path d="M12 17v-7" />
+        <path d="M12 13a3 3 0 0 1 6 0v4" />
+      </SocialIcon>
+    ),
+  },
+  {
+    label: 'Twitter',
+    href: 'https://x.com/Laadlibytes',
+    icon: (
+      <SocialIcon>
+        <path d="M4 4h4.5L20 20h-4.5z" />
+        <path d="M20 4l-6.6 7.4M4 20l6.6-7.4" />
       </SocialIcon>
     ),
   },
@@ -85,8 +103,8 @@ const SOCIAL_LINKS = [
 function FooterLinkColumn({ title, links }) {
   return (
     <div>
-      <h2 className="mb-4 font-display text-white text-lg">{title}</h2>
-      <ul className="space-y-2 text-sm">
+      <h2 className="mb-4 font-display text-white text-lg lg:text-xl">{title}</h2>
+      <ul className="space-y-2 text-sm lg:space-y-2.5 lg:text-base">
         {links.map((link) => (
           <li key={link.path}>
             <Link to={link.path} className="text-lightblue-100 transition hover:text-white">
@@ -130,7 +148,7 @@ function Footer() {
         className="pointer-events-none absolute right-0 bottom-0 w-20 select-none md:w-32 lg:w-44"
       />
 
-      <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+      <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_1.4fr] lg:gap-8">
         {/* White logo, straight on the navy */}
         <div>
           <Link to="/" aria-label={`${APP_SETTINGS.SITE_NAME} home`} className="inline-block">
@@ -147,13 +165,27 @@ function Footer() {
 
           {/* Brand tagline with the golden ornament: centred on mobile, left-aligned from md */}
           <div className="mx-auto mt-3 max-w-60 text-center md:mx-0 md:text-left">
-            <p className="font-display text-sm text-lightblue-100 md:text-base">Made with Devotion, Shared with Love</p>
+            <p className="font-display text-sm text-lightblue-100 md:text-base lg:text-lg">Made with Devotion, Shared with Love</p>
             <GoldenDivider className="mt-2 text-caramel-500 md:mx-0" />
           </div>
 
-          <p className="mt-4 max-w-xs text-sm">
+          <p className="mt-4 max-w-xs text-sm lg:text-base">
             Traditional chikkis and wholesome bites, made with love.
           </p>
+
+          {OFFICE_ADDRESS_LINES.length > 0 && (
+            <address className="mt-4 flex max-w-xs gap-2 text-sm leading-relaxed not-italic text-lightblue-100 lg:text-base">
+              <MapPin size={18} strokeWidth={1.75} aria-hidden="true" className="mt-1 shrink-0 text-caramel-500" />
+              <span>
+                <span className="sr-only">Office address: </span>
+                {OFFICE_ADDRESS_LINES.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
+              </span>
+            </address>
+          )}
         </div>
 
         <FooterLinkColumn title="Quick Links" links={QUICK_LINKS} />
@@ -161,12 +193,14 @@ function Footer() {
 
         {/* Social icons and newsletter */}
         <div>
-          <h2 className="mb-4 font-display text-white text-lg">Connect With Us</h2>
-          <ul className="flex gap-3">
+          <h2 className="mb-4 font-display text-white text-lg lg:text-xl">Connect With Us</h2>
+          <ul className="flex flex-wrap gap-3">
             {SOCIAL_LINKS.map((social) => (
               <li key={social.label}>
                 <a
                   href={social.href}
+                  // Real profiles open in a new tab, so the shopper doesn't leave the store.
+                  {...(social.href !== '#' && { target: '_blank', rel: 'noopener noreferrer' })}
                   aria-label={social.label}
                   className="inline-flex size-11 items-center justify-center rounded-full border border-white/40 transition hover:bg-white hover:text-navy-800"
                 >
@@ -176,7 +210,7 @@ function Footer() {
             ))}
           </ul>
 
-          <p className="mt-6 mb-3 text-sm">Subscribe for new updates</p>
+          <p className="mt-6 mb-3 text-sm lg:text-base">Subscribe for new updates</p>
           <form onSubmit={handleSubscribe} className="flex max-w-sm gap-2">
             <label htmlFor="newsletter-email" className="sr-only">
               Email address
@@ -186,11 +220,11 @@ function Footer() {
               type="email"
               autoComplete="email"
               placeholder="Your email address"
-              className="min-h-11 min-w-0 flex-1 rounded-full bg-white px-4 text-sm text-body placeholder:text-muted focus:ring-2 focus:ring-caramel-500 focus:outline-none"
+              className="min-h-11 min-w-0 flex-1 rounded-full bg-white px-4 text-sm text-body lg:text-base placeholder:text-muted focus:ring-2 focus:ring-caramel-500 focus:outline-none"
             />
             <button
               type="submit"
-              className="min-h-11 shrink-0 rounded-full bg-caramel-500 px-5 text-sm font-semibold text-white transition hover:bg-white hover:text-navy-800"
+              className="min-h-11 shrink-0 rounded-full bg-caramel-500 px-5 text-sm font-semibold lg:text-base text-white transition hover:bg-white hover:text-navy-800"
             >
               Subscribe
             </button>
@@ -200,7 +234,7 @@ function Footer() {
 
       {/* Bottom bar */}
       <div className="relative z-10 border-t border-white/20">
-        <p className="mx-auto max-w-7xl px-4 py-4 text-center text-xs sm:px-6">
+        <p className="mx-auto max-w-7xl px-4 py-4 text-center text-xs sm:px-6 lg:text-sm">
           © {new Date().getFullYear()} {APP_SETTINGS.SITE_NAME}. All rights reserved.
         </p>
       </div>
