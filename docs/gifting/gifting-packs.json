@@ -1,0 +1,214 @@
+{
+  "_about": "Structured transcription of the Laadlibytes Festive Gifting Catalogue 2026 (6 pages). Prices are MRP per gift pack, GST included. SKUs refer to the existing 56-SKU product catalogue; look products up by SKU, do not hardcode names. Values marked null are NOT stated in the catalogue and must be confirmed with the owner.",
+  "catalogue": {
+    "title": "Festive Gifting Catalogue 2026",
+    "brand": "Laadli Bytes",
+    "company": "Millet Bowl Food Products Pvt Ltd",
+    "currency": "INR",
+    "priceBasis": "MRP per gift pack",
+    "netWeightGramsPerPack": 180
+  },
+  "packs": [
+    {
+      "code": "FK",
+      "slug": "fruit-khazana",
+      "name": "Fruit Khazana",
+      "mrp": 399,
+      "headline": "12 Fruity Chikkis. One Festive Collection",
+      "description": "Fruit-forward millets, nuts, seeds & real fruit powders for a naturally sweet, tangy profile.",
+      "variantsHeading": "12 fruit-inspired variants",
+      "flavourCount": 12,
+      "flavours": [
+        {
+          "sku": "FV-01",
+          "catalogueName": "Mango Alohas"
+        },
+        {
+          "sku": "FV-02",
+          "catalogueName": "Apple Krnch"
+        },
+        {
+          "sku": "FV-03",
+          "catalogueName": "Banana Bubble"
+        },
+        {
+          "sku": "FV-04",
+          "catalogueName": "Strawberry Crush"
+        },
+        {
+          "sku": "FV-05",
+          "catalogueName": "Lime Light"
+        },
+        {
+          "sku": "FV-06",
+          "catalogueName": "Grape Kick"
+        },
+        {
+          "sku": "FV-07",
+          "catalogueName": "Orange Squeeze"
+        },
+        {
+          "sku": "FV-08",
+          "catalogueName": "Berry Twist"
+        },
+        {
+          "sku": "FV-09",
+          "catalogueName": "Fig Yum"
+        },
+        {
+          "sku": "FV-10",
+          "catalogueName": "Apricot Bloom"
+        },
+        {
+          "sku": "FV-11",
+          "catalogueName": "Snack-a-Guava"
+        },
+        {
+          "sku": "FV-12",
+          "catalogueName": "Palm n Pine"
+        }
+      ],
+      "strip": [
+        "For Every Celebration - Family, Friends, Clients, Teams",
+        "Choose Your Flavours - 12 fruit-inspired variants",
+        "Create Your Hamper - Custom combinations available"
+      ],
+      "piecesPerPack": null,
+      "fixedAssortmentOrPickYourOwn": null
+    },
+    {
+      "code": "SGE",
+      "slug": "super-grains-eight",
+      "name": "Super Grains Eight",
+      "nameVariantSeenInCatalogue": "Super Grain Eight",
+      "mrp": 499,
+      "headline": "Super Grain Eight. Real Grains. Real Goodness.",
+      "description": "Eight grains with millets and seeds, balanced with nuts & natural sweeteners for sustained energy.",
+      "variantsHeading": "Millets & Nuts Variants",
+      "flavourCount": 9,
+      "flavourCountNote": "The pack is called 'Eight' but page 5 lists nine variants. Confirm with the owner.",
+      "flavours": [
+        {
+          "sku": "MN-01",
+          "catalogueName": "Ragi Peanut Crunch"
+        },
+        {
+          "sku": "MN-02",
+          "catalogueName": "Ragi Almond Magic"
+        },
+        {
+          "sku": "MN-09",
+          "catalogueName": "Ragi Oats Ballet",
+          "groupOrNote": "Product sheet name is 'Ragi-Oats-Peanut Ballet'"
+        },
+        {
+          "sku": "MN-03",
+          "catalogueName": "Jowar Peanut Munch"
+        },
+        {
+          "sku": "MN-04",
+          "catalogueName": "Jowar Almond Mojo"
+        },
+        {
+          "sku": "MN-05",
+          "catalogueName": "Bajra Peanut Punch"
+        },
+        {
+          "sku": "MN-06",
+          "catalogueName": "Bajra Almond Charm"
+        },
+        {
+          "sku": "MN-07",
+          "catalogueName": "Foxtail Peanut Brunch"
+        },
+        {
+          "sku": "MN-08",
+          "catalogueName": "Foxtail Almond Joy"
+        }
+      ],
+      "strip": [
+        "For Every Celebration - Family, Friends, Clients, Teams",
+        "Choose Your Grains - Ragi, Jowar, Bajra, Foxtail, Oats",
+        "Create Your Hamper - Custom combinations available",
+        "Order Your Custom Hamper Today"
+      ],
+      "piecesPerPack": null,
+      "fixedAssortmentOrPickYourOwn": null
+    },
+    {
+      "code": "GS",
+      "slug": "golden-seven",
+      "name": "Golden Seven",
+      "mrp": 599,
+      "headline": "Golden Seven. Real Nuts. Real Seeds.",
+      "description": "Seven select grains, nuts, seeds & specialty inclusions for a richer, gourmet experience.",
+      "variantsHeading": "Nuts & Seeds Variants",
+      "flavourCount": 7,
+      "flavours": [
+        {
+          "sku": "NS-01",
+          "catalogueName": "Cashew Candy",
+          "groupOrNote": "Single-Nut Highlights"
+        },
+        {
+          "sku": "NS-02",
+          "catalogueName": "Walnut Treat",
+          "groupOrNote": "Single-Nut Highlights"
+        },
+        {
+          "sku": "NS-04",
+          "catalogueName": "Almond Harvest",
+          "groupOrNote": "Single-Nut Highlights"
+        },
+        {
+          "sku": "NS-03",
+          "catalogueName": "Nut Medley",
+          "groupOrNote": "Mixed & Trail"
+        },
+        {
+          "sku": "NS-05",
+          "catalogueName": "Pumpkin Almond Trail",
+          "groupOrNote": "Mixed & Trail"
+        },
+        {
+          "sku": "NS-06",
+          "catalogueName": "Seed Stick",
+          "groupOrNote": "Seed-Focused"
+        },
+        {
+          "sku": "NS-07",
+          "catalogueName": "Raw Radiance",
+          "groupOrNote": "Seed-Focused"
+        }
+      ],
+      "strip": [
+        "For Every Celebration - Family, Friends, Clients, Teams",
+        "Choose Your Crunch - Cashew, Walnut, Almond, Mixed Nuts, Seeds",
+        "Create Your Hamper - Custom combinations available"
+      ],
+      "piecesPerPack": null,
+      "fixedAssortmentOrPickYourOwn": null
+    }
+  ],
+  "commercialTerms": {
+    "payment": "100% advance along with order confirmation.",
+    "gst": "Included.",
+    "transportation": "Local Hyderabad delivery included; outstation To-Pay.",
+    "leadTime": "2 weeks from receipt of 100% advance and confirmed artwork/approvals, if any.",
+    "returns": "Goods are sold on a \"No Return / Non-refundable\" basis.",
+    "purchaseOrderNote": "Kindly share your purchase order at your earliest convenience, so we may block production slots as per the agreed lead time."
+  },
+  "contact": {
+    "company": "Millet Bowl Food Products Pvt Ltd",
+    "address": "Plot No 04, Mathrupuri Colony, Hyderabad - 500094",
+    "phone": "+91 80081 42786",
+    "email": "sanjay.kumar@milletbowl.com",
+    "website": "www.laadlibytes.com",
+    "signatory": "K. R. Sanjay Kumar, Laadlibytes Founder"
+  },
+  "festivalContext": {
+    "festival": "Diwali 2026",
+    "date": "2026-11-08",
+    "note": "Verify against the owner's calendar. With a 2-week lead time, Diwali delivery requires orders to be confirmed and paid roughly two weeks before the date."
+  }
+}

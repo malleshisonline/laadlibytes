@@ -6,10 +6,14 @@ import { productApi } from '../../api/productApi.js'
 import bhogLabel from '../../assets/illustrations/56bhoglabel.avif'
 import fluteLeft from '../../assets/backgrounds/fluteone.avif'
 import fluteRight from '../../assets/illustrations/flutetwo.avif'
+import { cloudinaryImageUrl } from '../../utils/cloudinaryImage.js'
 
 import BestSellersSection from './BestSellersSection.jsx'
 
 const PLACEHOLDER_COUNT = 6
+
+// Card images are fetched at this size (2× the rendered card) rather than as the full upload.
+const CARD_IMAGE_SIZE = 500
 
 
 const CARD_WIDTH_CLASSES =
@@ -39,7 +43,7 @@ function BhogCard({ product }) {
       <div className='flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-radial from-cream-100 via-blush-50 to-transparent to-70%'>
         {image && (
           <img
-            src={image.url}
+            src={cloudinaryImageUrl(image.url, CARD_IMAGE_SIZE, CARD_IMAGE_SIZE, { crop: 'limit' })}
             alt={image.alt || product.name}
             width='400'
             height='400'

@@ -4,7 +4,11 @@ import { Star } from 'lucide-react'
 
 import { productApi } from '../../api/productApi.js'
 import { TOP_RATED_PRODUCT_SLUGS } from '../../content/topRatedProducts.js'
+import { cloudinaryImageUrl } from '../../utils/cloudinaryImage.js'
 import GoldenDivider from '../common/GoldenDivider.jsx'
+
+// Card images are fetched at this size (2× the rendered card) rather than as the full upload.
+const CARD_IMAGE_SIZE = 500
 
 // The whole catalogue is 56 products; 100 is the API's page-size maximum.
 const PRODUCT_LIMIT = 100
@@ -34,7 +38,7 @@ function TopRatedCard({ product }) {
       <div className='relative aspect-square overflow-hidden rounded-xl bg-cream-50'>
         {front && (
           <img
-            src={front.url}
+            src={cloudinaryImageUrl(front.url, CARD_IMAGE_SIZE, CARD_IMAGE_SIZE, { crop: 'limit' })}
             alt={front.alt || product.name}
             width='400'
             height='400'

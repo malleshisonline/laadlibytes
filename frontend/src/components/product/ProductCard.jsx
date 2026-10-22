@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router'
 import {
   Heart,
@@ -7,7 +8,12 @@ import {
 } from 'lucide-react'
 import { APP_ROUTES, productDetailsPath } from '../../constants/appRoutepoints.js'
 import { useProductCartActions } from '../../hooks/useProductCartActions.js'
+import { cloudinaryImageUrl } from '../../utils/cloudinaryImage.js'
 import { formatPackSize, formatPrice } from '../../utils/productFormatters.js'
+
+// Cards render at about 170–270px; 500 keeps them sharp on 2× screens without fetching the full upload.
+const CARD_IMAGE_SIZE = 500
+const cardImageUrl = (url) => cloudinaryImageUrl(url, CARD_IMAGE_SIZE, CARD_IMAGE_SIZE, { crop: 'limit' })
 
 const CARD_FRAME_CLASSES =
   'group relative h-full bg-surface border border-cream-200'
@@ -107,15 +113,20 @@ function BuyNowButton({ product, pending, onBuyNow }) {
 
 
 /**
- * Storefront Product Card
+ * Storefront Product Card. `priority` is for the cards in the first row: their image loads eagerly and first.
  */
-function ProductCard({ product }) {
+function ProductCard({ product, priority = false }) {
   const {
     addToCart,
     buyNow,
     isInCart,
     isPending,
   } = useProductCartActions()
+
+  // The hover image is only mounted once the card is first hovered or focused, so the grid doesn't download a
+  // second photo per card up front (touch screens never hover, so they never fetch it).
+  const [hasHovered, setHasHovered] = useState(false)
+  const revealHoverImage = () => setHasHovered(true)
 
   const pending = isPending(product.id)
 
@@ -130,7 +141,7 @@ function ProductCard({ product }) {
   const productLabels = getProductLabels(product)
 
   return (
-    <article className={CARD_FRAME_CLASSES}>
+    <article className={CARD_FRAME_CLASSES} onPointerEnter={revealHoverImage} onFocus={revealHoverImage}>
 
       <div className={CARD_BODY_CLASSES}>
 
@@ -164,11 +175,12 @@ function ProductCard({ product }) {
 
             {image && (
               <img
-                src={image.url}
+                src={cardImageUrl(image.url)}
                 alt={image.alt || product.name}
                 width='400'
                 height='400'
-                loading='lazy'
+                loading={priority ? 'eager' : 'lazy'}
+                fetchPriority={priority ? 'high' : undefined}
                 decoding='async'
                 className={`
   relative h-full w-full object-contain p-0.5 mix-blend-multiply
@@ -185,9 +197,9 @@ function ProductCard({ product }) {
                 THIRD IMAGE - HOVER
             --------------------------------------------- */}
 
-            {hoverImage && (
+            {hoverImage && hasHovered && (
               <img
-                src={hoverImage.url}
+                src={cardImageUrl(hoverImage.url)}
                 alt=''
                 aria-hidden='true'
                 width='400'
