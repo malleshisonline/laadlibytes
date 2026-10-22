@@ -23,6 +23,9 @@ const FILTER_KEYS = ['category', 'price', 'sort', 'search']
 const CARD_STAGGER_MS = 60
 const MAX_STAGGER_MS = 480
 
+// Cards in the first row on a laptop: their images load eagerly, ahead of the rest.
+const PRIORITY_CARD_COUNT = 4
+
 const DECORATION_CLASSES = 'pointer-events-none absolute hidden opacity-25 select-none md:block'
 
 const CHIP_CLASSES =
@@ -307,7 +310,7 @@ function ProductsPage() {
                           // Timing only: each card starts a moment after the one before it.
                           style={{ animationDelay: `${Math.min(index * CARD_STAGGER_MS, MAX_STAGGER_MS)}ms` }}
                         >
-                          <ProductCard product={product} />
+                          <ProductCard product={product} priority={index < PRIORITY_CARD_COUNT} />
                         </li>
                       ))}
                 </ul>

@@ -6,6 +6,10 @@ import { productApi } from '../../api/productApi.js'
 import bhogBackground from '../../assets/backgrounds/56bhogbg.avif'
 import APP_ROUTES from '../../constants/appRoutepoints.js'
 import { useScrollPager } from '../../hooks/useScrollPager.js'
+import { cloudinaryImageUrl } from '../../utils/cloudinaryImage.js'
+
+// Card images are fetched at this size (2× the rendered card) rather than as the full upload.
+const CARD_IMAGE_SIZE = 500
 
 // The whole catalogue is 56 products; 100 is the API's page-size maximum.
 const PRODUCT_LIMIT = 100
@@ -59,7 +63,7 @@ function ShowcaseCard({ product, index }) {
         />
         {image && (
           <img
-            src={image.url}
+            src={cloudinaryImageUrl(image.url, CARD_IMAGE_SIZE, CARD_IMAGE_SIZE, { crop: 'limit' })}
             alt={image.alt || product.name}
             width='400'
             height='400'
