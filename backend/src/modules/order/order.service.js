@@ -1,6 +1,9 @@
 import crypto from 'node:crypto';
 
+import { env } from '../../config/env.js';
 import { logger } from '../../config/logger.js';
+import { sendEmail } from '../../integrations/email/index.js';
+import { orderReceivedEmail } from '../../templates/email/orderReceived.js';
 import { ApiError } from '../../utils/ApiError.js';
 import { buildMeta, getPagination } from '../../utils/pagination.js';
 import { Address } from '../address/address.model.js';
@@ -228,6 +231,25 @@ async function recordGuestCustomerFor(order) {
   }
 }
 
+/**
+ * Emails the shop about a newly paid order. Best-effort and not awaited by the caller: the payment is
+ * already recorded, so a slow or failing mail server must never delay or fail the customer's confirmation.
+ */
+async function notifyOrderReceived(order) {
+  const to = env.ORDER_NOTIFY_EMAIL ?? env.ENQUIRY_NOTIFY_EMAIL;
+  if (!to) {
+    logger.warn('ORDER_NOTIFY_EMAIL and ENQUIRY_NOTIFY_EMAIL are not set; nobody was told about a paid order', {
+      orderNumber: order.orderNumber,
+    });
+    return;
+  }
+  try {
+    await sendEmail({ to, ...orderReceivedEmail(order) });
+  } catch (error) {
+    logger.error('Order notification email failed', { orderNumber: order.orderNumber, error: error.message });
+  }
+}
+
 async function createWithUniqueNumber(payload) {
   for (let attempt = 1; ; attempt++) {
     try {
@@ -379,6 +401,8 @@ export const orderService = {
       { returnDocument: 'after' }
     );
     if (updated) {
+      // Only this branch moved the order to paid, so a repeated verify or webhook never emails twice.
+      notifyOrderReceived(updated);
       return toCustomerView(updated);
     }
 

@@ -45,6 +45,11 @@ const envSchema = z.object({
     (value) => (typeof value === 'string' ? value.trim() || undefined : value),
     z.email().optional()
   ),
+  // Where new paid orders are emailed. Unset: ENQUIRY_NOTIFY_EMAIL gets them instead.
+  ORDER_NOTIFY_EMAIL: z.preprocess(
+    (value) => (typeof value === 'string' ? value.trim() || undefined : value),
+    z.email().optional()
+  ),
 
   SMS_PROVIDER: z.enum(['console', 'msg91']).default('console'),
   MSG91_AUTH_KEY: z.string().trim().optional(),

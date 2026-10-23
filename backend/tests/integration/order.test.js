@@ -5,6 +5,21 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import request from 'supertest';
 
+// ESM: the mock must be registered before the app (and so the email module) is imported.
+// A plain function, not jest.fn, so afterEach's restoreAllMocks never strips it.
+const outbox = [];
+let failNextEmail = false;
+jest.unstable_mockModule('../../src/integrations/email/index.js', () => {
+  const sendEmail = async (message) => {
+    if (failNextEmail) {
+      failNextEmail = false;
+      throw new Error('SMTP down');
+    }
+    outbox.push(message);
+  };
+  return { sendEmail, default: sendEmail };
+});
+
 const { default: app } = await import('../../src/app.js');
 const { env } = await import('../../src/config/env.js');
 const { Address } = await import('../../src/modules/address/address.model.js');
@@ -111,6 +126,8 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
+  outbox.length = 0;
+  failNextEmail = false;
   providerOrders = new Map();
   providerPayments = new Map();
   jest.spyOn(globalThis, 'fetch').mockImplementation(async (url, options = {}) => {
@@ -549,6 +566,128 @@ describe('Razorpay checkout and verification', () => {
 
     expect(res.status).toBe(401);
     expect(res.body.code).toBe('INVALID_WEBHOOK_SIGNATURE');
+  });
+});
+
+describe('order notification email to the shop', () => {
+  // The email is sent without being awaited, so give it a moment to land in the outbox.
+  const emailsSettle = () => new Promise((resolve) => setTimeout(resolve, 50));
+
+  function capturedWebhook(order, paymentId) {
+    const payment = {
+      id: paymentId,
+      order_id: order.checkout.orderId,
+      amount: order.total * 100,
+      currency: 'INR',
+      status: 'captured',
+    };
+    return signedWebhook({ event: 'payment.captured', payload: { payment: { entity: payment } } });
+  }
+
+  const sendWebhook = ({ rawBody, signature }) =>
+    request(app)
+      .post(api('/payments/webhook'))
+      .set('Content-Type', 'application/json')
+      .set('x-razorpay-signature', signature)
+      .send(rawBody);
+
+  test('emails the products, quantities, total, customer and order ID once the payment is verified', async () => {
+    const customer = await makeCustomer();
+    const chikki = await makeProduct({ name: 'Peanut Chikki', price: 150, mrp: 180 });
+    const ladoo = await makeProduct({ name: 'Millet <Ladoo>', price: 120, mrp: 120 });
+    await fillCart(customer.userId, [
+      { product: chikki, quantity: 2 },
+      { product: ladoo, quantity: 1 },
+    ]);
+    const checkout = await asCustomer(customer.userId, 'post').send({ addressId: customer.addressId });
+
+    await emailsSettle();
+    expect(outbox).toHaveLength(0);
+
+    const res = await verifyPayment(checkout.body.data, customer.userId, 'pay_notify');
+    await emailsSettle();
+
+    expect(res.status).toBe(200);
+    expect(outbox).toHaveLength(1);
+    const [email] = outbox;
+    const { orderNumber } = checkout.body.data;
+    expect(email.to).toBe(env.ENQUIRY_NOTIFY_EMAIL);
+    expect(email.subject).toBe(`New order ${orderNumber} from Renu Yadav`);
+    expect(email.text).toContain('You have received an order from Renu Yadav.');
+    expect(email.text).toContain(`Order ID: ${orderNumber}`);
+    expect(email.text).toContain('- Peanut Chikki x 2');
+    expect(email.text).toContain('- Millet <Ladoo> x 1');
+    expect(email.text).toContain('Total: ₹420');
+    expect(email.html).toContain('Millet &lt;Ladoo&gt; &times; 1');
+    expect(email.html).not.toContain('<Ladoo>');
+  });
+
+  test('sends one email when the verify call and the webhook both confirm the same payment', async () => {
+    const customer = await makeCustomer();
+    const checkout = await asCustomer(customer.userId, 'post').send({
+      addressId: customer.addressId,
+      buyNow: { productId: (await makeProduct()).id },
+    });
+
+    const verified = await verifyPayment(checkout.body.data, customer.userId, 'pay_once');
+    const repeat = await verifyPayment(checkout.body.data, customer.userId, 'pay_once');
+    const webhook = await sendWebhook(capturedWebhook(checkout.body.data, 'pay_once'));
+    await emailsSettle();
+
+    expect([verified.status, repeat.status, webhook.status]).toEqual([200, 200, 200]);
+    expect(outbox).toHaveLength(1);
+  });
+
+  test('a webhook alone also notifies the shop', async () => {
+    const customer = await makeCustomer();
+    const checkout = await asCustomer(customer.userId, 'post').send({
+      addressId: customer.addressId,
+      buyNow: { productId: (await makeProduct()).id },
+    });
+
+    const res = await sendWebhook(capturedWebhook(checkout.body.data, 'pay_webhook_notify'));
+    await emailsSettle();
+
+    expect(res.status).toBe(200);
+    expect(outbox).toHaveLength(1);
+    expect(outbox[0].subject).toContain(checkout.body.data.orderNumber);
+  });
+
+  test('sends nothing for a failed payment', async () => {
+    const customer = await makeCustomer();
+    const checkout = await asCustomer(customer.userId, 'post').send({
+      addressId: customer.addressId,
+      buyNow: { productId: (await makeProduct()).id },
+    });
+    const payment = {
+      id: 'pay_failed_no_email',
+      order_id: checkout.body.data.checkout.orderId,
+      amount: checkout.body.data.total * 100,
+      currency: 'INR',
+      status: 'failed',
+    };
+
+    const res = await sendWebhook(signedWebhook({ event: 'payment.failed', payload: { payment: { entity: payment } } }));
+    await emailsSettle();
+
+    expect(res.status).toBe(200);
+    expect(outbox).toHaveLength(0);
+  });
+
+  test('a failing mail server never fails the payment', async () => {
+    const customer = await makeCustomer();
+    const checkout = await asCustomer(customer.userId, 'post').send({
+      addressId: customer.addressId,
+      buyNow: { productId: (await makeProduct()).id },
+    });
+    failNextEmail = true;
+
+    const res = await verifyPayment(checkout.body.data, customer.userId, 'pay_smtp_down');
+    await emailsSettle();
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.paymentStatus).toBe('paid');
+    expect(outbox).toHaveLength(0);
   });
 });
 
