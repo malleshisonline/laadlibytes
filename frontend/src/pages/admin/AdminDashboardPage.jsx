@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { AlertTriangle, Inbox, Package, PackageX, ShoppingBag, Truck, Users, Wallet } from 'lucide-react'
+import { AlertTriangle, Inbox, Package, PackageX, ShoppingBag, Truck, Users } from 'lucide-react'
 
 import { adminApi } from '../../api/adminApi.js'
 import AdminLoadState from '../../components/admin/AdminLoadState.jsx'
@@ -77,21 +77,13 @@ function AdminDashboardPage() {
       <AdminPageHeader title="Dashboard" description="What needs your attention today." />
 
       <h2 className="mb-3 text-lg font-semibold text-navy-800">Orders</h2>
-      <div className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         <StatCard
           label="New orders"
           hint="Placed; payment status is shown in the order list"
           value={orders.byStatus.placed}
           Icon={ShoppingBag}
           to={ordersWith({ status: 'placed' })}
-        />
-        <StatCard
-          label="Payment pending"
-          hint="Not marked paid yet"
-          value={orders.unpaid}
-          Icon={Wallet}
-          tone={orders.unpaid ? 'warning' : 'navy'}
-          to={ordersWith({ paymentStatus: 'pending' })}
         />
         <StatCard
           label="To pack and ship"

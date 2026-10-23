@@ -6,6 +6,7 @@ import { Check, Pencil, Plus } from 'lucide-react'
 import { adminApi } from '../../api/adminApi.js'
 import AdminLoadState from '../../components/admin/AdminLoadState.jsx'
 import AdminPageHeader from '../../components/admin/AdminPageHeader.jsx'
+import AdminPagination from '../../components/admin/AdminPagination.jsx'
 import {
   ADMIN_BADGE,
   ADMIN_BUTTON_PRIMARY,
@@ -20,12 +21,15 @@ import {
 import { adminProductEditPath, APP_ROUTES } from '../../constants/appRoutepoints.js'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle.js'
 import { cloudinaryImageUrl } from '../../utils/cloudinaryImage.js'
+import { paginateList } from '../../utils/paginateList.js'
 import { formatPackSize, formatPrice } from '../../utils/productFormatters.js'
 
 // Matches DEFAULT_LOW_STOCK_THRESHOLD in backend/src/modules/admin/admin.service.js (the dashboard's "Low stock").
 const LOW_STOCK_THRESHOLD = 10
 // The API's largest page. The catalogue is 56 products, so one or two requests load it all.
 const PAGE_SIZE = 100
+// Rows shown per page of the table.
+const ADMIN_PRODUCTS_PER_PAGE = 10
 const THUMBNAIL_SIZE = 44
 
 /**
@@ -161,10 +165,17 @@ function AdminProductsPage() {
 
   // 56 rows: filtering on every render is cheaper than keeping a memo in sync with four filters.
   const filtered = products.filter((product) => matchesFilters(product, filters))
+  const { pageItems, meta } = paginateList(filtered, searchParams.get('page'), ADMIN_PRODUCTS_PER_PAGE)
 
+  /** Changing a filter leaves out `page`, so the list goes back to page 1. */
   function setFilter(name, value) {
     const next = { ...filters, [name]: value }
     setSearchParams(Object.fromEntries(Object.entries(next).filter(([, filterValue]) => filterValue)), { replace: true })
+  }
+
+  function setPage(page) {
+    const next = { ...filters, page: page > 1 ? String(page) : '' }
+    setSearchParams(Object.fromEntries(Object.entries(next).filter(([, paramValue]) => paramValue)))
   }
 
   /** Saves one change; resolves true on success. */
@@ -289,7 +300,7 @@ function AdminProductsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filtered.map((product) => {
+                  {pageItems.map((product) => {
                     const image = product.images?.[0]
                     const isBusy = busyIds.has(product.id)
                     return (
@@ -366,9 +377,7 @@ function AdminProductsPage() {
                 </tbody>
               </table>
             </div>
-            <p className="mt-4 text-sm text-muted">
-              Showing {filtered.length} of {products.length} products
-            </p>
+            <AdminPagination meta={meta} onPageChange={setPage} />
           </>
         )}
       </div>
