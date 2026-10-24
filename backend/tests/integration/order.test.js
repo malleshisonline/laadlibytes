@@ -142,6 +142,17 @@ beforeEach(async () => {
       providerOrders.set(providerOrder.id, providerOrder);
       return new Response(JSON.stringify(providerOrder), { status: 200 });
     }
+    const capture = String(url).match(/\/payments\/([^/]+)\/capture$/);
+    if (capture) {
+      const payment = providerPayments.get(capture[1]);
+      payment.status = 'captured';
+      return new Response(JSON.stringify(payment), { status: 200 });
+    }
+    const orderPayments = String(url).match(/\/orders\/([^/]+)\/payments$/);
+    if (orderPayments) {
+      const items = [...providerPayments.values()].filter((payment) => payment.order_id === orderPayments[1]);
+      return new Response(JSON.stringify({ count: items.length, items }), { status: 200 });
+    }
     if (String(url).includes('/payments/')) {
       const paymentId = String(url).split('/').at(-1);
       const payment = providerPayments.get(paymentId);
@@ -241,6 +252,7 @@ describe('placing an order', () => {
     const { userId, addressId } = await makeCustomer();
     const product = await makeProduct();
     const placed = await asCustomer(userId, 'post').send({ addressId, buyNow: { productId: product.id, quantity: 1 } });
+    await verifyPayment(placed.body.data, userId, 'pay_price_change');
 
     await Product.updateOne({ _id: product._id }, { price: 999, name: 'Renamed' });
     const res = await asCustomer(userId, 'get', `/${placed.body.data.id}`);
@@ -496,7 +508,7 @@ describe('Razorpay checkout and verification', () => {
     expect(await Cart.findOne({ user: customer.userId }).lean()).toBeNull();
   });
 
-  test('keeps the order placed when Razorpay reports a failed payment', async () => {
+  test('a failed payment leaves the checkout unpaid and never shows it as an order', async () => {
     const customer = await makeCustomer();
     const checkout = await asCustomer(customer.userId, 'post').send({
       addressId: customer.addressId,
@@ -522,8 +534,11 @@ describe('Razorpay checkout and verification', () => {
 
     expect(res.status).toBe(200);
     const saved = await Order.findById(checkout.body.data.id).lean();
-    expect(saved.status).toBe('placed');
     expect(saved.paymentStatus).toBe('failed');
+    expect((await asAdmin('get', `/${checkout.body.data.id}`)).status).toBe(404);
+    expect((await asAdmin('get')).body.meta.total).toBe(0);
+    expect((await asCustomer(customer.userId, 'get')).body.meta.total).toBe(0);
+    expect((await asCustomer(customer.userId, 'get', `/${checkout.body.data.id}`)).status).toBe(404);
   });
 
   test('accepts order.paid at the configured Razorpay webhook URL', async () => {
@@ -802,10 +817,15 @@ describe('guest checkout (no account)', () => {
   });
 
   test('the admin sees a guest order with its contact details and no user', async () => {
+    const checkoutKey = crypto.randomUUID();
     const placed = await asGuest().send({
-      checkoutKey: crypto.randomUUID(),
+      checkoutKey,
       address: guestAddress,
       buyNow: { productId: (await makeProduct()).id },
+    });
+    await asGuest(`/${placed.body.data.id}/payment/verify`).send({
+      checkoutKey,
+      ...paymentDetailsFor(placed.body.data, 'pay_guest_admin'),
     });
 
     const res = await asAdmin('get', `/${placed.body.data.id}`);
@@ -818,15 +838,21 @@ describe('guest checkout (no account)', () => {
 });
 
 describe("a customer's own orders", () => {
-  test('lists only their orders, newest first, without admin-only history fields', async () => {
+  test('lists only their paid orders, newest first, without admin-only history fields', async () => {
     const me = await makeCustomer();
     const other = await makeCustomer();
     const product = await makeProduct();
-    const place = ({ userId, addressId }) =>
-      asCustomer(userId, 'post').send({ addressId, buyNow: { productId: product.id } });
+    let paymentSeq = 0;
+    const place = async ({ userId, addressId }, { pay = true } = {}) => {
+      const res = await asCustomer(userId, 'post').send({ addressId, buyNow: { productId: product.id } });
+      paymentSeq += 1;
+      if (pay) await verifyPayment(res.body.data, userId, `pay_list_${paymentSeq}`);
+      return res;
+    };
 
     const older = await place(me);
     const newer = await place(me);
+    await place(me, { pay: false });
     await place(other);
 
     const res = await asCustomer(me.userId, 'get');
@@ -854,13 +880,17 @@ describe("a customer's own orders", () => {
 });
 
 describe('admin order management', () => {
-  async function placeOne({ stock = 20, quantity = 2 } = {}) {
+  let paymentSeq = 0;
+  /** A paid order, unless `pay: false` leaves it an unpaid checkout. */
+  async function placeOne({ stock = 20, quantity = 2, pay = true } = {}) {
     const customer = await makeCustomer();
     const product = await makeProduct({ stock });
     const res = await asCustomer(customer.userId, 'post').send({
       addressId: customer.addressId,
       buyNow: { productId: product.id, quantity },
     });
+    paymentSeq += 1;
+    if (pay) await verifyPayment(res.body.data, customer.userId, `pay_admin_${paymentSeq}`);
     return { order: res.body.data, product, customer };
   }
 
@@ -874,8 +904,8 @@ describe('admin order management', () => {
 
   test('lists orders filtered by status and searched by order number or phone', async () => {
     const { order } = await placeOne();
-    const { order: packedOrder, customer } = await placeOne();
-    await verifyPayment(packedOrder, customer.userId, 'pay_admin_filter');
+    const { order: packedOrder } = await placeOne();
+    await placeOne({ pay: false });
     await asAdmin('patch', `/${packedOrder.id}/status`).send({ status: 'packed' });
 
     const placed = await asAdmin('get', '?status=placed');
@@ -901,8 +931,7 @@ describe('admin order management', () => {
   });
 
   test('moves an order forward one step at a time and records each change', async () => {
-    const { order, customer } = await placeOne();
-    await verifyPayment(order, customer.userId, 'pay_status_transition');
+    const { order } = await placeOne();
 
     for (const status of ['packed', 'shipped', 'delivered']) {
       const res = await asAdmin('patch', `/${order.id}/status`).send({ status, note: `now ${status}` });
@@ -916,12 +945,12 @@ describe('admin order management', () => {
   });
 
   test('refuses to skip a step, go backwards or leave a final status', async () => {
+    const { order: unpaid } = await placeOne({ pay: false });
+    const unpaidPacking = await asAdmin('patch', `/${unpaid.id}/status`).send({ status: 'packed' });
+    expect(unpaidPacking.status).toBe(404);
+    expect(unpaidPacking.body.code).toBe('ORDER_NOT_FOUND');
+
     const { order } = await placeOne();
-
-    const unpaidPacking = await asAdmin('patch', `/${order.id}/status`).send({ status: 'packed' });
-    expect(unpaidPacking.status).toBe(409);
-    expect(unpaidPacking.body.code).toBe('PAYMENT_REQUIRED');
-
     const skip = await asAdmin('patch', `/${order.id}/status`).send({ status: 'shipped' });
     expect(skip.status).toBe(409);
     expect(skip.body.code).toBe('INVALID_STATUS_TRANSITION');
@@ -940,7 +969,7 @@ describe('admin order management', () => {
     });
 
     expect(res.status).toBe(404);
-    expect((await Order.findById(order.id).lean()).paymentStatus).toBe('pending');
+    expect((await Order.findById(order.id).lean()).paymentStatus).toBe('paid');
   });
 
   test('refuses removed and unsupported statuses', async () => {
@@ -951,20 +980,168 @@ describe('admin order management', () => {
     expect((await asAdmin('patch', `/${order.id}/status`).send({ status: 'voided' })).status).toBe(400);
   });
 
-  test('the dashboard summary counts orders by status and the unpaid ones', async () => {
+  test('the dashboard summary counts paid orders by status and leaves unpaid checkouts out', async () => {
     const { order: shipped } = await placeOne();
     const { order: packed } = await placeOne();
     await placeOne();
-    await Order.updateOne({ _id: shipped.id }, { status: 'shipped', paymentStatus: 'paid' });
-    await Order.updateOne({ _id: packed.id }, { status: 'packed', paymentStatus: 'paid' });
+    await placeOne({ pay: false });
+    await Order.updateOne({ _id: shipped.id }, { status: 'shipped' });
+    await Order.updateOne({ _id: packed.id }, { status: 'packed' });
 
     const res = await request(app).get(api('/admin/summary')).set('Authorization', bearer(adminId, 'admin'));
 
     expect(res.body.data.orders).toEqual({
       total: 3,
       byStatus: { placed: 1, packed: 1, shipped: 1, delivered: 0 },
-      unpaid: 1,
-      toPackAndShip: 1,
+      toPackAndShip: 2,
     });
+  });
+});
+
+describe('payment status check while the payment window is open', () => {
+  const statusOf = (userId, orderId, body = {}) =>
+    asCustomer(userId, 'post', `/${orderId}/payment/status`).send(body);
+
+  /** Records a payment on Razorpay's side only, as if the browser never heard about it. */
+  function paymentAtRazorpay(order, id, status) {
+    providerPayments.set(id, { id, order_id: order.checkout.orderId, amount: order.total * 100, currency: 'INR', status });
+  }
+
+  async function checkoutFor(customer, { stock = 20, quantity = 1, cart = false } = {}) {
+    const product = await makeProduct({ stock });
+    if (cart) {
+      await fillCart(customer.userId, [{ product, quantity }]);
+      const res = await asCustomer(customer.userId, 'post').send({ addressId: customer.addressId });
+      return { order: res.body.data, product };
+    }
+    const res = await asCustomer(customer.userId, 'post').send({
+      addressId: customer.addressId,
+      buyNow: { productId: product.id, quantity },
+    });
+    return { order: res.body.data, product };
+  }
+
+  test('an unpaid checkout reports pending and keeps its stock', async () => {
+    const customer = await makeCustomer();
+    const { order, product } = await checkoutFor(customer, { stock: 5, quantity: 2 });
+
+    const res = await statusOf(customer.userId, order.id);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data).toEqual({ paymentStatus: 'pending', order: null });
+    expect(await stockOf(product)).toBe(3);
+  });
+
+  test('finds a payment Razorpay captured without the browser being told, and places the order', async () => {
+    const customer = await makeCustomer();
+    const { order } = await checkoutFor(customer, { cart: true });
+    paymentAtRazorpay(order, 'pay_seen_by_poll', 'captured');
+
+    const res = await statusOf(customer.userId, order.id);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.paymentStatus).toBe('paid');
+    expect(res.body.data.order).toMatchObject({ id: order.id, paymentStatus: 'paid', paymentReference: 'pay_seen_by_poll' });
+    expect((await Cart.findOne({ user: customer.userId }).lean()).items).toHaveLength(0);
+    expect((await asAdmin('get', `/${order.id}`)).status).toBe(200);
+    // Asking again changes nothing.
+    expect((await statusOf(customer.userId, order.id)).body.data.paymentStatus).toBe('paid');
+  });
+
+  test('captures a payment that Razorpay only authorized', async () => {
+    const customer = await makeCustomer();
+    const { order } = await checkoutFor(customer);
+    paymentAtRazorpay(order, 'pay_authorized_only', 'authorized');
+
+    const res = await statusOf(customer.userId, order.id);
+
+    expect(res.body.data.paymentStatus).toBe('paid');
+    expect(providerPayments.get('pay_authorized_only').status).toBe('captured');
+  });
+
+  test('closing the window unpaid gives the stock back once, and the checkout is never an order', async () => {
+    const customer = await makeCustomer();
+    const { order, product } = await checkoutFor(customer, { stock: 5, quantity: 2 });
+    paymentAtRazorpay(order, 'pay_failed_attempt', 'failed');
+
+    const first = await statusOf(customer.userId, order.id, { abandon: true });
+    const again = await statusOf(customer.userId, order.id, { abandon: true });
+
+    expect(first.body.data).toEqual({ paymentStatus: 'pending', order: null });
+    expect(again.status).toBe(200);
+    expect(await stockOf(product)).toBe(5);
+    expect((await asAdmin('get')).body.meta.total).toBe(0);
+  });
+
+  test('a payment that arrives after the stock was given back still places the order and takes the stock again', async () => {
+    const customer = await makeCustomer();
+    const { order, product } = await checkoutFor(customer, { stock: 5, quantity: 2 });
+    await statusOf(customer.userId, order.id, { abandon: true });
+    expect(await stockOf(product)).toBe(5);
+
+    const { rawBody, signature } = signedWebhook({
+      event: 'payment.captured',
+      payload: {
+        payment: {
+          entity: { id: 'pay_late', order_id: order.checkout.orderId, amount: order.total * 100, currency: 'INR', status: 'captured' },
+        },
+      },
+    });
+    const res = await request(app)
+      .post(api('/webhooks/razorpay'))
+      .set('Content-Type', 'application/json')
+      .set('x-razorpay-signature', signature)
+      .send(rawBody);
+
+    expect(res.status).toBe(200);
+    expect(await stockOf(product)).toBe(3);
+    const saved = await Order.findById(order.id).select('+stockReleased').lean();
+    expect(saved).toMatchObject({ paymentStatus: 'paid', stockReleased: false });
+  });
+
+  test("needs the order's owner, and a guest needs the order's checkoutKey", async () => {
+    const customer = await makeCustomer();
+    const stranger = await makeCustomer();
+    const { order } = await checkoutFor(customer);
+    expect((await statusOf(stranger.userId, order.id)).status).toBe(404);
+
+    const checkoutKey = crypto.randomUUID();
+    const guest = await request(app)
+      .post(api('/orders/guest'))
+      .send({
+        checkoutKey,
+        address: { name: 'Guest Shopper', phone: '9876501234', pincode: '500081', line1: 'House 12', city: 'Hyderabad', state: 'Telangana' },
+        buyNow: { productId: (await makeProduct()).id },
+      });
+    const guestStatus = (key) =>
+      request(app).post(api(`/orders/guest/${guest.body.data.id}/payment/status`)).send({ checkoutKey: key });
+
+    expect((await guestStatus(crypto.randomUUID())).status).toBe(404);
+    paymentAtRazorpay(guest.body.data, 'pay_guest_poll', 'captured');
+    const res = await guestStatus(checkoutKey);
+    expect(res.status).toBe(200);
+    expect(res.body.data.paymentStatus).toBe('paid');
+  });
+
+  test('the sweep gives back stock of old unpaid checkouts, and places one Razorpay did capture', async () => {
+    const { paymentService } = await import('../../src/modules/payment/payment.service.js');
+    const customer = await makeCustomer();
+    const { order: abandoned, product: abandonedProduct } = await checkoutFor(customer, { stock: 5, quantity: 2 });
+    const { order: paidLate, product: paidProduct } = await checkoutFor(customer, { stock: 5, quantity: 2 });
+    const { order: recent, product: recentProduct } = await checkoutFor(customer, { stock: 5, quantity: 2 });
+    paymentAtRazorpay(paidLate, 'pay_found_by_sweep', 'captured');
+    const longAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
+    await Order.collection.updateMany(
+      { _id: { $in: [abandoned.id, paidLate.id].map((id) => new mongoose.Types.ObjectId(id)) } },
+      { $set: { createdAt: longAgo } }
+    );
+
+    await paymentService.releaseAbandonedCheckouts();
+
+    expect(await stockOf(abandonedProduct)).toBe(5);
+    expect(await stockOf(paidProduct)).toBe(3);
+    expect(await stockOf(recentProduct)).toBe(3);
+    expect((await Order.findById(paidLate.id).lean()).paymentStatus).toBe('paid');
+    expect((await Order.findById(recent.id).select('+stockReleased').lean()).stockReleased).toBe(false);
   });
 });

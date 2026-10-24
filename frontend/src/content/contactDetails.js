@@ -1,7 +1,6 @@
 import { Clock, Mail, MapPin, Phone } from 'lucide-react'
 
 // Contact Us page copy, laid out as in design-reference/finaLaadliBytesUI.png.
-// TODO: CONTACT_EMAIL is still the design's placeholder; replace it with the real public address.
 const CONTACT_EMAIL = 'sanjay.kumar@milletbowl.com'
 const CONTACT_PHONE = '+91 80081 42786'
 

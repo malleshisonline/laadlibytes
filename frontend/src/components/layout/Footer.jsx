@@ -21,6 +21,8 @@ const QUICK_LINKS = [
 const CUSTOMER_CARE_LINKS = [
   { label: 'Privacy Policy', path: '/privacy-policy' },
   { label: 'Terms & Conditions', path: '/terms' },
+  { label: 'Refund & Cancellation', path: '/refund-policy' },
+  { label: 'Shipping & Delivery', path: '/shipping-policy' },
   { label: 'FAQs', path: '/faq' },
 ]
 
@@ -43,7 +45,7 @@ function SocialIcon({ children }) {
   )
 }
 
-// YouTube has no channel yet, so it points to "#" for now.
+// Add YouTube back here once the channel exists.
 const SOCIAL_LINKS = [
   {
     label: 'Instagram',
@@ -62,16 +64,6 @@ const SOCIAL_LINKS = [
     icon: (
       <SocialIcon>
         <path d="M15 3h-2a4 4 0 0 0-4 4v3H7v4h2v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h2z" />
-      </SocialIcon>
-    ),
-  },
-  {
-    label: 'YouTube',
-    href: '#',
-    icon: (
-      <SocialIcon>
-        <rect x="2" y="5" width="20" height="14" rx="4" />
-        <path d="m10 9 5 3-5 3z" />
       </SocialIcon>
     ),
   },
@@ -236,6 +228,9 @@ function Footer() {
       <div className="relative z-10 border-t border-white/20">
         <p className="mx-auto max-w-7xl px-4 py-4 text-center text-xs sm:px-6 lg:text-sm">
           © {new Date().getFullYear()} {APP_SETTINGS.SITE_NAME}. All rights reserved.
+          <span className="block sm:inline sm:before:content-['_·_']">
+            {APP_SETTINGS.SITE_NAME} is a brand of Millet Bowl Food Products Pvt Ltd.
+          </span>
         </p>
       </div>
     </footer>

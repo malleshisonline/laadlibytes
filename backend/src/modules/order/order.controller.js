@@ -70,6 +70,17 @@ export const orderController = {
     sendResponse(res, { message: 'Payment verified', data: order });
   }),
 
+  paymentStatus: asyncHandler(async (req, res) => {
+    const result = await paymentService.syncCheckoutPayment({ userId: req.user.id }, req.params.id, req.body);
+    sendResponse(res, { message: 'Payment status fetched', data: result });
+  }),
+
+  guestPaymentStatus: asyncHandler(async (req, res) => {
+    const { checkoutKey, ...options } = req.body;
+    const result = await paymentService.syncCheckoutPayment({ guestCheckoutKey: checkoutKey }, req.params.id, options);
+    sendResponse(res, { message: 'Payment status fetched', data: result });
+  }),
+
   listMine: asyncHandler(async (req, res) => {
     const { items, meta } = await orderService.listMine(req.user.id, req.validatedQuery ?? {});
     sendResponse(res, { message: 'Orders fetched successfully', data: items, meta });

@@ -29,6 +29,9 @@ const ProductDetailsPage = lazy(() => import('./pages/ProductDetailsPage.jsx'))
 const ProductsPage = lazy(() => import('./pages/ProductsPage.jsx'))
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage.jsx'))
 const TermsPage = lazy(() => import('./pages/TermsPage.jsx'))
+const RefundPolicyPage = lazy(() => import('./pages/RefundPolicyPage.jsx'))
+const ShippingPolicyPage = lazy(() => import('./pages/ShippingPolicyPage.jsx'))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage.jsx'))
 const RegisterPage = lazy(() => import('./pages/RegisterPage.jsx'))
 const VerifyOtpPage = lazy(() => import('./pages/VerifyOtpPage.jsx'))
 const BestSellers = lazy(() => import('./pages/BestSellers.jsx'))
@@ -83,6 +86,8 @@ function App() {
             <Route path={APP_ROUTES.CONTACT} element={<ContactPage />} />
             <Route path={APP_ROUTES.PRIVACY_POLICY} element={<PrivacyPolicyPage />} />
             <Route path={APP_ROUTES.TERMS} element={<TermsPage />} />
+            <Route path={APP_ROUTES.REFUND_POLICY} element={<RefundPolicyPage />} />
+            <Route path={APP_ROUTES.SHIPPING_POLICY} element={<ShippingPolicyPage />} />
             <Route path={APP_ROUTES.FAQ} element={<FaqPage />} />
             <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
             <Route path={APP_ROUTES.PRODUCT_DETAILS} element={<ProductDetailsPage />} />
@@ -103,6 +108,9 @@ function App() {
                 <Route path={APP_ROUTES.ACCOUNT_SECURITY} element={<SecuritySection />} />
               </Route>
             </Route>
+
+            {/* Any other address: a "Page not found" with the menu and footer, never a blank screen. */}
+            <Route path='*' element={<NotFoundPage />} />
           </Route>
 
           {/* Admin panel: admins only, its own layout with no storefront navbar or footer. */}

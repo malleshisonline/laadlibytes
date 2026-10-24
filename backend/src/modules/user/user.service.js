@@ -144,6 +144,8 @@ export const userService = {
       ...ownOrders,
       status: { $in: ['placed', 'packed'] },
       paymentStatus: { $in: ['pending', 'failed'] },
+      // An abandoned checkout already gave its stock back.
+      stockReleased: { $ne: true },
     })
       .select('items.product items.quantity')
       .lean();

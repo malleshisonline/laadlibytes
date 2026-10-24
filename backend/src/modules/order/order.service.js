@@ -28,6 +28,12 @@ const ORDER_SORT_MAP = {
   oldest: { createdAt: 1, _id: 1 },
 };
 
+// Only a paid order is placed. Before that the document is a checkout holding stock, and customers
+// and admins never see it: every read below that serves them filters on this.
+const PLACED_ORDER = Object.freeze({ paymentStatus: 'paid' });
+
+const CHECKOUT_FIELDS = '+razorpayOrderId +checkoutUsesCart +guestCartToken +stockReleased';
+
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // 404 for another user's order too, so the response never reveals that it exists.
@@ -78,6 +84,7 @@ function toCustomerView(order) {
   delete view.checkoutKey;
   delete view.checkoutUsesCart;
   delete view.guestCartToken;
+  delete view.stockReleased;
   return view;
 }
 
@@ -176,6 +183,28 @@ async function reserveStock(lines) {
     reserved.push({ productId: product._id, quantity });
   }
   return reserved;
+}
+
+/**
+ * A payment arrived for a checkout whose stock was already put back. The money is taken, so the order
+ * stands either way: each line takes its stock again where enough is left, and a short line is
+ * logged for the shop to handle rather than refusing the paid order.
+ */
+async function retakeReleasedStock(order) {
+  for (const { product, quantity, name } of order.items) {
+    const { modifiedCount } = await Product.updateOne(
+      { _id: product, stock: { $gte: quantity } },
+      { $inc: { stock: -quantity } }
+    );
+    if (modifiedCount === 0) {
+      logger.error('A late payment arrived after the stock was released, and the stock is now short', {
+        orderNumber: order.orderNumber,
+        product: name,
+        quantity,
+      });
+    }
+  }
+  await Order.updateOne({ _id: order._id }, { $set: { stockReleased: false } });
 }
 
 /**
@@ -323,7 +352,7 @@ export const orderService = {
   },
 
   async findCheckout(owner, checkoutKey) {
-    return Order.findOne({ ...ownerFilter(owner), checkoutKey }).select('+razorpayOrderId +checkoutKey');
+    return Order.findOne({ ...ownerFilter(owner), checkoutKey }).select('+razorpayOrderId +checkoutKey +stockReleased');
   },
 
   async attachRazorpayOrder(orderId, owner, razorpayOrderId) {
@@ -363,13 +392,39 @@ export const orderService = {
   },
 
   async checkoutForRazorpayOrder(razorpayOrderId) {
-    return Order.findOne({ razorpayOrderId }).select('+razorpayOrderId +checkoutUsesCart +guestCartToken');
+    return Order.findOne({ razorpayOrderId }).select(CHECKOUT_FIELDS);
   },
 
   async getCheckoutFor(owner, orderId) {
-    return Order.findOne({ _id: orderId, ...ownerFilter(owner) }).select(
-      '+razorpayOrderId +checkoutUsesCart +guestCartToken'
+    return Order.findOne({ _id: orderId, ...ownerFilter(owner) }).select(CHECKOUT_FIELDS);
+  },
+
+  /**
+   * Puts back the stock of an unpaid checkout that was abandoned. The document is kept, hidden, so a
+   * payment that still arrives later finds its order. Matches at most once, so stock never goes back twice.
+   */
+  async releaseCheckoutStock(order) {
+    const released = await Order.findOneAndUpdate(
+      { _id: order._id, paymentStatus: { $ne: 'paid' }, stockReleased: { $ne: true } },
+      { $set: { stockReleased: true } }
     );
+    if (released) {
+      await releaseStock(released.items.map((item) => ({ productId: item.product, quantity: item.quantity })));
+    }
+    return Boolean(released);
+  },
+
+  /** Unpaid checkouts older than `createdBefore` that still hold stock, oldest first. */
+  async findAbandonedCheckouts(createdBefore, limit = 50) {
+    return Order.find({
+      paymentStatus: { $ne: 'paid' },
+      stockReleased: { $ne: true },
+      razorpayOrderId: { $exists: true },
+      createdAt: { $lt: createdBefore },
+    })
+      .sort({ createdAt: 1 })
+      .limit(limit)
+      .select(CHECKOUT_FIELDS);
   },
 
   async markPaymentPaid(order, paymentId) {
@@ -399,8 +454,9 @@ export const orderService = {
         $push: { history: { $each: history } },
       },
       { returnDocument: 'after' }
-    );
+    ).select('+stockReleased');
     if (updated) {
+      if (updated.stockReleased) await retakeReleasedStock(updated);
       // Only this branch moved the order to paid, so a repeated verify or webhook never emails twice.
       notifyOrderReceived(updated);
       return toCustomerView(updated);
@@ -439,7 +495,7 @@ export const orderService = {
   /** The signed-in user's own orders, newest first. */
   async listMine(userId, query) {
     const { page, limit, skip } = getPagination(query, 50);
-    const filter = { user: userId };
+    const filter = { user: userId, ...PLACED_ORDER };
 
     const [orders, total] = await Promise.all([
       Order.find(filter).sort(ORDER_SORT_MAP.newest).skip(skip).limit(limit),
@@ -450,10 +506,15 @@ export const orderService = {
   },
 
   async getMine(userId, orderId) {
-    return orderService.getFor({ userId }, orderId);
+    const order = await Order.findOne({ _id: orderId, user: userId, ...PLACED_ORDER });
+    if (!order) throw orderNotFound();
+    return toCustomerView(order);
   },
 
-  /** One order as its owner sees it: a signed-in customer's own, or a guest's by checkoutKey. */
+  /**
+   * One order or checkout as its owner sees it: a signed-in customer's own, or a guest's by checkoutKey.
+   * Unpaid ones too, because the checkout flow itself reads them; customer-facing reads use getMine.
+   */
   async getFor(owner, orderId) {
     const order = await Order.findOne({ _id: orderId, ...ownerFilter(owner) });
     if (!order) throw orderNotFound();
@@ -463,10 +524,9 @@ export const orderService = {
   /** Admin list. Leaves the history out; the detail route has it. */
   async list(query) {
     const { page, limit, skip } = getPagination(query);
-    const filter = {};
+    const filter = { ...PLACED_ORDER };
 
     if (query.status) filter.status = query.status;
-    if (query.paymentStatus) filter.paymentStatus = query.paymentStatus;
     if (query.search) {
       const term = { $regex: escapeRegex(query.search), $options: 'i' };
       filter.$or = [{ orderNumber: term }, { 'address.name': term }, { 'contact.phone': term }, { 'contact.email': term }];
@@ -486,7 +546,7 @@ export const orderService = {
 
   /** Admin detail, with the customer and who made each change. */
   async getById(orderId) {
-    const order = await Order.findById(orderId)
+    const order = await Order.findOne({ _id: orderId, ...PLACED_ORDER })
       .populate('user', 'name email phone')
       .populate('guestCustomer', 'name email phone')
       .populate('history.by', 'name');
@@ -499,7 +559,7 @@ export const orderService = {
    * admins clicking at once cannot both move it (or put its stock back twice).
    */
   async updateStatus(orderId, { status, note }, actorId) {
-    const order = await Order.findById(orderId).select('status paymentStatus').lean();
+    const order = await Order.findOne({ _id: orderId, ...PLACED_ORDER }).select('status paymentStatus').lean();
     if (!order) throw orderNotFound();
 
     if (!ORDER_STATUS_TRANSITIONS[order.status]?.includes(status)) {

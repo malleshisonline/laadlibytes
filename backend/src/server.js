@@ -2,8 +2,19 @@ import app from './app.js';
 import { env } from './config/env.js';
 import { connectDB, disconnectDB } from './config/database.js';
 import { logger } from './config/logger.js';
+import { paymentService } from './modules/payment/payment.service.js';
+
+// How often unpaid checkouts are checked for abandonment (payment.service.js releaseAbandonedCheckouts).
+const ABANDONED_CHECKOUT_SWEEP_MS = 5 * 60 * 1000;
 
 let server;
+let abandonedCheckoutSweep;
+
+function sweepAbandonedCheckouts() {
+  paymentService.releaseAbandonedCheckouts().catch((err) => {
+    logger.error('Abandoned checkout sweep failed', { message: err.message });
+  });
+}
 
 async function bootstrap() {
   await connectDB();
@@ -11,6 +22,12 @@ async function bootstrap() {
   server = app.listen(env.PORT, () => {
     logger.info(`Server listening on http://localhost:${env.PORT}${env.API_PREFIX} [${env.NODE_ENV}]`);
   });
+
+  if (env.RAZORPAY_KEY_ID && env.RAZORPAY_KEY_SECRET) {
+    sweepAbandonedCheckouts();
+    abandonedCheckoutSweep = setInterval(sweepAbandonedCheckouts, ABANDONED_CHECKOUT_SWEEP_MS);
+    abandonedCheckoutSweep.unref();
+  }
 }
 
 /** Stop accepting connections, drain in-flight requests, then close the DB. */
@@ -23,6 +40,7 @@ async function shutdown(signal, exitCode = 0) {
   }, 10_000).unref();
 
   try {
+    clearInterval(abandonedCheckoutSweep);
     if (server) await new Promise((resolve, reject) => server.close((err) => (err ? reject(err) : resolve())));
     await disconnectDB();
     clearTimeout(forceExit);

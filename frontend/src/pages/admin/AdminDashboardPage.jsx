@@ -80,7 +80,7 @@ function AdminDashboardPage() {
       <div className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         <StatCard
           label="New orders"
-          hint="Placed; payment status is shown in the order list"
+          hint="Paid and waiting to be packed"
           value={orders.byStatus.placed}
           Icon={ShoppingBag}
           to={ordersWith({ status: 'placed' })}
@@ -90,7 +90,7 @@ function AdminDashboardPage() {
           hint="Paid orders, placed or packed"
           value={orders.toPackAndShip}
           Icon={Truck}
-          to={ordersWith({ paymentStatus: 'paid' })}
+          to={APP_ROUTES.ADMIN_ORDERS}
         />
         <StatCard label="All orders" value={orders.total} Icon={Package} to={APP_ROUTES.ADMIN_ORDERS} />
       </div>

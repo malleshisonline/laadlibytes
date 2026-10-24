@@ -6,7 +6,7 @@ import { idParamSchema, objectIdSchema } from '../../utils/validators.js';
 import { addressFields } from '../address/address.validation.js';
 import { MAX_QTY_PER_LINE } from '../cart/cart.service.js';
 
-import { ORDER_STATUSES, PAYMENT_STATUSES } from './order.model.js';
+import { ORDER_STATUSES } from './order.model.js';
 
 export const orderIdParamSchema = idParamSchema;
 
@@ -57,7 +57,7 @@ export const adminListOrdersQuerySchema = z.object({
   // Order number, customer name or phone.
   search: z.string().trim().max(100).optional(),
   status: z.enum(ORDER_STATUSES).optional(),
-  paymentStatus: z.enum(PAYMENT_STATUSES).optional(),
+  // No paymentStatus filter: only paid orders are placed, so every listed order is paid.
   sort: z.enum(ORDER_SORTS).default('newest'),
 });
 
@@ -75,5 +75,17 @@ export const verifyRazorpayPaymentSchema = z.object({
 });
 
 export const verifyGuestPaymentSchema = verifyRazorpayPaymentSchema.extend({
+  checkoutKey: z.string().uuid(),
+});
+
+/**
+ * Asks Razorpay whether the checkout was paid. `abandon: true` is sent when the shopper closes the
+ * payment window: an unpaid checkout then gives its stock back.
+ */
+export const paymentStatusSchema = z.object({
+  abandon: z.boolean().default(false),
+});
+
+export const guestPaymentStatusSchema = paymentStatusSchema.extend({
   checkoutKey: z.string().uuid(),
 });

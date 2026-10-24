@@ -31,7 +31,6 @@ import {
 import { formatPrice } from '../../utils/productFormatters.js'
 
 const STATUS_OPTIONS = ORDER_STEPS
-const PAYMENT_OPTIONS = ['pending', 'paid', 'failed']
 
 /** /admin/orders. Filters live in the URL, so a dashboard card can open a filtered list and Back keeps it. */
 function AdminOrdersPage() {
@@ -39,7 +38,6 @@ function AdminOrdersPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const params = {
     status: searchParams.get('status') ?? '',
-    paymentStatus: searchParams.get('paymentStatus') ?? '',
     search: searchParams.get('search') ?? '',
     sort: searchParams.get('sort') ?? 'newest',
     page: Number(searchParams.get('page')) || 1,
@@ -62,11 +60,11 @@ function AdminOrdersPage() {
 
   return (
     <>
-      <AdminPageHeader title="Orders" description="Pack and ship paid orders, and review payment status." />
+      <AdminPageHeader title="Orders" description="Every order here is paid. Pack and ship them one step at a time." />
 
       <div className={`${ADMIN_CARD} mb-4`}>
         <div className="grid gap-3 md:grid-cols-12">
-          <form onSubmit={handleSearch} className="md:col-span-6" role="search">
+          <form onSubmit={handleSearch} className="md:col-span-9" role="search">
             <label htmlFor="order-search" className={ADMIN_LABEL}>
               Search
             </label>
@@ -98,24 +96,6 @@ function AdminOrdersPage() {
               {STATUS_OPTIONS.map((option) => (
                 <option key={option} value={option}>
                   {adminOrderStatusLabel(option)}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="md:col-span-3">
-            <label htmlFor="order-payment" className={ADMIN_LABEL}>
-              Payment
-            </label>
-            <select
-              id="order-payment"
-              value={params.paymentStatus}
-              onChange={(event) => updateParams({ paymentStatus: event.target.value })}
-              className={ADMIN_INPUT}
-            >
-              <option value="">All payments</option>
-              {PAYMENT_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {paymentStatusLabel(option)}
                 </option>
               ))}
             </select>

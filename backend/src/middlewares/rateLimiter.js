@@ -12,11 +12,22 @@ const baseOptions = {
   handler: (_req, _res, next) => next(ApiError.tooMany()),
 };
 
+// The checkout page polls this while the payment window is open; paymentStatusLimiter covers it.
+const PAYMENT_STATUS_PATH = /\/orders\/(guest\/)?[a-f\d]{24}\/payment\/status$/i;
+
 /** Applied to the whole API surface. */
 export const apiLimiter = rateLimit({
   ...baseOptions,
+  skip: (req) => baseOptions.skip(req) || PAYMENT_STATUS_PATH.test(req.originalUrl.split('?')[0]),
   windowMs: env.RATE_LIMIT_WINDOW_MS,
   limit: env.RATE_LIMIT_MAX,
+});
+
+/** The payment-status poll: one request every few seconds for as long as the payment window stays open. */
+export const paymentStatusLimiter = rateLimit({
+  ...baseOptions,
+  windowMs: 15 * 60 * 1000,
+  limit: 300,
 });
 
 /** Tighter budget for credential endpoints (password login / refresh). */

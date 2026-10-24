@@ -4,6 +4,8 @@ export const APP_ROUTES = {
   CONTACT: '/contact',
   PRIVACY_POLICY: '/privacy-policy',
   TERMS: '/terms',
+  REFUND_POLICY: '/refund-policy',
+  SHIPPING_POLICY: '/shipping-policy',
   FAQ: '/faq',
   IDENTIFY: '/identify',
   LOGIN: '/login',

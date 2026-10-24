@@ -191,6 +191,8 @@ describe('a guest customer is not an account', () => {
 
   test('signing up with the phone turns it into the account, with its orders and addresses', async () => {
     const placed = await placeGuestOrder({ email: 'someone-else@example.com' });
+    // Only a paid order is listed under My Orders.
+    await Order.updateOne({ _id: placed.body.data.id }, { paymentStatus: 'paid' });
     const guest = await User.findOne({ phone: GUEST_PHONE }).lean();
 
     const res = await signUp(GUEST_PHONE);

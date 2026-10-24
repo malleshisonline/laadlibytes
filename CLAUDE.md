@@ -136,14 +136,15 @@ Contact is the address phone plus the account email, if any. The order number is
 `status` (delivery) and `paymentStatus` are separate fields:
 
 - `status` moves only along `ORDER_STATUS_TRANSITIONS`: `placed → packed → shipped → delivered`.
-- A new order is `placed` while payment is pending or failed. Successful verified Razorpay payment sets `paymentStatus` to `paid` but leaves `status` as `placed`; admins can then move it to `packed`.
+- **Only a paid order is an order.** The document is created when checkout opens (it holds the stock and the Razorpay order), but until `paymentStatus` is `paid` it is a hidden checkout: `PLACED_ORDER` in `order.service.js` filters every customer read (`GET /orders`, `GET /orders/:id`) and every admin read and write (`/admin/orders`, the summary). Verified payment sets `paid` and leaves `status` as `placed`; admins can then move it to `packed`.
+- `POST /orders/:id/payment/status` (guest: `POST /orders/guest/:id/payment/status` with `checkoutKey`) asks Razorpay directly (`GET /orders/{id}/payments`, capturing an `authorized` payment) and places the order if it was paid, so a payment the browser never heard about still lands. The storefront polls it while the payment window is open, then closes the window; it has its own `paymentStatusLimiter` instead of `apiLimiter`. `{ abandon: true }`, sent when the window is closed, gives an unpaid checkout's stock back (`stockReleased`). `server.js` runs `releaseAbandonedCheckouts` every 5 minutes for checkouts unpaid after `ABANDONED_CHECKOUT_AFTER_MS` (30 min). A payment that arrives after the release still places the order and takes the stock again (`markPaymentPaid`), logging an error if it is short.
 - The shop takes **no cancellations, refunds, returns or exchanges**, so there is no `cancelled`, no `refunded` and no customer cancel route.
 - There is no `confirmed` or `voided` order status. Payment state remains separately represented by `paymentStatus`.
 - `paymentStatus` is `pending | paid | failed`. Razorpay checkout creates the gateway order server-side; customer verification and signed `payment.captured` webhooks are the only paths to `paid`. `POST /orders/:id/payment/verify` validates the checkout signature and confirms the captured amount/currency with Razorpay. Admins cannot edit payment status.
 - Both admin updates filter on the status they read, so two admins acting at once get 409 `ORDER_CHANGED` instead of a double change or a double restock.
 - Every change appends `{ event, value, note, by, at }` to `history`. Customer reads (`GET /orders`, `GET /orders/:id`, own orders only, another user's id is a 404) strip `by`, `note` and `user`.
-- `/admin/orders` lists (filter `status` / `paymentStatus`, `search` on order number, name, phone or email) and reads, with `user` and `history.by` populated.
-- `GET /admin/summary` has `orders: { total, byStatus, unpaid }`.
+- `/admin/orders` lists paid orders (filter `status`, `search` on order number, name, phone or email) and reads, with `user` and `history.by` populated.
+- `GET /admin/summary` has `orders: { total, byStatus, toPackAndShip }`, paid orders only.
 - The shop is emailed once per order when it becomes paid (`notifyOrderReceived` in `order.service.js`, template `orderReceived.js`): only the `markPaymentPaid` branch that actually moves it to `paid` sends, so a repeated verify or webhook never emails twice. It goes to `ORDER_NOTIFY_EMAIL`, else `ENQUIRY_NOTIFY_EMAIL`, is not awaited, and a mail failure is only logged. The driver is `EMAIL_PROVIDER` (`smtp` or `resend`), so switching provider is an env change only.
 
 ## Product decisions

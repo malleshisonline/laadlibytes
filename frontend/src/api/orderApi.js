@@ -16,6 +16,12 @@ export const orderApi = {
     ),
   resumePayment: (id) => httpClient.post(API_ENDPOINTS.ORDERS.CHECKOUT(id), {}),
   verifyPayment: (id, details) => httpClient.post(API_ENDPOINTS.ORDERS.VERIFY_PAYMENT(id), details),
+  /**
+   * Asks whether the checkout was paid; resolves to { paymentStatus, order }. `abandon: true` (the shopper closed
+   * the payment window) also gives an unpaid checkout's stock back.
+   */
+  paymentStatus: (id, { abandon = false } = {}) =>
+    httpClient.post(API_ENDPOINTS.ORDERS.PAYMENT_STATUS(id), { abandon }),
 
   /**
    * A guest order (not signed in): the address and an optional email are saved on the order only. Without
@@ -30,6 +36,8 @@ export const orderApi = {
     }),
   verifyGuestPayment: (id, checkoutKey, details) =>
     httpClient.post(API_ENDPOINTS.ORDERS.GUEST_VERIFY_PAYMENT(id), { ...details, checkoutKey }),
+  guestPaymentStatus: (id, checkoutKey, { abandon = false } = {}) =>
+    httpClient.post(API_ENDPOINTS.ORDERS.GUEST_PAYMENT_STATUS(id), { checkoutKey, abandon }),
 
   /** Resolves to { data: orders (newest first), meta: { page, totalPages, hasNextPage, … } }. */
   list: (page = 1) => httpClient.getWithMeta(`${API_ENDPOINTS.ORDERS.ROOT}?${new URLSearchParams({ page: String(page) })}`),

@@ -67,11 +67,17 @@ function usePlaceOrder() {
         const checkout = user
           ? await orderApi.place({ ...payload, checkoutKey: key })
           : await orderApi.placeGuest({ ...payload, checkoutKey: key })
-        const order = await openRazorpayCheckout(checkout.checkout, (details) =>
-          user ? orderApi.verifyPayment(checkout.id, details) : orderApi.verifyGuestPayment(checkout.id, key, details),
+        const order = await openRazorpayCheckout(
+          checkout.checkout,
+          (details) =>
+            user ? orderApi.verifyPayment(checkout.id, details) : orderApi.verifyGuestPayment(checkout.id, key, details),
+          (options) =>
+            user ? orderApi.paymentStatus(checkout.id, options) : orderApi.guestPaymentStatus(checkout.id, key, options),
         )
         if (!order) {
-          toast.error('Payment was cancelled. The order remains placed; you can try again.')
+          // Nothing was placed and the stock went back, so the next attempt is a fresh checkout.
+          checkoutKey.current = globalThis.crypto.randomUUID()
+          toast.error('Payment was not completed, so your order could not be placed. Please try again.')
           return null
         }
         if (user) {

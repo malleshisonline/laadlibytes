@@ -73,8 +73,12 @@ const orderHistorySchema = new mongoose.Schema(
 );
 
 /**
- * One placed order. Delivery is free on every order, so there is deliberately no shippingCharge:
+ * One order. Delivery is free on every order, so there is deliberately no shippingCharge:
  * total is the sum of the lines.
+ *
+ * The document is created when checkout opens, so it can hold the stock and the Razorpay order, but
+ * until `paymentStatus` is 'paid' it is only a checkout: customers and admins never see it
+ * (PLACED_ORDER in order.service.js).
  */
 const orderSchema = new mongoose.Schema(
   {
@@ -111,6 +115,9 @@ const orderSchema = new mongoose.Schema(
     checkoutUsesCart: { type: Boolean, default: false, select: false },
     // sha256 of the guest's `cartId` cookie, for a guest cart order: the paid lines leave that cart.
     guestCartToken: { type: String, select: false },
+    // An unpaid checkout whose stock was put back after it was abandoned. A payment that still
+    // arrives later takes the stock again (order.service.js markPaymentPaid).
+    stockReleased: { type: Boolean, default: false, select: false },
     history: { type: [orderHistorySchema], default: [] },
   },
   {

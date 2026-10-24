@@ -153,6 +153,39 @@ function expectedWebhookSignature(rawBody) {
 }
 
 /**
+ * Asks Razorpay for the checkout's payments and returns the captured one, or null. A payment that is
+ * only authorized (manual capture in the Razorpay account) is captured here first, so it counts too.
+ */
+async function findCapturedPayment(order) {
+  const { items = [] } = await razorpayRequest(`/orders/${encodeURIComponent(order.razorpayOrderId)}/payments`);
+  const amount = amountInPaise(order.total);
+  const matching = items.filter((payment) => payment.amount === amount && payment.currency === CURRENCY);
+
+  const captured = matching.find((payment) => payment.status === 'captured');
+  if (captured) return captured;
+
+  const authorized = matching.find((payment) => payment.status === 'authorized');
+  if (!authorized) return null;
+  const capturedNow = await razorpayRequest(`/payments/${encodeURIComponent(authorized.id)}/capture`, {
+    method: 'POST',
+    body: { amount, currency: CURRENCY },
+  });
+  return capturedNow.status === 'captured' ? capturedNow : null;
+}
+
+/** Records a captured payment on its checkout, which places the order. */
+async function placePaidCheckout(order, payment) {
+  assertPaymentMatchesOrder(payment, order);
+  const paidOrder = await orderService.markPaymentPaid(order, payment.id);
+  if (order.checkoutUsesCart) await orderService.removeOrderedCartItems(order);
+  return paidOrder;
+}
+
+// A checkout left unpaid this long gives its stock back. Checkout's own payment window closes after
+// CHECKOUT_TIMEOUT_SECONDS on the storefront, well inside this.
+export const ABANDONED_CHECKOUT_AFTER_MS = 30 * 60 * 1000;
+
+/**
  * `owner` is `{ userId }` for a signed-in customer or `{ guestCheckoutKey }` for a guest order; see
  * ownerFilter in order.service.js.
  */
@@ -164,7 +197,8 @@ export const paymentService = {
     if (
       order.status !== 'placed' ||
       !['pending', 'failed'].includes(order.paymentStatus) ||
-      !order.razorpayOrderId
+      !order.razorpayOrderId ||
+      order.stockReleased
     ) {
       throw ApiError.conflict('This order is not available for payment', { code: 'CHECKOUT_CLOSED' });
     }
@@ -176,7 +210,8 @@ export const paymentService = {
     assertApiCredentials();
     const existing = await orderService.findCheckout(owner, payload.checkoutKey);
     if (existing) {
-      if (existing.status !== 'placed' || existing.paymentStatus === 'paid') {
+      // An abandoned checkout gave its stock back, so it cannot be reopened; the storefront starts a new one.
+      if (existing.status !== 'placed' || existing.paymentStatus === 'paid' || existing.stockReleased) {
         throw ApiError.conflict('This checkout can no longer accept payment', { code: 'CHECKOUT_CLOSED' });
       }
       if (!existing.razorpayOrderId) {
@@ -282,6 +317,50 @@ export const paymentService = {
     return paidOrder;
   },
 
+  /**
+   * Whether the checkout has been paid, asked of Razorpay directly so it never waits on a webhook.
+   * Resolves to `{ paymentStatus: 'paid', order }` once paid (placing the order if this call found the
+   * payment), else `{ paymentStatus: 'pending' | 'failed', order: null }`. With `abandon`, sent when the
+   * shopper closes the payment window, an unpaid checkout also gives its stock back.
+   */
+  async syncCheckoutPayment(owner, localOrderId, { abandon = false } = {}) {
+    assertApiCredentials();
+    const order = await orderService.getCheckoutFor(owner, localOrderId);
+    if (!order?.razorpayOrderId) throw ApiError.notFound('Order not found', { code: 'ORDER_NOT_FOUND' });
+
+    if (order.paymentStatus !== 'paid') {
+      const payment = await findCapturedPayment(order);
+      if (payment) {
+        const paidOrder = await placePaidCheckout(order, payment);
+        logger.info('Razorpay payment found by status check', { orderId: order.id, razorpayOrderId: order.razorpayOrderId });
+        return { paymentStatus: 'paid', order: paidOrder };
+      }
+      if (abandon) await orderService.releaseCheckoutStock(order);
+      return { paymentStatus: order.paymentStatus, order: null };
+    }
+
+    return { paymentStatus: 'paid', order: await orderService.getFor(owner, order.id) };
+  },
+
+  /**
+   * Gives back the stock of checkouts left unpaid past ABANDONED_CHECKOUT_AFTER_MS (a closed tab never
+   * sends `abandon`). Each is checked with Razorpay first, so a payment that did go through places its
+   * order instead. One failing checkout is logged and never stops the rest.
+   */
+  async releaseAbandonedCheckouts() {
+    const checkouts = await orderService.findAbandonedCheckouts(new Date(Date.now() - ABANDONED_CHECKOUT_AFTER_MS));
+    for (const order of checkouts) {
+      try {
+        const payment = await findCapturedPayment(order);
+        if (payment) await placePaidCheckout(order, payment);
+        else await orderService.releaseCheckoutStock(order);
+      } catch (error) {
+        logger.error('Could not settle an abandoned checkout', { orderId: order.id, message: error.message });
+      }
+    }
+    if (checkouts.length) logger.info('Abandoned checkouts settled', { count: checkouts.length });
+  },
+
   verifyWebhookSignature(rawBody, signature) {
     assertApiCredentials();
     assertWebhookSecret();
@@ -335,11 +414,16 @@ export const paymentService = {
         throw ApiError.badRequest('Razorpay failure event is not failed', { code: 'INVALID_PAYMENT_EVENT' });
       }
       await orderService.markPaymentFailed(order, payment.id);
+      // Razorpay's own reason, so a failure can be diagnosed from the logs alone.
       logger.info('Razorpay webhook payment marked failed', {
         event: type,
         orderId: order.id,
         razorpayOrderId: payment.order_id,
         paymentStatus: 'failed',
+        errorCode: payment.error_code,
+        errorDescription: payment.error_description,
+        errorReason: payment.error_reason,
+        errorSource: payment.error_source,
       });
     }
   },

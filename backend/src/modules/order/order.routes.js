@@ -1,12 +1,15 @@
 import { Router } from 'express';
 
 import { authenticate } from '../../middlewares/authenticate.js';
+import { paymentStatusLimiter } from '../../middlewares/rateLimiter.js';
 import { validate } from '../../middlewares/validate.js';
 
 import { orderController } from './order.controller.js';
 import {
+  guestPaymentStatusSchema,
   listMyOrdersQuerySchema,
   orderIdParamSchema,
+  paymentStatusSchema,
   placeGuestOrderSchema,
   placeOrderSchema,
   verifyGuestPaymentSchema,
@@ -29,6 +32,13 @@ router.post(
   validate({ params: orderIdParamSchema, body: verifyGuestPaymentSchema }),
   orderController.verifyGuestPayment
 );
+// Polled while the payment window is open, so it has its own budget instead of the API-wide one.
+router.post(
+  '/guest/:id/payment/status',
+  paymentStatusLimiter,
+  validate({ params: orderIdParamSchema, body: guestPaymentStatusSchema }),
+  orderController.guestPaymentStatus
+);
 
 router.use(authenticate);
 
@@ -39,6 +49,12 @@ router.post(
   '/:id/payment/verify',
   validate({ params: orderIdParamSchema, body: verifyRazorpayPaymentSchema }),
   orderController.verifyPayment
+);
+router.post(
+  '/:id/payment/status',
+  paymentStatusLimiter,
+  validate({ params: orderIdParamSchema, body: paymentStatusSchema }),
+  orderController.paymentStatus
 );
 router.get('/:id', validate({ params: orderIdParamSchema }), orderController.getMine);
 

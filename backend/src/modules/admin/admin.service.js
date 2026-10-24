@@ -30,7 +30,6 @@ export const adminService = {
       totalEnquiries,
       newEnquiries,
       ordersByStatus,
-      unpaidOrders,
       ordersToPackAndShip,
     ] = await Promise.all([
       Product.countDocuments({}),
@@ -44,9 +43,9 @@ export const adminService = {
       User.countDocuments({ role: 'admin' }),
       Enquiry.countDocuments({}),
       Enquiry.countDocuments({ status: 'new' }),
-      // One group per status rather than one countDocuments per status.
-      Order.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }]),
-      Order.countDocuments({ paymentStatus: { $ne: 'paid' } }),
+      // One group per status rather than one countDocuments per status. Only paid orders are placed;
+      // an unpaid checkout is not an order yet.
+      Order.aggregate([{ $match: { paymentStatus: 'paid' } }, { $group: { _id: '$status', count: { $sum: 1 } } }]),
       Order.countDocuments({ status: { $in: ['placed', 'packed'] }, paymentStatus: 'paid' }),
     ]);
 
@@ -84,7 +83,6 @@ export const adminService = {
       orders: {
         total: Object.values(orderCounts).reduce((sum, count) => sum + count, 0),
         byStatus: orderCounts,
-        unpaid: unpaidOrders,
         toPackAndShip: ordersToPackAndShip,
       },
     };
