@@ -13,6 +13,7 @@
     "seed": "node scripts/seedCatalogue.js",
     "promote-admin": "node scripts/promoteUserToAdmin.js",
     "update-prices": "node scripts/updateCataloguePrices.js",
+    "sync-indexes": "node scripts/syncIndexes.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{js,json,md}\"",

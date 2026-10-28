@@ -10,7 +10,7 @@ import { ORDER_STATUSES } from './order.model.js';
 
 export const orderIdParamSchema = idParamSchema;
 
-const buyNowSchema = z
+export const buyNowSchema = z
   .object({
     productId: objectIdSchema,
     quantity: z
@@ -22,6 +22,9 @@ const buyNowSchema = z
   })
   .optional();
 
+// Loose on purpose: any typed code reaches coupon.service.js, which answers COUPON_INVALID for a bad one.
+export const appliedCouponCodeSchema = z.string().trim().toUpperCase().min(1).max(30);
+
 /**
  * Without `buyNow` the whole cart is ordered. With it, only that product is, and the cart is left
  * alone: the same split as the storefront's Order Summary page.
@@ -30,6 +33,7 @@ export const placeOrderSchema = z.object({
   addressId: objectIdSchema,
   checkoutKey: z.string().uuid().default(() => randomUUID()),
   buyNow: buyNowSchema,
+  couponCode: appliedCouponCodeSchema.optional(),
 });
 
 /**
@@ -41,6 +45,7 @@ export const placeGuestOrderSchema = z.object({
   address: z.object(addressFields),
   email: z.string().trim().toLowerCase().pipe(z.email('Enter a valid email address')).optional(),
   buyNow: buyNowSchema,
+  couponCode: appliedCouponCodeSchema.optional(),
 });
 
 export const listMyOrdersQuerySchema = z.object({

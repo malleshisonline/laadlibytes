@@ -84,7 +84,10 @@ function OrderConfirmedPage() {
                   </address>
                 </section>
 
-                <PriceDetailsBox cart={order} />
+                <PriceDetailsBox
+                  cart={order}
+                  coupon={order.coupon && { code: order.coupon.code, discount: order.discount }}
+                />
               </div>
             </div>
           )}

@@ -79,6 +79,15 @@ export const adminApi = {
     updateStatus: (id, status) => httpClient.patch(ADMIN.ENQUIRY(id), { status }),
   },
 
+  coupons: {
+    list: (params) => httpClient.getWithMeta(`${ADMIN.COUPONS}${toQueryString(params)}`),
+    get: (id) => httpClient.get(ADMIN.COUPON(id)),
+    create: (fields) => httpClient.post(ADMIN.COUPONS, fields),
+    update: (id, changes) => httpClient.patch(ADMIN.COUPON(id), changes),
+    /** Resolves to { deleted }: a coupon an order has used is switched off instead of deleted. */
+    remove: (id) => httpClient.delete(ADMIN.COUPON(id)),
+  },
+
 }
 
 export default adminApi

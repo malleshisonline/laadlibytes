@@ -37,11 +37,15 @@ export const APP_ROUTES = {
   ADMIN_CATEGORY_EDIT: '/admin/categories/:id/edit',
   ADMIN_USERS: '/admin/users',
   ADMIN_ENQUIRIES: '/admin/enquiries',
+  ADMIN_COUPONS: '/admin/coupons',
+  ADMIN_COUPON_NEW: '/admin/coupons/new',
+  ADMIN_COUPON_EDIT: '/admin/coupons/:id/edit',
 };
 
 export const adminOrderPath = (id) => `${APP_ROUTES.ADMIN_ORDERS}/${encodeURIComponent(id)}`;
 export const adminProductEditPath = (id) => `${APP_ROUTES.ADMIN_PRODUCTS}/${encodeURIComponent(id)}/edit`;
 export const adminCategoryEditPath = (id) => `${APP_ROUTES.ADMIN_CATEGORIES}/${encodeURIComponent(id)}/edit`;
+export const adminCouponEditPath = (id) => `${APP_ROUTES.ADMIN_COUPONS}/${encodeURIComponent(id)}/edit`;
 
 /** Link to one product's details page. */
 export const productDetailsPath = (slug) => `${APP_ROUTES.PRODUCTS}/${encodeURIComponent(slug)}`;

@@ -9,10 +9,10 @@ export const orderApi = {
    * Places an order and resolves to it. `buyNow` ({ productId, quantity }) orders that product alone and leaves
    * the cart as it is; without it the whole cart is ordered and those lines leave the cart.
    */
-  place: ({ addressId, buyNow, checkoutKey }) =>
+  place: ({ addressId, buyNow, checkoutKey, couponCode }) =>
     httpClient.post(
       API_ENDPOINTS.ORDERS.ROOT,
-      { addressId, ...(buyNow ? { buyNow } : {}), checkoutKey },
+      { addressId, ...(buyNow ? { buyNow } : {}), ...(couponCode ? { couponCode } : {}), checkoutKey },
     ),
   resumePayment: (id) => httpClient.post(API_ENDPOINTS.ORDERS.CHECKOUT(id), {}),
   verifyPayment: (id, details) => httpClient.post(API_ENDPOINTS.ORDERS.VERIFY_PAYMENT(id), details),
@@ -27,11 +27,12 @@ export const orderApi = {
    * A guest order (not signed in): the address and an optional email are saved on the order only. Without
    * `buyNow` it orders the guest cart, found by the cart cookie. Keep `checkoutKey`: verifying needs it again.
    */
-  placeGuest: ({ address, email, buyNow, checkoutKey }) =>
+  placeGuest: ({ address, email, buyNow, checkoutKey, couponCode }) =>
     httpClient.post(API_ENDPOINTS.ORDERS.GUEST, {
       address,
       ...(email ? { email } : {}),
       ...(buyNow ? { buyNow } : {}),
+      ...(couponCode ? { couponCode } : {}),
       checkoutKey,
     }),
   verifyGuestPayment: (id, checkoutKey, details) =>

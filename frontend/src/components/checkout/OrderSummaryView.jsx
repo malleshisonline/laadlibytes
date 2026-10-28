@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { LoaderCircle,  MapPin, Package, ShieldCheck,  } from 'lucide-react'
 
 import { formatPrice } from '../../utils/productFormatters.js'
+import ApplyCouponBox from '../cart/ApplyCouponBox.jsx'
 import PriceDetailsBox from '../cart/PriceDetailsBox.jsx'
 
 import OrderItemsSummary from './OrderItemsSummary.jsx'
@@ -31,7 +32,8 @@ function SummarySection({ step, title, Icon, action, children }) {
  * works and the price details with Pay / Place Order. `order` has the cart's shape
  * ({ items, itemCount, subtotal, mrpTotal, savings }). `address` is the delivery section's body; when
  * `addressAction` is given it sits in the section header. `onPlaceOrder` is awaited; the button stays disabled
- * meanwhile, so a double click never places two orders.
+ * meanwhile, so a double click never places two orders. `coupon` (from useCheckoutCoupon) adds the Apply Coupon
+ * box; the button waits while a code is being priced, so it never shows an amount the backend has not confirmed.
  */
 function OrderSummaryView({
   order,
@@ -43,9 +45,12 @@ function OrderSummaryView({
   onQuantityChange,
   onRemoveItem,
   maxQuantity,
+  coupon,
 }) {
   const [isPlacing, setIsPlacing] = useState(false)
   const hasIssues = order.items.some((item) => item.issue)
+  const appliedCoupon = coupon?.preview ? { code: coupon.preview.code, discount: coupon.preview.discount } : null
+  const amountToPay = order.subtotal - (appliedCoupon?.discount ?? 0)
 
   async function handlePlaceOrder() {
     if (isPlacing) return
@@ -81,12 +86,13 @@ function OrderSummaryView({
       </div>
 
       <div className='lg:col-span-4'>
-        <div className='lg:sticky lg:top-28'>
-          <PriceDetailsBox cart={order}>
+        <div className='space-y-4 lg:sticky lg:top-28'>
+          {coupon && <ApplyCouponBox coupon={coupon} />}
+          <PriceDetailsBox cart={order} coupon={appliedCoupon}>
             <button
               type='button'
               onClick={handlePlaceOrder}
-              disabled={hasIssues || !canPlaceOrder || isPlacing}
+              disabled={hasIssues || !canPlaceOrder || isPlacing || Boolean(coupon?.isApplying)}
               aria-busy={isPlacing}
               className='inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-navy-800 px-6 text-sm font-bold text-white shadow-md transition hover:bg-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600 disabled:cursor-not-allowed disabled:bg-lightblue-100 disabled:text-muted disabled:shadow-none'
             >
@@ -95,7 +101,7 @@ function OrderSummaryView({
               ) : (
                 <ShieldCheck size={18} strokeWidth={2} aria-hidden='true' />
               )}
-              {isPlacing ? 'Opening secure checkout…' : `Pay / Place Order · ${formatPrice(order.subtotal)}`}
+              {isPlacing ? 'Opening secure checkout…' : `Pay / Place Order · ${formatPrice(amountToPay)}`}
             </button>
             <p className='mt-2 text-center text-xs text-muted'>
               {canPlaceOrder ? 'Payment confirmation is verified securely by the store.' : 'Choose a delivery address to place the order.'}

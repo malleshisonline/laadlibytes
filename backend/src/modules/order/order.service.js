@@ -9,6 +9,7 @@ import { buildMeta, getPagination } from '../../utils/pagination.js';
 import { Address } from '../address/address.model.js';
 import { addressService } from '../address/address.service.js';
 import { Cart } from '../cart/cart.model.js';
+import { couponService } from '../coupon/coupon.service.js';
 import { Product } from '../product/product.model.js';
 import { User } from '../user/user.model.js';
 import { userService } from '../user/user.service.js';
@@ -32,7 +33,7 @@ const ORDER_SORT_MAP = {
 // and admins never see it: every read below that serves them filters on this.
 const PLACED_ORDER = Object.freeze({ paymentStatus: 'paid' });
 
-const CHECKOUT_FIELDS = '+razorpayOrderId +checkoutUsesCart +guestCartToken +stockReleased';
+const CHECKOUT_FIELDS = '+razorpayOrderId +checkoutUsesCart +guestCartToken +stockReleased +couponId';
 
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -85,6 +86,7 @@ function toCustomerView(order) {
   delete view.checkoutUsesCart;
   delete view.guestCartToken;
   delete view.stockReleased;
+  delete view.couponId;
   return view;
 }
 
@@ -131,17 +133,30 @@ function toOrderItem({ product, quantity }) {
   };
 }
 
-function totalsOf(items) {
-  const subtotal = items.reduce((sum, item) => sum + item.lineTotal, 0);
+const subtotalOf = (items) => items.reduce((sum, item) => sum + item.lineTotal, 0);
+
+function totalsOf(items, discount = 0) {
+  const subtotal = subtotalOf(items);
   const mrpTotal = items.reduce((sum, item) => sum + Math.max(item.mrp, item.price) * item.quantity, 0);
   return {
     itemCount: items.reduce((sum, item) => sum + item.quantity, 0),
     subtotal,
     mrpTotal,
     savings: mrpTotal - subtotal,
-    // Delivery is free on every order, so the total is the subtotal.
-    total: subtotal,
+    discount,
+    // Delivery is free on every order, so the total is the subtotal less the coupon discount.
+    total: subtotal - discount,
   };
+}
+
+/** The order's copy of the coupon, so editing or deleting it later never changes the order. */
+function couponCopy(coupon) {
+  return { code: coupon.code, type: coupon.type, value: coupon.value, maxDiscount: coupon.maxDiscount ?? null };
+}
+
+/** Gives back the coupon use an unpaid checkout held, if it had a coupon. */
+async function releaseCouponOf(order) {
+  if (order.couponId) await couponService.release(order.couponId);
 }
 
 /** Puts stock back when a later line could not be reserved or checkout setup fails. */
@@ -204,24 +219,55 @@ async function retakeReleasedStock(order) {
       });
     }
   }
+  if (order.couponId) await couponService.retake(order.couponId, order.orderNumber);
   await Order.updateOne({ _id: order._id }, { $set: { stockReleased: false } });
 }
 
 /**
  * Prices the lines, takes the stock and saves the order, or saves nothing and puts the stock back.
  * Shared by signed-in and guest orders; `fields` is everything else on the order.
+ *
+ * With a `couponCode` the discount is worked out here, on the server, and one use of the coupon is
+ * taken before the stock, then given back with it if anything later fails. Without one, nothing
+ * about the order changes. `customer` (`{ userId, phone }`) is who the per-customer limit counts; it is
+ * checked again once the order is saved, and an order past it is deleted and given back like a failed one.
  */
-async function createOrder(lines, fields) {
+async function createOrder(lines, fields, { couponCode, customer } = {}) {
   const items = lines.map(toOrderItem);
-  const totals = totalsOf(items);
-  const reserved = await reserveStock(lines);
 
+  let applied = null;
+  if (couponCode) {
+    applied = await couponService.evaluate(couponCode, subtotalOf(items), customer);
+    await couponService.reserve(applied.coupon._id);
+  }
+  const couponFields = applied ? { coupon: couponCopy(applied.coupon), couponId: applied.coupon._id } : {};
+  const totals = totalsOf(items, applied?.discount ?? 0);
+
+  let reserved;
   try {
-    return await createWithUniqueNumber({ ...fields, items, ...totals });
+    reserved = await reserveStock(lines);
   } catch (error) {
-    await releaseStock(reserved);
+    if (applied) await couponService.release(applied.coupon._id);
     throw error;
   }
+
+  let order;
+  try {
+    order = await createWithUniqueNumber({ ...fields, items, ...totals, ...couponFields });
+  } catch (error) {
+    await releaseStock(reserved);
+    if (applied) await couponService.release(applied.coupon._id);
+    throw error;
+  }
+
+  // Two checkouts by one customer at once both passed `evaluate`; only the earliest are kept.
+  if (applied && !(await couponService.isWithinCustomerLimit(applied.coupon, customer, order._id))) {
+    await Order.deleteOne({ _id: order._id });
+    await releaseStock(reserved);
+    await couponService.release(applied.coupon._id);
+    throw couponService.customerLimitError();
+  }
+  return order;
 }
 
 /** The order's copy of an address: editing or deleting the saved one later never changes it. */
@@ -297,7 +343,7 @@ export const orderService = {
    * takes the stock and saves a copy of the products and the address. Cart-order lines are removed
    * after payment is verified; a Buy Now order leaves the cart alone.
    */
-  async placeOrder(userId, { addressId, buyNow, checkoutKey }, { deferCartRemoval = false } = {}) {
+  async placeOrder(userId, { addressId, buyNow, checkoutKey, couponCode }, { deferCartRemoval = false } = {}) {
     const [address, user] = await Promise.all([
       Address.findOne({ _id: addressId, user: userId }).lean(),
       User.findById(userId).select('email').lean(),
@@ -313,7 +359,7 @@ export const orderService = {
       checkoutKey,
       checkoutUsesCart: !buyNow,
       history: [{ event: 'status', value: 'placed', by: userId, at: new Date() }],
-    });
+    }, { couponCode, customer: { userId, phone: address.phone } });
 
     if (!buyNow && !deferCartRemoval) {
       await orderService.removeOrderedCartItems(order);
@@ -329,7 +375,7 @@ export const orderService = {
    * `buyNow` it orders the guest cart named by the `cartId` cookie
    * (`guestCartToken` is the raw cookie value, or null). The cart lines are removed after payment.
    */
-  async placeGuestOrder({ address, email, buyNow, checkoutKey }, guestCartToken) {
+  async placeGuestOrder({ address, email, buyNow, checkoutKey, couponCode }, guestCartToken) {
     const guestCartHash = guestCartToken ? hashToken(guestCartToken) : null;
     const lines = await resolveLines(guestCartHash ? { guestToken: guestCartHash } : null, buyNow);
     const order = await createOrder(lines, {
@@ -339,7 +385,7 @@ export const orderService = {
       checkoutUsesCart: !buyNow,
       ...(buyNow ? {} : { guestCartToken: guestCartHash }),
       history: [{ event: 'status', value: 'placed', at: new Date() }],
-    });
+    }, { couponCode, customer: { phone: address.phone } });
     await recordGuestCustomerFor(order);
     return toCustomerView(order);
   },
@@ -349,6 +395,28 @@ export const orderService = {
     return owner.userId
       ? orderService.placeOrder(owner.userId, payload, { deferCartRemoval: true })
       : orderService.placeGuestOrder(payload, guestCartToken);
+  },
+
+  /**
+   * What a coupon would take off the cart (or the Buy Now line) right now, for the checkout page.
+   * `owner` is `{ userId }` or `{}` for a guest. Takes no use and holds no stock: placing the order
+   * checks the code again, so this is only a preview.
+   */
+  async previewCoupon(owner, { code, buyNow, phone }, guestCartToken) {
+    let cartFilter = null;
+    if (owner.userId) cartFilter = { user: owner.userId };
+    else if (guestCartToken) cartFilter = { guestToken: hashToken(guestCartToken) };
+
+    const lines = await resolveLines(cartFilter, buyNow);
+    const subtotal = subtotalOf(lines.map(toOrderItem));
+    const { coupon, discount } = await couponService.evaluate(code, subtotal, { userId: owner.userId, phone });
+    return {
+      ...couponCopy(coupon),
+      description: coupon.description ?? null,
+      subtotal,
+      discount,
+      total: subtotal - discount,
+    };
   },
 
   async findCheckout(owner, checkoutKey) {
@@ -384,9 +452,10 @@ export const orderService = {
       ...ownerFilter(owner),
       status: 'placed',
       paymentStatus: 'pending',
-    });
+    }).select('+couponId');
     if (order) {
       await releaseStock(order.items.map((item) => ({ productId: item.product, quantity: item.quantity })));
+      await releaseCouponOf(order);
     }
     return Boolean(order);
   },
@@ -407,9 +476,10 @@ export const orderService = {
     const released = await Order.findOneAndUpdate(
       { _id: order._id, paymentStatus: { $ne: 'paid' }, stockReleased: { $ne: true } },
       { $set: { stockReleased: true } }
-    );
+    ).select('+couponId');
     if (released) {
       await releaseStock(released.items.map((item) => ({ productId: item.product, quantity: item.quantity })));
+      await releaseCouponOf(released);
     }
     return Boolean(released);
   },
@@ -454,7 +524,7 @@ export const orderService = {
         $push: { history: { $each: history } },
       },
       { returnDocument: 'after' }
-    ).select('+stockReleased');
+    ).select('+stockReleased +couponId');
     if (updated) {
       if (updated.stockReleased) await retakeReleasedStock(updated);
       // Only this branch moved the order to paid, so a repeated verify or webhook never emails twice.

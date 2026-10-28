@@ -39,6 +39,8 @@ const BestSellers = lazy(() => import('./pages/BestSellers.jsx'))
 // The admin pages load only when an admin opens them, so shoppers never download them.
 const AdminCategoriesPage = lazy(() => import('./pages/admin/AdminCategoriesPage.jsx'))
 const AdminCategoryFormPage = lazy(() => import('./pages/admin/AdminCategoryFormPage.jsx'))
+const AdminCouponFormPage = lazy(() => import('./pages/admin/AdminCouponFormPage.jsx'))
+const AdminCouponsPage = lazy(() => import('./pages/admin/AdminCouponsPage.jsx'))
 const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage.jsx'))
 const AdminEnquiriesPage = lazy(() => import('./pages/admin/AdminEnquiriesPage.jsx'))
 const AdminOrderDetailsPage = lazy(() => import('./pages/admin/AdminOrderDetailsPage.jsx'))
@@ -127,6 +129,9 @@ function App() {
               <Route path={APP_ROUTES.ADMIN_CATEGORY_EDIT} element={<AdminCategoryFormPage />} />
               <Route path={APP_ROUTES.ADMIN_USERS} element={<AdminUsersPage />} />
               <Route path={APP_ROUTES.ADMIN_ENQUIRIES} element={<AdminEnquiriesPage />} />
+              <Route path={APP_ROUTES.ADMIN_COUPONS} element={<AdminCouponsPage />} />
+              <Route path={APP_ROUTES.ADMIN_COUPON_NEW} element={<AdminCouponFormPage />} />
+              <Route path={APP_ROUTES.ADMIN_COUPON_EDIT} element={<AdminCouponFormPage />} />
             </Route>
           </Route>
 

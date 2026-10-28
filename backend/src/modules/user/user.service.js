@@ -4,6 +4,7 @@ import { hashToken } from '../../utils/token.js';
 import { Address } from '../address/address.model.js';
 import { Cart } from '../cart/cart.model.js';
 import { Category } from '../category/category.model.js';
+import { couponService } from '../coupon/coupon.service.js';
 import { Enquiry } from '../enquiry/enquiry.model.js';
 import { OtpChallenge } from '../otp/otp.model.js';
 import { Order } from '../order/order.model.js';
@@ -65,7 +66,7 @@ export const userService = {
       throw ApiError.badRequest('A guest customer cannot be made an admin', { code: 'GUEST_CANNOT_BE_ADMIN' });
     }
 
-    const user = await User.findByIdAndUpdate(id, payload, { new: true, runValidators: true });
+    const user = await User.findByIdAndUpdate(id, payload, { returnDocument: 'after', runValidators: true });
     if (!user) throw ApiError.notFound('User not found');
     return user;
   },
@@ -147,7 +148,7 @@ export const userService = {
       // An abandoned checkout already gave its stock back.
       stockReleased: { $ne: true },
     })
-      .select('items.product items.quantity')
+      .select('items.product items.quantity +couponId')
       .lean();
     const stockByProduct = new Map();
     unpaidUnshippedOrders.forEach(({ items }) => {
@@ -163,6 +164,10 @@ export const userService = {
         }))
       );
     }
+    // Their coupon uses go back with the stock, the same as an abandoned checkout.
+    await Promise.all(
+      unpaidUnshippedOrders.filter((order) => order.couponId).map((order) => couponService.release(order.couponId))
+    );
 
     await Promise.all([
       Address.deleteMany({ user: id }),

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 import { INDIAN_STATES } from '../address/address.model.js';
+import { COUPON_TYPES } from '../coupon/coupon.model.js';
 import { PACK_UNITS } from '../product/product.model.js';
 
 // The delivery journey stays separate from the verified payment status.
@@ -59,6 +60,17 @@ const orderAddressSchema = new mongoose.Schema(
   { _id: false }
 );
 
+// A copy of the coupon as it was applied: editing or deleting the coupon later never changes it.
+const orderCouponSchema = new mongoose.Schema(
+  {
+    code: { type: String, required: true, uppercase: true, trim: true },
+    type: { type: String, enum: COUPON_TYPES, required: true },
+    value: { type: Number, required: true, min: 1 },
+    maxDiscount: { type: Number, min: 1, default: null },
+  },
+  { _id: false }
+);
+
 // One entry per status or payment change. `by` and `note` are for admins; customers see only
 // what changed and when (order.service.js leaves the other two out of their reads).
 const orderHistorySchema = new mongoose.Schema(
@@ -74,7 +86,7 @@ const orderHistorySchema = new mongoose.Schema(
 
 /**
  * One order. Delivery is free on every order, so there is deliberately no shippingCharge:
- * total is the sum of the lines.
+ * total is the sum of the lines less the coupon's `discount` (0 without a coupon).
  *
  * The document is created when checkout opens, so it can hold the stock and the Razorpay order, but
  * until `paymentStatus` is 'paid' it is only a checkout: customers and admins never see it
@@ -104,6 +116,11 @@ const orderSchema = new mongoose.Schema(
     subtotal: { type: Number, required: true, min: 0 },
     mrpTotal: { type: Number, required: true, min: 0 },
     savings: { type: Number, required: true, min: 0 },
+    // At most one coupon per order, applied to the whole subtotal (coupon.service.js discountFor).
+    coupon: { type: orderCouponSchema, default: undefined },
+    discount: { type: Number, min: 0, default: 0 },
+    // The coupon's id, so a use can be given back or taken again (order.service.js). Internal.
+    couponId: { type: mongoose.Schema.Types.ObjectId, ref: 'Coupon', select: false },
     total: { type: Number, required: true, min: 0 },
     status: { type: String, enum: ORDER_STATUSES, default: 'placed' },
     paymentStatus: { type: String, enum: PAYMENT_STATUSES, default: 'pending' },
@@ -146,6 +163,8 @@ orderSchema.index(
 orderSchema.index({ razorpayOrderId: 1 }, { unique: true, sparse: true });
 // A guest customer's orders, moved to `user` when they sign up.
 orderSchema.index({ guestCustomer: 1 }, { sparse: true });
+// A coupon's orders: usage counts, the per-customer limit, and whether its code can still change.
+orderSchema.index({ 'coupon.code': 1 }, { sparse: true });
 
 export const Order = mongoose.model('Order', orderSchema);
 

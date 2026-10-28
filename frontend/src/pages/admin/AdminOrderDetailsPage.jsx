@@ -265,7 +265,7 @@ function AdminOrderDetailsPage() {
             </address>
           </Section>
 
-          <PriceDetailsBox cart={order} />
+          <PriceDetailsBox cart={order} coupon={order.coupon && { code: order.coupon.code, discount: order.discount }} />
 
           <Section title="History">
             <HistoryList history={order.history} />

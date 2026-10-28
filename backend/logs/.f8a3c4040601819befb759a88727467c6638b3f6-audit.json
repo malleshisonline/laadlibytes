@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "E:\\Isnap_projects\\laadlibytes\\backend\\logs\\.f8a3c4040601819befb759a88727467c6638b3f6-audit.json",
+    "files": [
+        {
+            "date": 1793165437658,
+            "name": "E:\\Isnap_projects\\laadlibytes\\backend\\logs\\error-2026-10-28.log",
+            "hash": "4e4eb57e9d55e77bedefde79163e9c8eef4d026a45e4160a54a2561297aa7c28"
+        }
+    ],
+    "hashType": "sha256"
+}

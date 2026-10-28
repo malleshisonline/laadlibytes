@@ -1,6 +1,17 @@
 import { Suspense, useEffect } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router'
-import { FolderTree, Inbox, LayoutDashboard, LoaderCircle, LogOut, Package, ShoppingBag, Store, Users } from 'lucide-react'
+import {
+  BadgePercent,
+  FolderTree,
+  Inbox,
+  LayoutDashboard,
+  LoaderCircle,
+  LogOut,
+  Package,
+  ShoppingBag,
+  Store,
+  Users,
+} from 'lucide-react'
 
 import logo from '../assets/brand/logo.svg'
 import { APP_ROUTES } from '../constants/appRoutepoints.js'
@@ -13,6 +24,7 @@ const SECTIONS = [
   { path: APP_ROUTES.ADMIN_CATEGORIES, label: 'Categories', Icon: FolderTree },
   { path: APP_ROUTES.ADMIN_USERS, label: 'Customers', Icon: Users },
   { path: APP_ROUTES.ADMIN_ENQUIRIES, label: 'Enquiries', Icon: Inbox },
+  { path: APP_ROUTES.ADMIN_COUPONS, label: 'Coupons', Icon: BadgePercent },
 ]
 
 // A pill in a scrolling row on mobile, a full-width sidebar item from lg.

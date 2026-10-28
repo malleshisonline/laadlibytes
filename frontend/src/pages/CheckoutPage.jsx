@@ -12,9 +12,11 @@ import { APP_SETTINGS } from '../constants/appSettings.js'
 import { pickAddress, useAddresses } from '../hooks/useAddresses.js'
 import { useAuth } from '../hooks/useAuth.js'
 import { useCart } from '../hooks/useCart.js'
+import { useCheckoutCoupon } from '../hooks/useCheckoutCoupon.js'
 import { useGuestDeliveryDetails } from '../hooks/useGuestDeliveryDetails.js'
 import { useProduct } from '../hooks/useProduct.js'
 import { formatAddressLine, formatIndianMobile } from '../utils/addressValidation.js'
+import { clearSavedCouponCode } from '../utils/couponLink.js'
 import { maxQuantityFor } from '../utils/productStock.js'
 import { openRazorpayCheckout } from '../utils/razorpayCheckout.js'
 
@@ -37,7 +39,8 @@ const PLACE_ORDER_ERROR_MESSAGES = {
 }
 
 function placeOrderErrorMessage(error) {
-  if (SHOPPER_MESSAGE_CODES.includes(error.code)) return error.message
+  // Coupon refusals ("This coupon has reached its usage limit") are written for shoppers too.
+  if (SHOPPER_MESSAGE_CODES.includes(error.code) || error.code?.startsWith('COUPON_')) return error.message
   if (PLACE_ORDER_ERROR_MESSAGES[error.code]) return PLACE_ORDER_ERROR_MESSAGES[error.code]
   if (error.status === 0) return 'We couldn’t reach the store. Check your internet connection and try again.'
   if (error.status === 429) return 'Too many tries in a short time. Please wait a moment and try again.'
@@ -50,18 +53,25 @@ function toGuestOrderPayload({ email, ...address }) {
 }
 
 /**
- * Returns placeOrder(payload, onFailure). A signed-in user sends { addressId, buyNow }; a guest sends
- * { address, email, buyNow }. On success it opens the new order, or for a guest the Order Confirmed page
+ * Returns placeOrder(payload, onFailure). A signed-in user sends { addressId, buyNow, couponCode }; a guest sends
+ * { address, email, buyNow, couponCode }. On success it opens the new order, or for a guest the Order Confirmed page
  * (replacing the Order Summary in history, so Back doesn't offer to place it again); on failure it shows a toast
- * and calls `onFailure`, which reloads whatever may have changed (stock, the cart, the addresses).
+ * and calls `onFailure`, which reloads whatever may have changed (stock, the cart, the addresses, the coupon).
  */
 function usePlaceOrder() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const checkoutKey = useRef(globalThis.crypto.randomUUID())
+  const checkoutCouponCode = useRef(undefined)
 
   return useCallback(
     async (payload, onFailure) => {
+      // A checkout is priced once, when it is created, and a retry with the same key reuses it. So a different
+      // coupon (or none) needs a new checkout.
+      if (payload.couponCode !== checkoutCouponCode.current) {
+        checkoutKey.current = globalThis.crypto.randomUUID()
+        checkoutCouponCode.current = payload.couponCode
+      }
       const key = checkoutKey.current
       try {
         const checkout = user
@@ -80,6 +90,8 @@ function usePlaceOrder() {
           toast.error('Payment was not completed, so your order could not be placed. Please try again.')
           return null
         }
+        // Used: a share-link code is not applied again to the next order.
+        clearSavedCouponCode()
         if (user) {
           navigate(orderDetailsPath(order.id), { replace: true, state: { justPlaced: true } })
         } else {
@@ -158,8 +170,14 @@ function AddressSummary({ address }) {
  * A one-line order in the cart's shape, for Buy Now: the quantity is kept between 1 and what can be bought,
  * and an out-of-stock product is flagged the way the cart flags it.
  */
+const buyNowQuantityFor = (product, requestedQuantity) =>
+  Math.max(1, Math.min(requestedQuantity, maxQuantityFor(product) || 1))
+
+/** The cart's lines as one string, so an applied coupon is priced again whenever they change. */
+const cartPricingKey = (cart) => (cart?.items ?? []).map((item) => `${item.product.id}:${item.quantity}`).join(',')
+
 function buyNowOrder(product, requestedQuantity) {
-  const quantity = Math.max(1, Math.min(requestedQuantity, maxQuantityFor(product) || 1))
+  const quantity = buyNowQuantityFor(product, requestedQuantity)
   const mrp = Math.max(product.mrp ?? product.price, product.price)
   const subtotal = product.price * quantity
   const mrpTotal = mrp * quantity
@@ -191,6 +209,19 @@ function CartOrderSummary() {
   const { addresses, status: addressStatus, retry } = useAddresses(Boolean(user))
   const guest = useGuestDeliveryDetails()
   const placeOrder = usePlaceOrder()
+  const address = user ? pickAddress(addresses, location.state?.addressId) : null
+  const coupon = useCheckoutCoupon({
+    phone: user ? address?.phone : guest.details?.phone,
+    pricingKey: cartPricingKey(cart),
+    enabled: Boolean(cart?.items.length),
+  })
+  const couponCode = coupon.preview?.code
+
+  // A refused coupon (it just ran out, say) is priced again, so the box shows why and the total drops it.
+  function reloadAfterFailure(error) {
+    if (error.code?.startsWith('COUPON_')) coupon.revalidate()
+    reload()
+  }
 
   if ((cartStatus === 'loading' && !cart) || addressStatus === 'loading') return <SummarySkeleton />
 
@@ -220,8 +251,9 @@ function CartOrderSummary() {
     return (
       <OrderSummaryView
         order={cart}
-        onPlaceOrder={() => placeOrder(toGuestOrderPayload(guest.details), () => reload())}
+        onPlaceOrder={() => placeOrder({ ...toGuestOrderPayload(guest.details), couponCode }, reloadAfterFailure)}
         address={<GuestDeliveryDetails details={guest.details} onSave={guest.saveDetails} returnTo={APP_ROUTES.CHECKOUT} />}
+        coupon={coupon}
         itemsAction={
           <Link to={APP_ROUTES.CART} className={HEADER_LINK_CLASSES}>
             Edit
@@ -232,7 +264,6 @@ function CartOrderSummary() {
     )
   }
 
-  const address = pickAddress(addresses, location.state?.addressId)
   if (!address) {
     return (
       <SummaryNotice
@@ -246,14 +277,15 @@ function CartOrderSummary() {
 
   // The cart changes only when checkout creation succeeds; errors reload any stock/cart changes.
   async function handlePlaceOrder() {
-    return placeOrder({ addressId: address.id }, (error) => {
+    return placeOrder({ addressId: address.id, couponCode }, (error) => {
       if (error.code === 'ADDRESS_NOT_FOUND') retry()
-      reload()
+      reloadAfterFailure(error)
     })
   }
   return (
     <OrderSummaryView
       order={cart}
+      coupon={coupon}
       onPlaceOrder={handlePlaceOrder}
       address={<AddressSummary address={address} />}
       addressAction={
@@ -283,6 +315,14 @@ function BuyNowOrderSummary({ slug, quantity }) {
   const guest = useGuestDeliveryDetails()
   const [chosenAddressId, setChosenAddressId] = useState(null)
   const placeOrder = usePlaceOrder()
+  const selectedAddress = pickAddress(addressState.addresses, chosenAddressId)
+  const hasLine = Boolean(product) && quantity > 0
+  const coupon = useCheckoutCoupon({
+    buyNow: hasLine ? { productId: product.id, quantity: buyNowQuantityFor(product, quantity) } : undefined,
+    phone: user ? selectedAddress?.phone : guest.details?.phone,
+    enabled: hasLine,
+  })
+  const couponCode = coupon.preview?.code
 
   // `?qty=0`: the shopper removed the product, which leaves nothing to order (like an emptied cart).
   if (quantity === 0) {
@@ -320,7 +360,6 @@ function BuyNowOrderSummary({ slug, quantity }) {
     )
   }
 
-  const selectedAddress = pickAddress(addressState.addresses, chosenAddressId)
   const order = buyNowOrder(product, quantity)
 
   // The quantity lives in `?qty=`, so a reload keeps it; replace, so each step isn't a Back entry. 0 removes it.
@@ -340,16 +379,19 @@ function BuyNowOrderSummary({ slug, quantity }) {
   // Buy Now never touches the cart. A failure reloads the product, so a sold-out one shows as out of stock.
   function handlePlaceOrder() {
     const buyNow = { productId: product.id, quantity: order.items[0].quantity }
-    if (!user) return placeOrder({ ...toGuestOrderPayload(guest.details), buyNow }, () => retryProduct())
-    return placeOrder({ addressId: selectedAddress.id, buyNow }, (error) => {
-      if (error.code === 'ADDRESS_NOT_FOUND') addressState.retry()
+    const onFailure = (error) => {
+      if (error.code?.startsWith('COUPON_')) coupon.revalidate()
+      else if (error.code === 'ADDRESS_NOT_FOUND') addressState.retry()
       else retryProduct()
-    })
+    }
+    if (!user) return placeOrder({ ...toGuestOrderPayload(guest.details), buyNow, couponCode }, onFailure)
+    return placeOrder({ addressId: selectedAddress.id, buyNow, couponCode }, onFailure)
   }
 
   return (
     <OrderSummaryView
       order={order}
+      coupon={coupon}
       onPlaceOrder={handlePlaceOrder}
       address={
         user ? (

@@ -33,6 +33,12 @@ export const API_ENDPOINTS = {
   ENQUIRIES: {
     CREATE: '/enquiries',
   },
+  COUPONS: {
+    // The one coupon shown in the top banner, or null.
+    FEATURED: '/coupons/featured',
+    // Prices a code against the order about to be placed; takes no use.
+    APPLY: '/coupons/apply',
+  },
   ORDERS: {
     ROOT: '/orders',
     ITEM: (id) => `/orders/${encodeURIComponent(id)}`,
@@ -58,6 +64,8 @@ export const API_ENDPOINTS = {
     USER: (id) => `/admin/users/${encodeURIComponent(id)}`,
     ENQUIRIES: '/admin/enquiries',
     ENQUIRY: (id) => `/admin/enquiries/${encodeURIComponent(id)}`,
+    COUPONS: '/admin/coupons',
+    COUPON: (id) => `/admin/coupons/${encodeURIComponent(id)}`,
   },
 }
 

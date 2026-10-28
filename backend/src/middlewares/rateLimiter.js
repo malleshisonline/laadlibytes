@@ -62,6 +62,18 @@ export const enquiryLimiter = rateLimit({
   handler: (_req, _res, next) => next(ApiError.tooMany('Too many messages, please try again later')),
 });
 
+/**
+ * Coupon codes tried at checkout. Only refused codes count, so re-pricing a valid one as the cart
+ * changes is free, while guessing private codes is not.
+ */
+export const couponApplyLimiter = rateLimit({
+  ...baseOptions,
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  skipSuccessfulRequests: true,
+  handler: (_req, _res, next) => next(ApiError.tooMany('Too many coupon attempts, please try again later')),
+});
+
 /** Code guesses across challenges. Per-code attempt limits live in otp.service. */
 export const otpVerifyLimiter = rateLimit({
   ...baseOptions,

@@ -5,6 +5,7 @@ import adminRoutes from '../modules/admin/admin.routes.js';
 import authRoutes from '../modules/auth/auth.routes.js';
 import cartRoutes from '../modules/cart/cart.routes.js';
 import categoryRoutes from '../modules/category/category.routes.js';
+import couponRoutes from '../modules/coupon/coupon.routes.js';
 import enquiryRoutes from '../modules/enquiry/enquiry.routes.js';
 import orderRoutes from '../modules/order/order.routes.js';
 import paymentRoutes from '../modules/payment/payment.routes.js';
@@ -30,6 +31,7 @@ const routes = [
   { path: '/auth', router: authRoutes },
   { path: '/cart', router: cartRoutes },
   { path: '/categories', router: categoryRoutes },
+  { path: '/coupons', router: couponRoutes },
   { path: '/enquiries', router: enquiryRoutes },
   { path: '/orders', router: orderRoutes },
   { path: '/payments', router: paymentRoutes },

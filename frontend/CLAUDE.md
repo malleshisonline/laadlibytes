@@ -225,7 +225,8 @@ Reusable class names are in `global-styles.css`. Component files go in `src/comp
 ### Other page components
 | Page | Components |
 |---|---|
-| Cart | `CartItemRow` (image, name, price, quantity stepper, total), `ApplyCouponBox`, `PriceDetailsBox` |
+| Cart | `CartItemRow` (image, name, price, quantity stepper, total), `PriceDetailsBox` |
+| Order Summary | `ApplyCouponBox` (above `PriceDetailsBox`, via `OrderSummaryView`'s `coupon` prop) |
 | Checkout | `CheckoutStepper` (1 Shipping Address, 2 Payment, 3 Order Summary), `ShippingAddressForm`, `PaymentMethodOptions`, `OrderSummaryBox` |
 | Track Order | `TrackOrderForm`, `OrderTrackingSteps` (Order Placed, Processing, Shipped, Out for Delivery) |
 | FAQ | `FaqAccordion` (question rows with `+` / `−`, one open at a time) |
@@ -340,10 +341,22 @@ Minimum touch target on mobile: 44 × 44 px for buttons and icons.
 | 56 Bhog | `/56-bhog` | Products (filtered) or static | Confirm with manager |
 | Login / Signup | `/login`, `/register`, `/verify-otp` | Auth APIs | Ready. The design shows **Continue with Google** and **Forgot password**; the backend has no API for these yet. Do not build them until confirmed. |
 | My Account | `/account` | `GET /users/me`, `GET /orders`, `GET /orders/:id` | Ready. **My Orders** (`/account/orders`) lists orders newest first with "Load more". Each row opens `/account/orders/:id` (`OrderDetailsSection`): status badges, the tracking steps, payment, items (the order's own copy, shown through `OrderItemsSummary` via `toSummaryItem`), the address and the price details. A voided order (unpaid, set aside by the shop) shows a short notice instead of the steps. Labels and badge colours live in `utils/orderStatus.js`. There are no cancel or return buttons: the shop takes no cancellations, refunds, returns or exchanges |
-| Cart | `/cart` | `GET/DELETE /cart`, `POST /cart/items`, `PATCH/DELETE /cart/items/:productId`, `GET/POST /addresses` | Ready. State lives in `CartProvider` (`useCart`); guests have a cart via a cookie, merged on sign-in. No coupons (client decision), so no `ApplyCouponBox`. `DeliveryAddressBox` (Flipkart-style "Deliver to") lists saved addresses as radios with the default selected and adds new ones inline with `AddressForm`; guests are asked to sign in. **Continue** sends a guest to sign in, scrolls to the box with an error when no address is chosen, otherwise opens `/checkout` with `state.addressId` |
+| Cart | `/cart` | `GET/DELETE /cart`, `POST /cart/items`, `PATCH/DELETE /cart/items/:productId`, `GET/POST /addresses` | Ready. State lives in `CartProvider` (`useCart`); guests have a cart via a cookie, merged on sign-in. The cart page shows no coupon; codes are applied on the Order Summary (see below). `DeliveryAddressBox` (Flipkart-style "Deliver to") lists saved addresses as radios with the default selected and adds new ones inline with `AddressForm`; guests are asked to sign in. **Continue** sends a guest to sign in, scrolls to the box with an error when no address is chosen, otherwise opens `/checkout` with `state.addressId` |
 | Order Summary | `/checkout` | `GET /addresses`, `GET /products/:slug`, `POST /orders`, `POST /orders/guest`, `POST /orders/:id/payment/checkout`, `POST /orders/:id/payment/verify`, `POST /orders/guest/:id/payment/verify`; Razorpay Checkout | Public: a **guest** (not signed in) types name, mobile, address and an optional email in `GuestDeliveryDetails` (remembered in localStorage by `useGuestDeliveryDetails`), the order goes to `POST /orders/guest` with the page's `checkoutKey`, and after payment the guest lands on `/order-confirmed` (`OrderConfirmedPage`, order in router state). Everything below is the signed-in flow. Two modes sharing `OrderSummaryView`: **whole cart** (cart's Continue, or Buy Now on a product already in the cart) shows the address from `state.addressId` (else the default, via `pickAddress` in `hooks/useAddresses.js`) with Change/Edit links to the cart; **Buy Now** (`?buyNow=<slug>&qty=<n>`) shows that product alone, priced from the product API, with `DeliveryAddressBox bare` to pick or add the address on the page. Both show the items, price details and secure Razorpay payment step.
 
 **Pay / Place Order** sends `POST /orders` with `{ addressId, checkoutKey }`, plus `buyNow: { productId, quantity }` for Buy Now. The backend prices/reserves stock, creates a Razorpay order and returns the public Key ID plus payment order details. The app opens Razorpay Checkout and sends its response to `POST /orders/:id/payment/verify`; only a captured payment verified by the backend navigates to `/account/orders/:id` and shows the one-time confirmation banner. Closing checkout leaves the cart available for retry; failed payments remain unconfirmed. The account order detail can resume the same payment through `POST /orders/:id/payment/checkout`.
+
+**Coupons.** One per order, whole order; the backend works out every discount and the page only shows it.
+- `useCheckoutCoupon` prices the code with `POST /coupons/apply`. It runs again whenever the lines or the delivery phone change, and the Pay button waits while it runs.
+- Only a code the backend confirmed is sent as `couponCode` in the place payload.
+- A refused code is dropped, with the backend's message shown under the box.
+- `usePlaceOrder` starts a new `checkoutKey` when the coupon changes, because a checkout is priced once when it is created.
+- `PriceDetailsBox` takes an optional `coupon` ({ code, discount }) for the coupon line. Order detail, Order Confirmed and the admin order page pass the order's own `coupon` and `discount`.
+- **Banner and share links:**
+  - `CouponBanner` (in `MainLayout`, above the navbar) shows `GET /coupons/featured` and renders nothing when there is none.
+  - A share link `/?coupon=CODE` on any page is read by `useCouponShareLink`.
+  - Both save the code in sessionStorage (`utils/couponLink.js`). The banner's "Use code" saves it too. `pickCouponCode` also fires an event, so an open checkout applies the code at once.
+  - The code is cleared once an order is placed.
 | Track Order | `/track-order` | **Not built** | Build UI only when instructed |
 | FAQ | `/faq` | None (static content) | Ready |
 | Contact Us | `/contact` | `POST /enquiries` | Ready. Saved, emailed to `ENQUIRY_NOTIFY_EMAIL`, auto-reply to the sender. Admin inbox API is `/admin/enquiries`; its UI waits for the admin panel |
@@ -384,6 +397,11 @@ There was no approved design, so it uses the same tokens in a plain sidebar layo
   - There is deliberately no delete, because orders reference the account.
   - The list API returns `_id` (lean query), so rows are keyed by `id ?? _id`.
 - **Enquiries:** inbox with status and search filters. Opening a new one fetches it, which marks it read. Rows have Reply by email (`mailto:`) and Mark as replied / new.
+- **Coupons** (`/admin/coupons`):
+  - The list shows each coupon's state (Live / Scheduled / Expired / Used up / Off), uses (`usedCount` / limit, paid orders, total discount), On and Banner switches, Copy share link, Edit and Delete.
+  - Featuring one reloads the list, because the backend un-features the others.
+  - The form mirrors the backend checks and previews the offer and its share link.
+  - A coupon that has been used keeps its code (read-only), and Delete switches it off instead.
 
 `httpClient` sends a `FormData` body as-is (the browser sets the multipart boundary) and returns `null` for a 204.
 
