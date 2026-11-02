@@ -73,6 +73,9 @@ export const API_ENDPOINTS = {
     ENQUIRY: (id) => `/admin/enquiries/${encodeURIComponent(id)}`,
     COUPONS: '/admin/coupons',
     COUPON: (id) => `/admin/coupons/${encodeURIComponent(id)}`,
+    GIFT_HAMPERS: '/admin/gift-hampers',
+    GIFT_HAMPERS_REORDER: '/admin/gift-hampers/reorder',
+    GIFT_HAMPER: (id) => `/admin/gift-hampers/${encodeURIComponent(id)}`,
   },
 }
 

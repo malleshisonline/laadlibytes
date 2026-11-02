@@ -44,6 +44,8 @@ const AdminCouponFormPage = lazy(() => import('./pages/admin/AdminCouponFormPage
 const AdminCouponsPage = lazy(() => import('./pages/admin/AdminCouponsPage.jsx'))
 const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage.jsx'))
 const AdminEnquiriesPage = lazy(() => import('./pages/admin/AdminEnquiriesPage.jsx'))
+const AdminGiftHamperFormPage = lazy(() => import('./pages/admin/AdminGiftHamperFormPage.jsx'))
+const AdminGiftHampersPage = lazy(() => import('./pages/admin/AdminGiftHampersPage.jsx'))
 const AdminOrderDetailsPage = lazy(() => import('./pages/admin/AdminOrderDetailsPage.jsx'))
 const AdminOrdersPage = lazy(() => import('./pages/admin/AdminOrdersPage.jsx'))
 const AdminProductFormPage = lazy(() => import('./pages/admin/AdminProductFormPage.jsx'))
@@ -126,6 +128,9 @@ function App() {
               <Route path={APP_ROUTES.ADMIN_PRODUCTS} element={<AdminProductsPage />} />
               <Route path={APP_ROUTES.ADMIN_PRODUCT_NEW} element={<AdminProductFormPage />} />
               <Route path={APP_ROUTES.ADMIN_PRODUCT_EDIT} element={<AdminProductFormPage />} />
+              <Route path={APP_ROUTES.ADMIN_GIFT_HAMPERS} element={<AdminGiftHampersPage />} />
+              <Route path={APP_ROUTES.ADMIN_GIFT_HAMPER_NEW} element={<AdminGiftHamperFormPage />} />
+              <Route path={APP_ROUTES.ADMIN_GIFT_HAMPER_EDIT} element={<AdminGiftHamperFormPage />} />
               <Route path={APP_ROUTES.ADMIN_CATEGORIES} element={<AdminCategoriesPage />} />
               <Route path={APP_ROUTES.ADMIN_CATEGORY_NEW} element={<AdminCategoryFormPage />} />
               <Route path={APP_ROUTES.ADMIN_CATEGORY_EDIT} element={<AdminCategoryFormPage />} />

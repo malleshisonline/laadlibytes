@@ -15,6 +15,7 @@ import {
   ADMIN_LABEL,
 } from '../../components/admin/adminStyles.js'
 import PriceDetailsBox from '../../components/cart/PriceDetailsBox.jsx'
+import OrderGiftNote from '../../components/checkout/OrderGiftNote.jsx'
 import OrderItemsSummary from '../../components/checkout/OrderItemsSummary.jsx'
 import { APP_ROUTES } from '../../constants/appRoutepoints.js'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle.js'
@@ -238,6 +239,13 @@ function AdminOrderDetailsPage() {
           <Section title={`Items (${order.itemCount})`}>
             <OrderItemsSummary items={order.items.map(toSummaryItem)} />
             <p className="mt-2 text-xs text-muted">SKUs: {order.items.map((item) => `${item.sku} × ${item.quantity}`).join(', ')}</p>
+            {/* Only orders with a gift hamper carry these: write the message on the greeting card. */}
+            <OrderGiftNote order={order} className="mt-3" />
+            {order.termsAcceptedAt && (
+              <p className="mt-2 text-xs text-muted">
+                Gift hamper terms accepted on {formatOrderDateTime(order.termsAcceptedAt)}
+              </p>
+            )}
           </Section>
         </div>
 

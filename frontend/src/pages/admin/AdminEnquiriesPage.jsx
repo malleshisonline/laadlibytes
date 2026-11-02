@@ -26,6 +26,29 @@ const ENQUIRY_BADGE_CLASSES = {
   read: 'bg-lightblue-100 text-navy-800',
   replied: 'bg-leaf-600/10 text-success',
 }
+// Mirrors ENQUIRY_TYPES: 'contact' is the Contact Us form, 'bulk' a gift hamper bulk or corporate quote request.
+const ENQUIRY_TYPE_LABELS = { contact: 'Contact Us', bulk: 'Bulk / corporate' }
+
+/** Company, phone, hamper and quantity of a bulk quote request, the ones it has. */
+function BulkEnquiryFacts({ enquiry }) {
+  const facts = [
+    ['Company', enquiry.company],
+    ['Phone', enquiry.phone],
+    ['Hamper', enquiry.hamper && `${enquiry.hamper.name} (${enquiry.hamper.code})`],
+    ['Boxes', enquiry.quantity],
+  ].filter(([, value]) => value)
+  if (!facts.length) return null
+  return (
+    <dl className="mt-2 grid gap-x-4 gap-y-1 text-sm sm:grid-cols-2">
+      {facts.map(([label, value]) => (
+        <div key={label} className="flex gap-2">
+          <dt className="text-muted">{label}:</dt>
+          <dd className="font-semibold break-all text-navy-800">{value}</dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
 
 function EnquiryRow({ enquiry, isOpen, onToggle, onStatusChange, isBusy }) {
   const mailSubject = `Re: ${enquiry.subject || 'Your message to Laadli Bytes'}`
@@ -43,6 +66,7 @@ function EnquiryRow({ enquiry, isOpen, onToggle, onStatusChange, isBusy }) {
             <span className={`${ADMIN_BADGE} ${ENQUIRY_BADGE_CLASSES[enquiry.status]}`}>
               {ENQUIRY_STATUS_LABELS[enquiry.status]}
             </span>
+            {enquiry.type === 'bulk' && <span className={`${ADMIN_BADGE} bg-cream-100 text-caramel-700`}>Bulk</span>}
           </span>
           <span className="block truncate text-sm text-body">{enquiry.subject || enquiry.message}</span>
           <span className="block text-xs text-muted">{formatOrderDateTime(enquiry.createdAt)}</span>
@@ -57,6 +81,7 @@ function EnquiryRow({ enquiry, isOpen, onToggle, onStatusChange, isBusy }) {
       {isOpen && (
         <div className="border-t border-line p-3 sm:p-4">
           <p className="text-sm break-all text-muted">{enquiry.email}</p>
+          {enquiry.type === 'bulk' && <BulkEnquiryFacts enquiry={enquiry} />}
           {enquiry.subject && <p className="mt-2 font-semibold text-navy-800">{enquiry.subject}</p>}
           <p className="mt-2 text-sm whitespace-pre-line wrap-break-word text-body">{enquiry.message}</p>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -84,12 +109,13 @@ function EnquiryRow({ enquiry, isOpen, onToggle, onStatusChange, isBusy }) {
   )
 }
 
-/** /admin/enquiries: Contact Us messages. Opening a new one marks it read (the API does that on fetch). */
+/** /admin/enquiries: Contact Us messages and bulk quote requests (`?type=`). Opening a new one marks it read (the API does that on fetch). */
 function AdminEnquiriesPage() {
   useDocumentTitle('Enquiries')
   const [searchParams, setSearchParams] = useSearchParams()
   const params = {
     status: searchParams.get('status') ?? '',
+    type: searchParams.get('type') ?? '',
     search: searchParams.get('search') ?? '',
     page: Number(searchParams.get('page')) || 1,
   }
@@ -131,13 +157,16 @@ function AdminEnquiriesPage() {
 
   return (
     <>
-      <AdminPageHeader title="Enquiries" description="Messages sent from the Contact Us page." />
+      <AdminPageHeader
+        title="Enquiries"
+        description="Messages from the Contact Us page and bulk gift hamper quote requests."
+      />
 
       <div className={`${ADMIN_CARD} mb-4`}>
         <div className="grid gap-3 md:grid-cols-12">
           <form
             role="search"
-            className="md:col-span-8"
+            className="md:col-span-6"
             onSubmit={(event) => {
               event.preventDefault()
               updateParams({ search: searchText.trim() })
@@ -160,7 +189,25 @@ function AdminEnquiriesPage() {
               </button>
             </div>
           </form>
-          <div className="md:col-span-4">
+          <div className="md:col-span-3">
+            <label htmlFor="enquiry-type" className={ADMIN_LABEL}>
+              Type
+            </label>
+            <select
+              id="enquiry-type"
+              value={params.type}
+              onChange={(event) => updateParams({ type: event.target.value })}
+              className={ADMIN_INPUT}
+            >
+              <option value="">All</option>
+              {Object.entries(ENQUIRY_TYPE_LABELS).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="md:col-span-3">
             <label htmlFor="enquiry-status" className={ADMIN_LABEL}>
               Status
             </label>

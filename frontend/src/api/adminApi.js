@@ -88,6 +88,21 @@ export const adminApi = {
     remove: (id) => httpClient.delete(ADMIN.COUPON(id)),
   },
 
+  giftHampers: {
+    // Not paginated: a handful, in display order (active and switched off alike).
+    list: () => httpClient.get(ADMIN.GIFT_HAMPERS),
+    get: (id) => httpClient.get(ADMIN.GIFT_HAMPER(id)),
+    /** `files` are the new images; `fields.images` places them with { newImageFileIndex }, like products. */
+    create: (fields, files) =>
+      httpClient.post(ADMIN.GIFT_HAMPERS, withFiles(fields, { fieldsName: 'hamperFields', fileFieldName: 'images', files })),
+    update: (id, fields, files) =>
+      httpClient.patch(ADMIN.GIFT_HAMPER(id), withFiles(fields, { fieldsName: 'hamperFields', fileFieldName: 'images', files })),
+    /** `ids` is the full display order, first to last; resolves to the reordered list. */
+    reorder: (ids) => httpClient.post(ADMIN.GIFT_HAMPERS_REORDER, { ids }),
+    /** Resolves to { deleted }: a hamper an order has bought is switched off instead of deleted. */
+    remove: (id) => httpClient.delete(ADMIN.GIFT_HAMPER(id)),
+  },
+
 }
 
 export default adminApi

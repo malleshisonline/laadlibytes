@@ -41,12 +41,16 @@ export const APP_ROUTES = {
   ADMIN_COUPONS: '/admin/coupons',
   ADMIN_COUPON_NEW: '/admin/coupons/new',
   ADMIN_COUPON_EDIT: '/admin/coupons/:id/edit',
+  ADMIN_GIFT_HAMPERS: '/admin/gift-hampers',
+  ADMIN_GIFT_HAMPER_NEW: '/admin/gift-hampers/new',
+  ADMIN_GIFT_HAMPER_EDIT: '/admin/gift-hampers/:id/edit',
 };
 
 export const adminOrderPath = (id) => `${APP_ROUTES.ADMIN_ORDERS}/${encodeURIComponent(id)}`;
 export const adminProductEditPath = (id) => `${APP_ROUTES.ADMIN_PRODUCTS}/${encodeURIComponent(id)}/edit`;
 export const adminCategoryEditPath = (id) => `${APP_ROUTES.ADMIN_CATEGORIES}/${encodeURIComponent(id)}/edit`;
 export const adminCouponEditPath = (id) => `${APP_ROUTES.ADMIN_COUPONS}/${encodeURIComponent(id)}/edit`;
+export const adminGiftHamperEditPath = (id) => `${APP_ROUTES.ADMIN_GIFT_HAMPERS}/${encodeURIComponent(id)}/edit`;
 
 /** Link to one product's details page. */
 export const productDetailsPath = (slug) => `${APP_ROUTES.PRODUCTS}/${encodeURIComponent(slug)}`;

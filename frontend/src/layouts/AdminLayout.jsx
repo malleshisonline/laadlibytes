@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, useNavigate } from 'react-router'
 import {
   BadgePercent,
   FolderTree,
+  Gift,
   Inbox,
   LayoutDashboard,
   LoaderCircle,
@@ -21,6 +22,7 @@ const SECTIONS = [
   { path: APP_ROUTES.ADMIN, label: 'Dashboard', Icon: LayoutDashboard, end: true },
   { path: APP_ROUTES.ADMIN_ORDERS, label: 'Orders', Icon: ShoppingBag },
   { path: APP_ROUTES.ADMIN_PRODUCTS, label: 'Products', Icon: Package },
+  { path: APP_ROUTES.ADMIN_GIFT_HAMPERS, label: 'Gift Hampers', Icon: Gift },
   { path: APP_ROUTES.ADMIN_CATEGORIES, label: 'Categories', Icon: FolderTree },
   { path: APP_ROUTES.ADMIN_USERS, label: 'Customers', Icon: Users },
   { path: APP_ROUTES.ADMIN_ENQUIRIES, label: 'Enquiries', Icon: Inbox },
