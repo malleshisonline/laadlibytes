@@ -17,6 +17,13 @@ export const API_ENDPOINTS = {
     ROOT: '/cart',
     ITEMS: '/cart/items',
     ITEM: (productId) => `/cart/items/${encodeURIComponent(productId)}`,
+    // Gift hamper lines: the hamper and the number of boxes only.
+    HAMPERS: '/cart/hampers',
+    HAMPER: (hamperId) => `/cart/hampers/${encodeURIComponent(hamperId)}`,
+  },
+  GIFT_HAMPERS: {
+    LIST: '/gift-hampers',
+    DETAIL: (slug) => `/gift-hampers/${encodeURIComponent(slug)}`,
   },
   CATEGORIES: {
     LIST: '/categories',

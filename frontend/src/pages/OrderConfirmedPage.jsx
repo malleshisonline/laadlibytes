@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router'
 import { CircleCheck, ShoppingBag } from 'lucide-react'
 
 import PriceDetailsBox from '../components/cart/PriceDetailsBox.jsx'
+import OrderGiftNote from '../components/checkout/OrderGiftNote.jsx'
 import OrderItemsSummary from '../components/checkout/OrderItemsSummary.jsx'
 import { APP_ROUTES } from '../constants/appRoutepoints.js'
 import { APP_SETTINGS } from '../constants/appSettings.js'
@@ -67,6 +68,7 @@ function OrderConfirmedPage() {
                   Items ({order.itemCount})
                 </h2>
                 <OrderItemsSummary items={order.items.map(toSummaryItem)} />
+                <OrderGiftNote order={order} className='mt-3' />
               </section>
 
               <div className='grid gap-4 md:grid-cols-2'>

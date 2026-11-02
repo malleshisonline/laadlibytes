@@ -3,6 +3,7 @@ import { toast } from 'react-hot-toast'
 
 import { cartApi } from '../api/cartApi.js'
 import { useAuth } from '../hooks/useAuth.js'
+import { lineItemOf } from '../utils/cartLine.js'
 
 import { CartContext } from './cartContext.js'
 
@@ -11,6 +12,7 @@ const SHOPPER_MESSAGE_CODES = ['INSUFFICIENT_STOCK', 'CART_LIMIT']
 
 const CART_ERROR_MESSAGES = {
   PRODUCT_NOT_FOUND: 'Sorry, this product is no longer available.',
+  GIFT_HAMPER_NOT_FOUND: 'Sorry, this gift hamper is no longer available.',
   CART_ITEM_NOT_FOUND: 'This item is no longer in your cart.',
 }
 
@@ -101,6 +103,22 @@ function CartProvider({ children }) {
     [changeItem],
   )
 
+  // Gift hamper lines: the hamper and the number of boxes only (the box itself is fixed).
+  const addHamperToCart = useCallback(
+    (hamper, quantity = 1) => changeItem(hamper.id, () => cartApi.addHamper(hamper.id, quantity)),
+    [changeItem],
+  )
+
+  const updateHamperQuantity = useCallback(
+    (hamperId, quantity) => changeItem(hamperId, () => cartApi.updateHamper(hamperId, quantity)),
+    [changeItem],
+  )
+
+  const removeHamperFromCart = useCallback(
+    (hamperId) => changeItem(hamperId, () => cartApi.removeHamper(hamperId)),
+    [changeItem],
+  )
+
   const clearCart = useCallback(async () => {
     try {
       await run(cartApi.clear)
@@ -113,8 +131,8 @@ function CartProvider({ children }) {
 
   const isPending = useCallback((productId) => pendingProductIds.has(productId), [pendingProductIds])
 
-  // Product buttons switch to "Go to Cart" from the cart itself, so the state survives a reload.
-  const cartProductIds = useMemo(() => new Set(cart?.items.map((item) => item.product.id)), [cart])
+  // Product and hamper buttons switch to "Go to Cart" from the cart itself, so the state survives a reload.
+  const cartProductIds = useMemo(() => new Set(cart?.items.map((item) => lineItemOf(item).id)), [cart])
   const isInCart = useCallback((productId) => cartProductIds.has(productId), [cartProductIds])
 
   const value = useMemo(
@@ -125,12 +143,28 @@ function CartProvider({ children }) {
       addToCart,
       updateQuantity,
       removeFromCart,
+      addHamperToCart,
+      updateHamperQuantity,
+      removeHamperFromCart,
       clearCart,
       isPending,
       isInCart,
       reload,
     }),
-    [cart, status, addToCart, updateQuantity, removeFromCart, clearCart, isPending, isInCart, reload],
+    [
+      cart,
+      status,
+      addToCart,
+      updateQuantity,
+      removeFromCart,
+      addHamperToCart,
+      updateHamperQuantity,
+      removeHamperFromCart,
+      clearCart,
+      isPending,
+      isInCart,
+      reload,
+    ],
   )
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

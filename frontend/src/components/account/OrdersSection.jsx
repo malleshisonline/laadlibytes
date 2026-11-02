@@ -30,7 +30,7 @@ function OrderThumbnails({ items }) {
   return (
     <div className='flex shrink-0 -space-x-3'>
       {shown.map((item) => (
-        <span key={item.product} className='size-12 overflow-hidden rounded-lg border-2 border-surface bg-cream-100 p-0.5'>
+        <span key={item.product ?? item.hamper} className='size-12 overflow-hidden rounded-lg border-2 border-surface bg-cream-100 p-0.5'>
           {item.image?.url && (
             <img
               src={cloudinaryImageUrl(item.image.url, THUMBNAIL_SIZE * 2, THUMBNAIL_SIZE * 2, { crop: 'limit' })}

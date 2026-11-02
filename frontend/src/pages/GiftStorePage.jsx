@@ -1,10 +1,20 @@
-import { Gift, Heart, Sparkles } from 'lucide-react'
-import { Link } from 'react-router'
+import { useEffect, useState } from 'react'
+import { Building2, Gift, Heart, RotateCw, Sparkles } from 'lucide-react'
+import { Link, useLocation, useSearchParams } from 'react-router'
 
 import giftHamper from '../assets/illustrations/product_hamper.avif'
 import GoldenDivider from '../components/common/GoldenDivider.jsx'
+import BulkEnquiryForm from '../components/giftHamper/BulkEnquiryForm.jsx'
+import GiftHamperCard from '../components/giftHamper/GiftHamperCard.jsx'
+import GiftHamperTerms from '../components/giftHamper/GiftHamperTerms.jsx'
+import HamperFlavoursPanel from '../components/giftHamper/HamperFlavoursPanel.jsx'
 import { APP_ROUTES } from '../constants/appRoutepoints.js'
+import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
+import { useGiftHampers } from '../hooks/useGiftHampers.js'
 import giftstoreImage from '../assets/backgrounds/Laadli_Bytes__Home_of_Sweet_Memories.avif'
+
+const HAMPERS_SECTION_ID = 'gift-hampers'
+const BULK_ENQUIRY_SECTION_ID = 'bulk-enquiry'
 
 const FLOATING_ITEMS = [
   {
@@ -184,9 +194,115 @@ function FloatingElements() {
   )
 }
 
-function GiftStorePage() {
+function SectionHeading({ id, title, subtitle }) {
   return (
-    <main className='overflow-hidden bg-[#fffaf3]'>
+    <div className='text-center'>
+      <h2 id={id} className='font-display text-2xl font-semibold text-navy-800 md:text-3xl'>
+        {title}
+      </h2>
+      <GoldenDivider className='mt-3' />
+      {subtitle && <p className='mx-auto mt-3 max-w-prose text-sm text-body md:text-base'>{subtitle}</p>}
+    </div>
+  )
+}
+
+// Phones and tablets show 2–3 cards across, kept to about a product card's width; from lg the sidebar sits left.
+const HAMPER_GRID_CLASSES = 'mx-auto grid max-w-3xl grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:gap-5 lg:max-w-none'
+
+function HamperGridSkeleton() {
+  return (
+    <div aria-hidden='true' className='lg:flex lg:gap-6 xl:gap-8'>
+      <div className='hidden h-96 w-64 shrink-0 animate-pulse rounded-2xl bg-cream-100 lg:block' />
+      <div className={`${HAMPER_GRID_CLASSES} flex-1`}>
+        {[0, 1, 2].map((index) => (
+          <div key={index} className='aspect-3/5 animate-pulse bg-cream-100' />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * The hampers on sale, laid out like the Products page: from lg a sidebar on the left lists what is inside the
+ * hamper being hovered (the first one until then), and the cards sit on the right. Phones and tablets show the
+ * cards only; each hamper's own page lists its flavours.
+ */
+function GiftHamperShop({ hampers, status, onRetry }) {
+  const [activeHamperId, setActiveHamperId] = useState(null)
+
+  if (status === 'loading') return <HamperGridSkeleton />
+
+  if (status === 'error') {
+    return (
+      <div className='py-6 text-center'>
+        <p className='text-body'>We couldn’t load the gift hampers right now.</p>
+        <button
+          type='button'
+          onClick={onRetry}
+          className='mt-4 inline-flex min-h-11 items-center gap-2 rounded-lg bg-navy-800 px-5 text-sm font-semibold text-white shadow-md transition hover:bg-navy-700'
+        >
+          <RotateCw size={16} strokeWidth={1.75} aria-hidden='true' />
+          Try again
+        </button>
+      </div>
+    )
+  }
+
+  if (!hampers.length) {
+    return (
+      <p className='py-6 text-center text-body'>
+        Our festive hampers are being packed. Check back soon, or ask us for a custom hamper below.
+      </p>
+    )
+  }
+
+  const activeHamper = hampers.find((hamper) => hamper.id === activeHamperId) ?? hampers[0]
+
+  return (
+    <div className='lg:flex lg:items-start lg:gap-6 xl:gap-8'>
+      <aside aria-label={`What's inside ${activeHamper.name}`} className='hidden w-64 shrink-0 lg:sticky lg:top-28 lg:block'>
+        <HamperFlavoursPanel hamper={activeHamper} />
+      </aside>
+
+      <div className='min-w-0 flex-1'>
+        <ul className={HAMPER_GRID_CLASSES}>
+          {hampers.map((hamper, index) => (
+            <li key={hamper.id}>
+              <GiftHamperCard
+                hamper={hamper}
+                isActive={hamper.id === activeHamper.id}
+                onActivate={() => setActiveHamperId(hamper.id)}
+                priority={index < 3}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * The Gift Store: the banner, the gift hampers on sale (with what is inside each), the intro, the gifting terms
+ * and the bulk / corporate quote form. `?hamper=<id>#bulk-enquiry` (from a hamper's page) opens
+ * the form with that hamper chosen.
+ */
+function GiftStorePage() {
+  const { hash } = useLocation()
+  const [searchParams] = useSearchParams()
+  const { hampers, status, retry } = useGiftHampers()
+  const requestedHamperId = searchParams.get('hamper') ?? ''
+
+  useDocumentTitle('Gift Store')
+
+  // The router does not scroll to `#…` itself. Wait for the hampers, so the page has its full height first.
+  useEffect(() => {
+    if (!hash || status === 'loading') return
+    document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [hash, status])
+
+  return (
+    <main className='overflow-x-clip bg-[#fffaf3]'>
 
       {/* =====================================================
           GIFT STORE HEADER BANNER
@@ -211,6 +327,27 @@ function GiftStorePage() {
         {/* Floating chikki + makhan matki */}
         <FloatingElements />
 
+      </section>
+
+
+      {/* =====================================================
+          GIFT HAMPERS
+      ===================================================== */}
+      <section
+        id={HAMPERS_SECTION_ID}
+        aria-labelledby='gift-hampers-heading'
+        className='scroll-mt-24 px-3 py-10 sm:px-6 md:py-14'
+      >
+        <div className='mx-auto max-w-5xl'>
+          <SectionHeading
+            id='gift-hampers-heading'
+            title='Festive gift hampers'
+            subtitle='Premium chikkis, thoughtfully curated. Each box is made to order for you.'
+          />
+          <div className='mt-8'>
+            <GiftHamperShop hampers={hampers} status={status} onRetry={retry} />
+          </div>
+        </div>
       </section>
 
 
@@ -254,7 +391,7 @@ function GiftStorePage() {
             items-center
             gap-6
             md:grid-cols-2
-            md:gap-10
+           
           '
         >
 
@@ -325,6 +462,8 @@ function GiftStorePage() {
             </p>
 
 
+            {/* Stacked on phones; a row on small tablets; stacked again on md, where the text column is narrow
+                beside the hamper picture; a row from lg. */}
             <div
               className='
                 mt-6
@@ -333,7 +472,12 @@ function GiftStorePage() {
                 justify-center
                 gap-3
                 sm:flex-row
+                sm:flex-wrap
+                md:flex-col
+                md:items-start
                 md:justify-start
+                lg:flex-row
+                lg:items-center
               '
             >
 
@@ -382,6 +526,8 @@ function GiftStorePage() {
                   border border-caramel-500/30
                   bg-white/70
                   px-6
+                  py-2
+                  text-center
                   text-sm
                   font-semibold
                   text-navy-700
@@ -440,6 +586,47 @@ function GiftStorePage() {
 
           </div>
 
+        </div>
+      </section>
+
+
+
+
+      {/* =====================================================
+          GIFTING TERMS
+      ===================================================== */}
+      <section aria-labelledby='gifting-terms-heading' className='bg-lightblue-50 px-4 py-10 sm:px-6 md:py-14'>
+        <div className='mx-auto max-w-6xl'>
+          <SectionHeading id='gifting-terms-heading' title='Gifting terms' />
+          <div className='mt-8'>
+            <GiftHamperTerms />
+          </div>
+        </div>
+      </section>
+
+
+      {/* =====================================================
+          BULK / CORPORATE ENQUIRY
+      ===================================================== */}
+      <section
+        id={BULK_ENQUIRY_SECTION_ID}
+        aria-labelledby='bulk-enquiry-heading'
+        className='scroll-mt-24 px-4 py-10 sm:px-6 md:py-14'
+      >
+        <div className='mx-auto max-w-3xl'>
+          <SectionHeading
+            id='bulk-enquiry-heading'
+            title='Gifting for your team or clients?'
+            subtitle='For bulk orders, a mix of hampers or a custom hamper, tell us what you need and we’ll send you a quote.'
+          />
+          <div className='mt-8 rounded-2xl border border-line bg-surface p-6 shadow-lg shadow-navy-900/10 md:p-8'>
+            <p className='mb-5 flex items-center gap-2 text-sm font-semibold text-navy-700'>
+              <Building2 size={18} strokeWidth={1.75} aria-hidden='true' className='text-caramel-700' />
+              Corporate and bulk enquiry
+            </p>
+            {/* Keyed by the chosen hamper, so arriving from another hamper's page resets the choice. */}
+            <BulkEnquiryForm key={requestedHamperId} hampers={hampers} defaultHamperId={requestedHamperId} />
+          </div>
         </div>
       </section>
     </main>

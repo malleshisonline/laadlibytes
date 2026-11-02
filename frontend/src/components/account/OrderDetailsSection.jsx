@@ -28,6 +28,7 @@ import {
   toSummaryItem,
 } from '../../utils/orderStatus.js'
 import PriceDetailsBox from '../cart/PriceDetailsBox.jsx'
+import OrderGiftNote from '../checkout/OrderGiftNote.jsx'
 import OrderItemsSummary from '../checkout/OrderItemsSummary.jsx'
 
 import AccountCard from './AccountCard.jsx'
@@ -335,6 +336,7 @@ function OrderDetailsSection() {
           <section>
             <SubHeading>Items ({order.itemCount})</SubHeading>
             <OrderItemsSummary items={order.items.map(toSummaryItem)} />
+            <OrderGiftNote order={order} className='mt-3' />
           </section>
 
           <div className='grid gap-6 md:grid-cols-2'>

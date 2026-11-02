@@ -5,6 +5,7 @@ import { RotateCw, ShoppingBag } from 'lucide-react'
 
 import { orderApi } from '../api/orderApi.js'
 import DeliveryAddressBox from '../components/cart/DeliveryAddressBox.jsx'
+import GiftHamperDetails from '../components/checkout/GiftHamperDetails.jsx'
 import GuestDeliveryDetails from '../components/checkout/GuestDeliveryDetails.jsx'
 import OrderSummaryView from '../components/checkout/OrderSummaryView.jsx'
 import { APP_ROUTES, orderDetailsPath } from '../constants/appRoutepoints.js'
@@ -16,7 +17,9 @@ import { useCheckoutCoupon } from '../hooks/useCheckoutCoupon.js'
 import { useGuestDeliveryDetails } from '../hooks/useGuestDeliveryDetails.js'
 import { useProduct } from '../hooks/useProduct.js'
 import { formatAddressLine, formatIndianMobile } from '../utils/addressValidation.js'
+import { isHamperLine, lineItemOf } from '../utils/cartLine.js'
 import { clearSavedCouponCode } from '../utils/couponLink.js'
+import { EMPTY_GIFT_DETAILS, toGiftPayload } from '../utils/giftDetails.js'
 import { maxQuantityFor } from '../utils/productStock.js'
 import { openRazorpayCheckout } from '../utils/razorpayCheckout.js'
 
@@ -28,12 +31,13 @@ const PRIMARY_LINK_CLASSES =
 const HEADER_LINK_CLASSES = 'min-h-11 content-center px-2 text-sm font-semibold text-navy-700 hover:underline'
 
 // Backend messages written for shoppers, shown as they are ("Only 1 left of Peanut Chikki").
-const SHOPPER_MESSAGE_CODES = ['INSUFFICIENT_STOCK', 'PRODUCT_UNAVAILABLE']
+const SHOPPER_MESSAGE_CODES = ['INSUFFICIENT_STOCK', 'PRODUCT_UNAVAILABLE', 'CART_LIMIT', 'TERMS_NOT_ACCEPTED']
 
 const PLACE_ORDER_ERROR_MESSAGES = {
   ADDRESS_NOT_FOUND: 'That address is no longer saved. Please choose another one.',
   CART_EMPTY: 'Your cart is empty.',
   PRODUCT_NOT_FOUND: 'Sorry, this product is no longer available.',
+  GIFT_HAMPER_NOT_FOUND: 'Sorry, this gift hamper is no longer available.',
   PAYMENT_NOT_CAPTURED: 'Razorpay has not confirmed the payment yet. Please wait a moment and check your orders.',
   PAYMENT_DETAILS_MISMATCH: 'The payment details did not match this order. Please contact us before trying again.',
 }
@@ -174,7 +178,18 @@ const buyNowQuantityFor = (product, requestedQuantity) =>
   Math.max(1, Math.min(requestedQuantity, maxQuantityFor(product) || 1))
 
 /** The cart's lines as one string, so an applied coupon is priced again whenever they change. */
-const cartPricingKey = (cart) => (cart?.items ?? []).map((item) => `${item.product.id}:${item.quantity}`).join(',')
+const cartPricingKey = (cart) =>
+  (cart?.items ?? []).map((item) => `${lineItemOf(item).id}:${item.quantity}`).join(',')
+
+/** The gift hamper lines' longest lead time and the first greeting card label, for the Gift details section. */
+function giftInfoFor(items) {
+  const hampers = items.filter(isHamperLine).map((item) => item.hamper)
+  if (!hampers.length) return null
+  return {
+    leadTimeDays: Math.max(...hampers.map((hamper) => hamper.leadTimeDays ?? 0)),
+    greetingCardLabel: hampers.find((hamper) => hamper.greetingCardLabel)?.greetingCardLabel,
+  }
+}
 
 function buyNowOrder(product, requestedQuantity) {
   const quantity = buyNowQuantityFor(product, requestedQuantity)
@@ -216,6 +231,7 @@ function CartOrderSummary() {
     enabled: Boolean(cart?.items.length),
   })
   const couponCode = coupon.preview?.code
+  const [giftDetails, setGiftDetails] = useState(EMPTY_GIFT_DETAILS)
 
   // A refused coupon (it just ran out, say) is priced again, so the box shows why and the total drops it.
   function reloadAfterFailure(error) {
@@ -247,11 +263,31 @@ function CartOrderSummary() {
     )
   }
 
+  // With a gift hamper in the cart, the shopper adds the gift details and must accept the hamper terms.
+  const giftInfo = giftInfoFor(cart.items)
+  const giftPayload = giftInfo ? toGiftPayload(giftDetails) : {}
+  const giftProps = giftInfo
+    ? {
+        giftDetails: (
+          <GiftHamperDetails
+            details={giftDetails}
+            onChange={setGiftDetails}
+            leadTimeDays={giftInfo.leadTimeDays}
+            greetingCardLabel={giftInfo.greetingCardLabel}
+          />
+        ),
+      }
+    : {}
+  const termsMissing = Boolean(giftInfo) && !giftDetails.termsAccepted
+  const termsHint = 'Accept the gift hamper terms to place the order.'
+
   if (!user) {
     return (
       <OrderSummaryView
         order={cart}
-        onPlaceOrder={() => placeOrder({ ...toGuestOrderPayload(guest.details), couponCode }, reloadAfterFailure)}
+        onPlaceOrder={() =>
+          placeOrder({ ...toGuestOrderPayload(guest.details), couponCode, ...giftPayload }, reloadAfterFailure)
+        }
         address={<GuestDeliveryDetails details={guest.details} onSave={guest.saveDetails} returnTo={APP_ROUTES.CHECKOUT} />}
         coupon={coupon}
         itemsAction={
@@ -259,7 +295,9 @@ function CartOrderSummary() {
             Edit
           </Link>
         }
-        canPlaceOrder={Boolean(guest.details)}
+        {...giftProps}
+        canPlaceOrder={Boolean(guest.details) && !termsMissing}
+        placeOrderHint={guest.details ? termsHint : undefined}
       />
     )
   }
@@ -277,7 +315,7 @@ function CartOrderSummary() {
 
   // The cart changes only when checkout creation succeeds; errors reload any stock/cart changes.
   async function handlePlaceOrder() {
-    return placeOrder({ addressId: address.id, couponCode }, (error) => {
+    return placeOrder({ addressId: address.id, couponCode, ...giftPayload }, (error) => {
       if (error.code === 'ADDRESS_NOT_FOUND') retry()
       reloadAfterFailure(error)
     })
@@ -298,6 +336,9 @@ function CartOrderSummary() {
           Edit
         </Link>
       }
+      {...giftProps}
+      canPlaceOrder={!termsMissing}
+      placeOrderHint={termsHint}
     />
   )
 }

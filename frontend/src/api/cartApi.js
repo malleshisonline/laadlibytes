@@ -18,6 +18,16 @@ export const cartApi = {
 
   removeItem: (productId) => httpClient.delete(API_ENDPOINTS.CART.ITEM(productId)),
 
+  /**
+   * Gift hamper lines come back as { kind: 'hamper', hamper: { id, name, slug, code, price, mrp, image, … }, … }
+   * instead of `product`. Past the hamper's own cap: 409 CART_LIMIT.
+   */
+  addHamper: (hamperId, quantity = 1) => httpClient.post(API_ENDPOINTS.CART.HAMPERS, { hamperId, quantity }),
+
+  updateHamper: (hamperId, quantity) => httpClient.patch(API_ENDPOINTS.CART.HAMPER(hamperId), { quantity }),
+
+  removeHamper: (hamperId) => httpClient.delete(API_ENDPOINTS.CART.HAMPER(hamperId)),
+
   clear: () => httpClient.delete(API_ENDPOINTS.CART.ROOT),
 }
 

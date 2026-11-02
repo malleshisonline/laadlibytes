@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
-import { Trash2 } from 'lucide-react'
+import { Gift, Trash2 } from 'lucide-react'
 
-import { productDetailsPath } from '../../constants/appRoutepoints.js'
+import { isHamperLine, lineDetailsPath, lineItemOf } from '../../utils/cartLine.js'
 import { cloudinaryImageUrl } from '../../utils/cloudinaryImage.js'
 import { formatPrice } from '../../utils/productFormatters.js'
 import QuantityStepper from '../ui/QuantityStepper.jsx'
@@ -12,15 +12,42 @@ const IMAGE_SIZE = 96
 function issueMessage(item) {
   if (item.issue === 'OUT_OF_STOCK') return 'Out of stock. Remove it to continue.'
   if (item.issue === 'INSUFFICIENT_STOCK') return `Only ${item.product.stock} left. Lower the quantity to continue.`
+  if (item.issue === 'QUANTITY_LIMIT') {
+    return `You can order at most ${item.maxQuantity} boxes online. Lower the quantity to continue.`
+  }
   return null
 }
 
-/** One cart line: photo, name and price, quantity stepper, line total and a remove button. */
+/** "Gift hamper · 12 pieces · 180 g · Made to order, ships in about 14 days" */
+function HamperFacts({ hamper }) {
+  const facts = [
+    hamper.piecesPerBox && `${hamper.piecesPerBox} pieces`,
+    hamper.netWeightGrams && `${hamper.netWeightGrams} g`,
+  ].filter(Boolean)
+
+  return (
+    <p className='mt-1 flex flex-wrap items-center gap-x-1.5 text-xs text-muted'>
+      <span className='inline-flex items-center gap-1 rounded-full bg-cream-100 px-2 py-0.5 font-bold text-caramel-700'>
+        <Gift size={12} strokeWidth={2} aria-hidden='true' />
+        Gift hamper
+      </span>
+      {facts.join(' · ')}
+      {hamper.leadTimeDays > 0 && <span>· Made to order, ships in about {hamper.leadTimeDays} days</span>}
+    </p>
+  )
+}
+
+/**
+ * One cart line: photo, name and price, quantity stepper, line total and a remove button. Works for products and
+ * gift hampers; `onQuantityChange(id, quantity)` and `onRemove(id)` get the product's or the hamper's id.
+ */
 function CartItemRow({ item, onQuantityChange, onRemove, isPending = false }) {
-  const { product, quantity } = item
-  const detailsPath = productDetailsPath(product.slug)
+  const { quantity } = item
+  const product = lineItemOf(item)
+  const isHamper = isHamperLine(item)
+  const detailsPath = lineDetailsPath(item)
   const issue = issueMessage(item)
-  // With a stock issue the stepper can only go down, towards what is available.
+  // With an issue the stepper can only go down, towards what can be bought.
   const maxQuantity = item.issue ? quantity : Math.max(item.maxQuantity, 1)
 
   return (
@@ -53,6 +80,7 @@ function CartItemRow({ item, onQuantityChange, onRemove, isPending = false }) {
                 <span className='ml-2 text-muted line-through'>{formatPrice(product.mrp)}</span>
               )}
             </p>
+            {isHamper && <HamperFacts hamper={product} />}
           </div>
           <p className='shrink-0 text-base font-extrabold text-navy-800'>{formatPrice(item.lineTotal)}</p>
         </div>

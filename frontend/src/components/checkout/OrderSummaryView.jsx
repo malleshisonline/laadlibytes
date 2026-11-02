@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LoaderCircle,  MapPin, Package, ShieldCheck,  } from 'lucide-react'
+import { Gift, LoaderCircle, MapPin, Package, ShieldCheck } from 'lucide-react'
 
 import { formatPrice } from '../../utils/productFormatters.js'
 import ApplyCouponBox from '../cart/ApplyCouponBox.jsx'
@@ -34,6 +34,8 @@ function SummarySection({ step, title, Icon, action, children }) {
  * `addressAction` is given it sits in the section header. `onPlaceOrder` is awaited; the button stays disabled
  * meanwhile, so a double click never places two orders. `coupon` (from useCheckoutCoupon) adds the Apply Coupon
  * box; the button waits while a code is being priced, so it never shows an amount the backend has not confirmed.
+ * `giftDetails` (an order with a gift hamper) adds a Gift details section; `placeOrderHint` replaces the line
+ * under the button while the order cannot be placed.
  */
 function OrderSummaryView({
   order,
@@ -46,6 +48,8 @@ function OrderSummaryView({
   onRemoveItem,
   maxQuantity,
   coupon,
+  giftDetails,
+  placeOrderHint = 'Choose a delivery address to place the order.',
 }) {
   const [isPlacing, setIsPlacing] = useState(false)
   const hasIssues = order.items.some((item) => item.issue)
@@ -83,6 +87,11 @@ function OrderSummaryView({
           />
         </SummarySection>
 
+        {giftDetails && (
+          <SummarySection step={3} title='Gift details' Icon={Gift}>
+            {giftDetails}
+          </SummarySection>
+        )}
       </div>
 
       <div className='lg:col-span-4'>
@@ -104,7 +113,7 @@ function OrderSummaryView({
               {isPlacing ? 'Opening secure checkout…' : `Pay / Place Order · ${formatPrice(amountToPay)}`}
             </button>
             <p className='mt-2 text-center text-xs text-muted'>
-              {canPlaceOrder ? 'Payment confirmation is verified securely by the store.' : 'Choose a delivery address to place the order.'}
+              {canPlaceOrder ? 'Payment confirmation is verified securely by the store.' : placeOrderHint}
             </p>
           </PriceDetailsBox>
         </div>

@@ -22,6 +22,7 @@ const ContactPage = lazy(() => import('./pages/ContactPage.jsx'))
 const FaqPage = lazy(() => import('./pages/FaqPage.jsx'))
 const HomePage = lazy(() => import('./pages/HomePage.jsx'))
 const GiftStorePage = lazy(() => import('./pages/GiftStorePage.jsx'))
+const GiftHamperDetailsPage = lazy(() => import('./pages/GiftHamperDetailsPage.jsx'))
 const IdentifyPage = lazy(() => import('./pages/IdentifyPage.jsx'))
 const LoginPage = lazy(() => import('./pages/LoginPage.jsx'))
 const OrderConfirmedPage = lazy(() => import('./pages/OrderConfirmedPage.jsx'))
@@ -96,6 +97,7 @@ function App() {
             <Route path={APP_ROUTES.CART} element={<CartPage />} />
             <Route path={APP_ROUTES.BEST_SELLERS} element={<BestSellers />} />
             <Route path={APP_ROUTES.GIFT_STORE} element={<GiftStorePage />} />
+            <Route path={APP_ROUTES.GIFT_HAMPER_DETAILS} element={<GiftHamperDetailsPage />} />
             {/* Checkout works without an account: a guest types the delivery details there. */}
             <Route path={APP_ROUTES.CHECKOUT} element={<CheckoutPage />} />
             <Route path={APP_ROUTES.ORDER_CONFIRMED} element={<OrderConfirmedPage />} />

@@ -14,6 +14,7 @@ export const APP_ROUTES = {
   PRODUCTS: '/products',
   BEST_SELLERS: '/best-sellers',
   GIFT_STORE: '/gift-store',
+  GIFT_HAMPER_DETAILS: '/gift-store/:slug',
   PRODUCT_DETAILS: '/products/:slug',
   CART: '/cart',
   CHECKOUT: '/checkout',
@@ -49,6 +50,9 @@ export const adminCouponEditPath = (id) => `${APP_ROUTES.ADMIN_COUPONS}/${encode
 
 /** Link to one product's details page. */
 export const productDetailsPath = (slug) => `${APP_ROUTES.PRODUCTS}/${encodeURIComponent(slug)}`;
+
+/** Link to one gift hamper's page in the Gift Store. */
+export const giftHamperDetailsPath = (slug) => `${APP_ROUTES.GIFT_STORE}/${encodeURIComponent(slug)}`;
 
 /** One of the user's orders, in My Account. Placing an order lands here too. */
 export const orderDetailsPath = (id) => `${APP_ROUTES.ACCOUNT_ORDERS}/${encodeURIComponent(id)}`;

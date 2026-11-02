@@ -10,6 +10,7 @@ import { APP_SETTINGS } from '../constants/appSettings.js'
 import { pickAddress, useAddresses } from '../hooks/useAddresses.js'
 import { useAuth } from '../hooks/useAuth.js'
 import { useCart } from '../hooks/useCart.js'
+import { isHamperLine, lineItemOf } from '../utils/cartLine.js'
 
 const PAGE_CLASSES = 'px-3 py-5 sm:px-4 md:py-8 lg:px-6 xl:px-16 2xl:px-24'
 
@@ -57,7 +58,17 @@ function EmptyCart() {
 function CartPage() {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { cart, status, updateQuantity, removeFromCart, clearCart, isPending, reload } = useCart()
+  const {
+    cart,
+    status,
+    updateQuantity,
+    removeFromCart,
+    updateHamperQuantity,
+    removeHamperFromCart,
+    clearCart,
+    isPending,
+    reload,
+  } = useCart()
   const addressState = useAddresses(Boolean(user))
   const [chosenAddressId, setChosenAddressId] = useState(null)
   const [addressError, setAddressError] = useState('')
@@ -146,15 +157,19 @@ function CartPage() {
           <section aria-label='Items in your cart'>
             <div className='rounded-2xl border border-line bg-surface px-4 shadow-card sm:px-5'>
               <ul className='divide-y divide-line'>
-                {cart.items.map((item) => (
-                  <CartItemRow
-                    key={item.product.id}
-                    item={item}
-                    onQuantityChange={updateQuantity}
-                    onRemove={removeFromCart}
-                    isPending={isPending(item.product.id)}
-                  />
-                ))}
+                {cart.items.map((item) => {
+                  const isHamper = isHamperLine(item)
+                  const lineId = lineItemOf(item).id
+                  return (
+                    <CartItemRow
+                      key={`${item.kind ?? 'product'}:${lineId}`}
+                      item={item}
+                      onQuantityChange={isHamper ? updateHamperQuantity : updateQuantity}
+                      onRemove={isHamper ? removeHamperFromCart : removeFromCart}
+                      isPending={isPending(lineId)}
+                    />
+                  )
+                })}
               </ul>
             </div>
             <div className='mt-3 flex items-center justify-between gap-3'>

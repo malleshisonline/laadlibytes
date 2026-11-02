@@ -52,11 +52,21 @@ export const formatOrderDate = (isoDate) => orderDateFormatter.format(new Date(i
 export const formatOrderDateTime = (isoDate) => orderDateTimeFormatter.format(new Date(isoDate))
 
 /**
- * An order line in the cart's shape ({ product: { id, name, slug, price, image }, quantity, lineTotal }), so the
- * checkout's OrderItemsSummary can show a placed order's own copy of its items.
+ * An order line in the cart's shape ({ product: { id, name, slug, price, image }, quantity, lineTotal }, or
+ * { kind: 'hamper', hamper: {…} } for a gift hamper), so the checkout's OrderItemsSummary can show a placed
+ * order's own copy of its items.
  */
-export const toSummaryItem = (item) => ({
-  product: { id: item.product, name: item.name, slug: item.slug, price: item.price, image: item.image?.url ? item.image : null },
-  quantity: item.quantity,
-  lineTotal: item.lineTotal,
-})
+export const toSummaryItem = (item) => {
+  const isHamper = item.kind === 'hamper'
+  const line = {
+    id: isHamper ? item.hamper : item.product,
+    name: item.name,
+    slug: item.slug,
+    price: item.price,
+    image: item.image?.url ? item.image : null,
+  }
+  // A gift hamper line keeps its kind, so it links to the Gift Store instead of a product page.
+  return isHamper
+    ? { kind: 'hamper', hamper: line, quantity: item.quantity, lineTotal: item.lineTotal }
+    : { product: line, quantity: item.quantity, lineTotal: item.lineTotal }
+}
