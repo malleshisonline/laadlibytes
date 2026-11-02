@@ -7,6 +7,7 @@ import cartRoutes from '../modules/cart/cart.routes.js';
 import categoryRoutes from '../modules/category/category.routes.js';
 import couponRoutes from '../modules/coupon/coupon.routes.js';
 import enquiryRoutes from '../modules/enquiry/enquiry.routes.js';
+import giftHamperRoutes from '../modules/giftHamper/giftHamper.routes.js';
 import orderRoutes from '../modules/order/order.routes.js';
 import paymentRoutes from '../modules/payment/payment.routes.js';
 import { paymentController } from '../modules/payment/payment.controller.js';
@@ -33,6 +34,7 @@ const routes = [
   { path: '/categories', router: categoryRoutes },
   { path: '/coupons', router: couponRoutes },
   { path: '/enquiries', router: enquiryRoutes },
+  { path: '/gift-hampers', router: giftHamperRoutes },
   { path: '/orders', router: orderRoutes },
   { path: '/payments', router: paymentRoutes },
   { path: '/products', router: productRoutes },

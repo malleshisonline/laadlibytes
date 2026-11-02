@@ -1,9 +1,26 @@
 import mongoose from 'mongoose';
 
-// _id: false — a line is identified by its product; one product never appears twice in a cart.
+// A product line, or a gift hamper line (giftHamper module). Lines saved before hampers existed have no
+// `kind` and are product lines.
+export const CART_LINE_KINDS = ['product', 'hamper'];
+
+const isHamperLine = function isHamperLine() {
+  return this.kind === 'hamper';
+};
+
+// _id: false — a line is identified by its product or hamper (cart.service.js lineKeyOf); neither
+// appears twice in a cart.
 const cartItemSchema = new mongoose.Schema(
   {
-    product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+    kind: { type: String, enum: CART_LINE_KINDS, default: 'product' },
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product',
+      required: function isProductLine() {
+        return this.kind !== 'hamper';
+      },
+    },
+    hamper: { type: mongoose.Schema.Types.ObjectId, ref: 'GiftHamper', required: isHamperLine },
     quantity: { type: Number, required: true, min: 1 },
   },
   { _id: false }

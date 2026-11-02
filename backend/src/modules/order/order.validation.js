@@ -26,6 +26,17 @@ export const buyNowSchema = z
 export const appliedCouponCodeSchema = z.string().trim().toUpperCase().min(1).max(30);
 
 /**
+ * Gift hamper fields, used only when the cart has a hamper line. `termsAccepted` must be true then
+ * (order.service.js). Nothing here describes a hamper's flavours: any flavour picks a client sends are
+ * stripped by z.object, and the seller packs the box by the hamper's name.
+ */
+const giftFields = {
+  giftMessage: z.string().trim().max(300, 'Gift message must be at most 300 characters').optional(),
+  recipientName: z.string().trim().max(80, 'Recipient name must be at most 80 characters').optional(),
+  termsAccepted: z.boolean().optional(),
+};
+
+/**
  * Without `buyNow` the whole cart is ordered. With it, only that product is, and the cart is left
  * alone: the same split as the storefront's Order Summary page.
  */
@@ -34,6 +45,7 @@ export const placeOrderSchema = z.object({
   checkoutKey: z.string().uuid().default(() => randomUUID()),
   buyNow: buyNowSchema,
   couponCode: appliedCouponCodeSchema.optional(),
+  ...giftFields,
 });
 
 /**
@@ -46,6 +58,7 @@ export const placeGuestOrderSchema = z.object({
   email: z.string().trim().toLowerCase().pipe(z.email('Enter a valid email address')).optional(),
   buyNow: buyNowSchema,
   couponCode: appliedCouponCodeSchema.optional(),
+  ...giftFields,
 });
 
 export const listMyOrdersQuerySchema = z.object({

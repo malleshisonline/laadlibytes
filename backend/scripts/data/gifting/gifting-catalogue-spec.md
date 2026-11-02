@@ -1,7 +1,7 @@
 # Laadlibytes Festive Gifting: Implementation Specification
 
 **Source document:** Laadlibytes Gifting Catalogue 2026 (6 pages, exported from Canva).
-**Important:** the PDF contains no selectable text. Every page is one flattened image. This file is the text transcription. The page images are in `reference/` for layout reference only. Structured data is in `gifting-packs.json`.
+**Important:** the PDF contains no selectable text. Every page is one flattened image. This file is the text transcription. The page images are in `reference/` for layout reference only. The hamper data the site uses (packs, prices, flavours) is in `giftHampers.json`, which `npm run seed-hampers` loads into the database.
 
 If this specification and the page images ever disagree, do not guess. List the difference under "Questions" in your plan and ask the owner.
 

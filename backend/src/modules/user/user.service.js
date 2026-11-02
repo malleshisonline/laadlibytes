@@ -6,6 +6,7 @@ import { Cart } from '../cart/cart.model.js';
 import { Category } from '../category/category.model.js';
 import { couponService } from '../coupon/coupon.service.js';
 import { Enquiry } from '../enquiry/enquiry.model.js';
+import { GiftHamper } from '../giftHamper/giftHamper.model.js';
 import { OtpChallenge } from '../otp/otp.model.js';
 import { Order } from '../order/order.model.js';
 import { Product } from '../product/product.model.js';
@@ -148,11 +149,12 @@ export const userService = {
       // An abandoned checkout already gave its stock back.
       stockReleased: { $ne: true },
     })
-      .select('items.product items.quantity +couponId')
+      .select('items.kind items.product items.quantity +couponId')
       .lean();
     const stockByProduct = new Map();
     unpaidUnshippedOrders.forEach(({ items }) => {
-      items.forEach(({ product, quantity }) => {
+      // Gift hamper lines are made to order and never took stock.
+      items.filter((item) => item.kind !== 'hamper').forEach(({ product, quantity }) => {
         const productId = product.toString();
         stockByProduct.set(productId, (stockByProduct.get(productId) ?? 0) + quantity);
       });
@@ -183,6 +185,8 @@ export const userService = {
       Product.updateMany({ updatedBy: id }, { $unset: { updatedBy: 1 } }),
       Category.updateMany({ createdBy: id }, { $unset: { createdBy: 1 } }),
       Category.updateMany({ updatedBy: id }, { $unset: { updatedBy: 1 } }),
+      GiftHamper.updateMany({ createdBy: id }, { $unset: { createdBy: 1 } }),
+      GiftHamper.updateMany({ updatedBy: id }, { $unset: { updatedBy: 1 } }),
     ]);
 
     if (deletion.deletedCount === 0) throw ApiError.notFound('User not found');

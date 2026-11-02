@@ -14,4 +14,8 @@ export const buildProductImageFolderPath = (sku) =>
 export const buildCategoryImageFolderPath = (slug) =>
   `${CLOUDINARY_ROOT_FOLDER}/categories/${toCloudinaryFolderSegment(slug)}`;
 
+/** laadlibytes/<env>/gift-hampers/<CODE> */
+export const buildGiftHamperImageFolderPath = (code) =>
+  `${CLOUDINARY_ROOT_FOLDER}/gift-hampers/${toCloudinaryFolderSegment(String(code).toUpperCase())}`;
+
 export default buildProductImageFolderPath;

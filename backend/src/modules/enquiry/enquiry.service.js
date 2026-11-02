@@ -5,8 +5,11 @@ import { enquiryAcknowledgementEmail } from '../../templates/email/enquiryAcknow
 import { enquiryReceivedEmail } from '../../templates/email/enquiryReceived.js';
 import { ApiError } from '../../utils/ApiError.js';
 import { buildMeta, getPagination } from '../../utils/pagination.js';
+import { giftHamperService } from '../giftHamper/giftHamper.service.js';
 
 import { Enquiry } from './enquiry.model.js';
+
+const BULK_FIELDS = ['company', 'phone', 'hamper', 'quantity'];
 
 const ENQUIRY_SORT_MAP = {
   newest: { createdAt: -1 },
@@ -53,7 +56,19 @@ export const enquiryService = {
       return null;
     }
 
-    const enquiry = await Enquiry.create({ ...payload, user: userId, ip });
+    const fields = { ...payload };
+    if (fields.type === 'bulk') {
+      // The hamper they asked about, so the email and the admin inbox can name it. Must be on sale.
+      const hamper = fields.hamper ? await giftHamperService.findActive(fields.hamper) : null;
+      if (fields.hamper && !hamper) throw ApiError.notFound('Gift hamper not found', { code: 'GIFT_HAMPER_NOT_FOUND' });
+      if (hamper && !fields.subject) fields.subject = `Bulk order: ${hamper.name}`;
+    } else {
+      // A Contact Us message never carries the bulk fields, even if a client sends them.
+      BULK_FIELDS.forEach((field) => delete fields[field]);
+    }
+
+    const enquiry = await Enquiry.create({ ...fields, user: userId, ip });
+    await enquiry.populate('hamper', 'name code');
     await sendEnquiryEmails(enquiry);
     return enquiry;
   },
@@ -63,16 +78,20 @@ export const enquiryService = {
     const filter = {};
 
     if (query.status) filter.status = query.status;
+    // Messages saved before bulk enquiries existed have no type, and are contact messages.
+    if (query.type === 'bulk') filter.type = 'bulk';
+    if (query.type === 'contact') filter.type = { $ne: 'bulk' };
     if (query.search) {
       const term = { $regex: escapeRegex(query.search), $options: 'i' };
-      filter.$or = [{ name: term }, { email: term }, { subject: term }, { message: term }];
+      filter.$or = [{ name: term }, { email: term }, { subject: term }, { message: term }, { company: term }];
     }
 
     const [items, total] = await Promise.all([
       Enquiry.find(filter)
         .sort(ENQUIRY_SORT_MAP[query.sort] ?? ENQUIRY_SORT_MAP.newest)
         .skip(skip)
-        .limit(limit),
+        .limit(limit)
+        .populate('hamper', 'name code'),
       Enquiry.countDocuments(filter),
     ]);
 
@@ -81,7 +100,7 @@ export const enquiryService = {
 
   /** Admin detail. Opening a new enquiry marks it read. */
   async getById(id) {
-    const enquiry = await Enquiry.findById(id).populate('user', 'name email phone');
+    const enquiry = await Enquiry.findById(id).populate('user', 'name email phone').populate('hamper', 'name code');
     if (!enquiry) throw ApiError.notFound('Enquiry not found');
 
     if (enquiry.status === 'new') {

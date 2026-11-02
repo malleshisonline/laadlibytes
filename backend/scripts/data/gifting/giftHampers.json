@@ -1,0 +1,104 @@
+[
+  {
+    "code": "FK",
+    "name": "Fruit Khazana",
+    "slug": "fruit-khazana",
+    "headline": "12 Fruity Chikkis. One Festive Collection",
+    "shortDescription": "Fruit-forward millets, nuts, seeds & real fruit powders for a naturally sweet, tangy profile.",
+    "price": 399,
+    "netWeightGrams": 180,
+    "piecesPerBox": 12,
+    "leadTimeDays": 14,
+    "greetingCardLabel": "Happy Diwali greeting card",
+    "accentColor": "caramel",
+    "maxQtyPerOrder": 50,
+    "sortOrder": 1,
+    "seo": {
+      "title": "Fruit Khazana Gift Hamper | Laadli Bytes",
+      "description": "12 fruity chikkis in one festive box: millets, nuts, seeds and real fruit powders. 180 g, MRP ₹399, GST included."
+    },
+    "imageFiles": ["hamper-images/fruitkhazana.avif"],
+    "flavours": [
+      "Mango Alohas",
+      "Orange Squeeze",
+      "Berry Twist",
+      "Apple Krnch",
+      "Banana Bubble",
+      "Fig Yum",
+      "Apricot Bloom",
+      "Strawberry Crush",
+      "Lime Light",
+      "Snack-a-Guava",
+      "Palm n Pine",
+      "Grape Kick"
+    ]
+  },
+  {
+    "code": "SGE",
+    "name": "Super Grains Eight",
+    "slug": "super-grains-eight",
+    "headline": "Super Grains Eight. Real Grains. Real Goodness.",
+    "shortDescription": "Eight grains with millets and seeds, balanced with nuts & natural sweeteners for sustained energy.",
+    "price": 499,
+    "netWeightGrams": 180,
+    "piecesPerBox": 12,
+    "leadTimeDays": 14,
+    "greetingCardLabel": "Happy Diwali greeting card",
+    "accentColor": "cocoa",
+    "maxQtyPerOrder": 50,
+    "sortOrder": 2,
+    "seo": {
+      "title": "Super Grains Eight Gift Hamper | Laadli Bytes",
+      "description": "12 chikkis in one festive box: millet and nut chikkis from ragi, jowar, bajra and foxtail, plus three fruity ones. 180 g, MRP ₹499, GST included."
+    },
+    "imageFiles": ["hamper-images/super_grain_eight.avif"],
+    "flavours": [
+      "Ragi Peanut Crunch",
+      "Ragi Almond Magic",
+      "Ragi Oats Ballet",
+      "Jowar Peanut Munch",
+      "Jowar Almond Mojo",
+      "Bajra Peanut Punch",
+      "Bajra Almond Charm",
+      "Foxtail Peanut Brunch",
+      "Foxtail Almond Joy",
+      "Mango Alohas",
+      "Apple Krnch",
+      "Banana Bubble"
+    ]
+  },
+  {
+    "code": "GS",
+    "name": "Golden Seven",
+    "slug": "golden-seven",
+    "headline": "Golden Seven. Real Nuts. Real Seeds.",
+    "shortDescription": "Seven select grains, nuts, seeds & specialty inclusions for a richer, gourmet experience.",
+    "price": 599,
+    "netWeightGrams": 180,
+    "piecesPerBox": 12,
+    "leadTimeDays": 14,
+    "greetingCardLabel": "Happy Diwali greeting card",
+    "accentColor": "leaf",
+    "maxQtyPerOrder": 50,
+    "sortOrder": 3,
+    "seo": {
+      "title": "Golden Seven Gift Hamper | Laadli Bytes",
+      "description": "12 chikkis in one festive box: cashew, walnut, almond, mixed-nut and seed chikkis, plus five fruity ones. 180 g, MRP ₹599, GST included."
+    },
+    "imageFiles": ["hamper-images/golden_seven.avif"],
+    "flavours": [
+      "Cashew Candy",
+      "Walnut Treat",
+      "Almond Harvest",
+      "Nut Medley",
+      "Pumpkin Almond Trail",
+      "Seed Stick",
+      "Raw Radiance",
+      "Strawberry Crush",
+      "Lime Light",
+      "Grape Kick",
+      "Orange Squeeze",
+      "Berry Twist"
+    ]
+  }
+]

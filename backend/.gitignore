@@ -15,4 +15,7 @@ requests.http
 # Local photos the seeder uploads to Cloudinary; the database stores only their URLs.
 scripts/data/product-images/
 scripts/data/category-images/
+scripts/data/gifting/hamper-images/
+# Flattened catalogue pages: layout reference only, never uploaded.
+scripts/data/gifting/reference/gift-catalogue/
 /scripts/data/Laadlibytes_Product_Data_Sheet.xlsx

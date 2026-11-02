@@ -11,6 +11,7 @@
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "seed": "node scripts/seedCatalogue.js",
+    "seed-hampers": "node scripts/seedGiftHampers.js",
     "promote-admin": "node scripts/promoteUserToAdmin.js",
     "update-prices": "node scripts/updateCataloguePrices.js",
     "sync-indexes": "node scripts/syncIndexes.js",

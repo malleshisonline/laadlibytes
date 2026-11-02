@@ -5,6 +5,7 @@ import { validate } from '../../middlewares/validate.js';
 import categoryAdminRoutes from '../category/category.admin.routes.js';
 import couponAdminRoutes from '../coupon/coupon.admin.routes.js';
 import enquiryAdminRoutes from '../enquiry/enquiry.admin.routes.js';
+import giftHamperAdminRoutes from '../giftHamper/giftHamper.admin.routes.js';
 import orderAdminRoutes from '../order/order.admin.routes.js';
 import productAdminRoutes from '../product/product.admin.routes.js';
 import userAdminRoutes from '../user/user.admin.routes.js';
@@ -34,5 +35,6 @@ router.use('/users', userAdminRoutes);
 router.use('/enquiries', enquiryAdminRoutes);
 router.use('/orders', orderAdminRoutes);
 router.use('/coupons', couponAdminRoutes);
+router.use('/gift-hampers', giftHamperAdminRoutes);
 
 export default router;

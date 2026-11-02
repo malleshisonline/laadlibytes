@@ -37,6 +37,21 @@ export const cartController = {
     sendResponse(res, { message: 'Removed from cart', data: cart });
   }),
 
+  addHamper: asyncHandler(async (req, res) => {
+    const cart = await cartService.addHamper(writeOwner(req, res), req.body.hamperId, req.body.quantity);
+    sendResponse(res, { message: 'Added to cart', data: cart });
+  }),
+
+  updateHamper: asyncHandler(async (req, res) => {
+    const cart = await cartService.setHamperQuantity(writeOwner(req, res), req.params.hamperId, req.body.quantity);
+    sendResponse(res, { message: 'Cart updated', data: cart });
+  }),
+
+  removeHamper: asyncHandler(async (req, res) => {
+    const cart = await cartService.removeHamper(readOwner(req), req.params.hamperId);
+    sendResponse(res, { message: 'Removed from cart', data: cart });
+  }),
+
   clear: asyncHandler(async (req, res) => {
     const cart = await cartService.clear(readOwner(req));
     sendResponse(res, { message: 'Cart cleared', data: cart });

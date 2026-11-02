@@ -20,11 +20,30 @@ export const PAYMENT_STATUSES = ['pending', 'paid', 'failed'];
 
 export const ORDER_HISTORY_EVENTS = ['status', 'payment'];
 
-// _id: false: a line is a copy of the product as it was sold, not an entity of its own. Editing
-// or unpublishing the product later never changes what this order says was bought.
+// A product line, or a gift hamper line (giftHamper module). Lines saved before hampers existed have
+// no `kind` and are product lines.
+export const ORDER_LINE_KINDS = ['product', 'hamper'];
+
+// _id: false: a line is a copy of the product (or hamper) as it was sold, not an entity of its own.
+// Editing or unpublishing it later never changes what this order says was bought.
 const orderItemSchema = new mongoose.Schema(
   {
-    product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+    kind: { type: String, enum: ORDER_LINE_KINDS, default: 'product' },
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product',
+      required: function isProductLine() {
+        return this.kind !== 'hamper';
+      },
+    },
+    // Hamper lines only; `sku` holds the hamper's code. The seller packs the box by its name.
+    hamper: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'GiftHamper',
+      required: function isHamperLine() {
+        return this.kind === 'hamper';
+      },
+    },
     name: { type: String, required: true, trim: true },
     sku: { type: String, required: true, trim: true },
     slug: { type: String, trim: true },
@@ -122,6 +141,11 @@ const orderSchema = new mongoose.Schema(
     // The coupon's id, so a use can be given back or taken again (order.service.js). Internal.
     couponId: { type: mongoose.Schema.Types.ObjectId, ref: 'Coupon', select: false },
     total: { type: Number, required: true, min: 0 },
+    // Gift hamper orders only: the note for the greeting card, who it is for, and when the buyer accepted
+    // the hamper terms (made to order, no returns). Absent on every other order.
+    giftMessage: { type: String, trim: true, maxlength: 300 },
+    recipientName: { type: String, trim: true, maxlength: 80 },
+    termsAcceptedAt: { type: Date },
     status: { type: String, enum: ORDER_STATUSES, default: 'placed' },
     paymentStatus: { type: String, enum: PAYMENT_STATUSES, default: 'pending' },
     // UPI transaction id or gateway payment id, whichever confirmed the payment.

@@ -7,9 +7,14 @@ import {
   uploadImageBufferToCloudinary,
 } from '../integrations/storage/cloudinaryImageStorage.js';
 import { categoryService } from '../modules/category/category.service.js';
+import { giftHamperService } from '../modules/giftHamper/giftHamper.service.js';
 import { productService } from '../modules/product/product.service.js';
 import { ApiError } from '../utils/ApiError.js';
-import { buildCategoryImageFolderPath, buildProductImageFolderPath } from '../utils/cloudinaryFolderPaths.js';
+import {
+  buildCategoryImageFolderPath,
+  buildGiftHamperImageFolderPath,
+  buildProductImageFolderPath,
+} from '../utils/cloudinaryFolderPaths.js';
 import {
   ALLOWED_IMAGE_FORMATS_LABEL,
   ALLOWED_IMAGE_MIME_TYPES,
@@ -224,5 +229,10 @@ export const uploadCategoryImageToCloudinary = createCloudinaryImageUploadMiddle
   }
   return buildCategoryImageFolderPath(slugify(req.body.slug ?? req.body.name));
 });
+
+// Update requests may omit the code, so the folder then comes from the stored hamper.
+export const uploadGiftHamperImagesToCloudinary = createCloudinaryImageUploadMiddleware(async (req) =>
+  buildGiftHamperImageFolderPath(req.body.code ?? (await giftHamperService.getCodeById(req.params.id)))
+);
 
 export default parseMultipartImageFiles;

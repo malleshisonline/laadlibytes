@@ -9,7 +9,9 @@ import { buildMeta, getPagination } from '../../utils/pagination.js';
 import { Address } from '../address/address.model.js';
 import { addressService } from '../address/address.service.js';
 import { Cart } from '../cart/cart.model.js';
+import { isHamperLine } from '../cart/cart.service.js';
 import { couponService } from '../coupon/coupon.service.js';
+import { giftHamperService } from '../giftHamper/giftHamper.service.js';
 import { Product } from '../product/product.model.js';
 import { User } from '../user/user.model.js';
 import { userService } from '../user/user.service.js';
@@ -91,35 +93,72 @@ function toCustomerView(order) {
 }
 
 /**
- * The lines to order, each with its live product. Buy Now orders one product and ignores the cart;
- * otherwise it is the cart, minus products that were unpublished since they were added (the cart
- * page already hides those, so the shopper never saw them).
+ * The lines to order, each with its live product or gift hamper. Buy Now orders one product and ignores
+ * the cart; otherwise it is the cart, minus products and hampers that were unpublished since they were
+ * added (the cart page already hides those, so the shopper never saw them).
  */
 async function resolveLines(cartFilter, buyNow) {
   if (buyNow) {
     const product = await Product.findOne({ _id: buyNow.productId, isActive: true }).select(PRODUCT_FIELDS).lean();
     if (!product) throw ApiError.notFound('Product not found', { code: 'PRODUCT_NOT_FOUND' });
-    return [{ product, quantity: buyNow.quantity }];
+    return [{ kind: 'product', product, quantity: buyNow.quantity }];
   }
 
   const cart = cartFilter ? await Cart.findOne(cartFilter).lean() : null;
   const cartItems = cart?.items ?? [];
-  const products = await Product.find({ _id: { $in: cartItems.map((item) => item.product) }, isActive: true })
-    .select(PRODUCT_FIELDS)
-    .lean();
+  const productIds = cartItems.filter((item) => !isHamperLine(item)).map((item) => item.product);
+  const hamperIds = cartItems.filter(isHamperLine).map((item) => item.hamper);
+
+  const [products, hampersById] = await Promise.all([
+    Product.find({ _id: { $in: productIds }, isActive: true }).select(PRODUCT_FIELDS).lean(),
+    giftHamperService.findActiveByIds(hamperIds),
+  ]);
   const productsById = new Map(products.map((product) => [product._id.toString(), product]));
 
   const lines = cartItems
-    .map(({ product, quantity }) => ({ product: productsById.get(product.toString()), quantity }))
-    .filter((line) => line.product);
+    .map((item) =>
+      isHamperLine(item)
+        ? { kind: 'hamper', hamper: hampersById.get(item.hamper.toString()), quantity: item.quantity }
+        : { kind: 'product', product: productsById.get(item.product.toString()), quantity: item.quantity }
+    )
+    .filter((line) => line.product || line.hamper);
 
   if (!lines.length) throw ApiError.badRequest('Your cart is empty', { code: 'CART_EMPTY' });
+
+  // Made to order, so there is no stock to run out: only the hamper's own per-order cap.
+  const overCap = lines.find((line) => line.kind === 'hamper' && line.quantity > line.hamper.maxQtyPerOrder);
+  if (overCap) {
+    throw ApiError.conflict(`You can order at most ${overCap.hamper.maxQtyPerOrder} boxes of ${overCap.hamper.name} online`, {
+      code: 'CART_LIMIT',
+    });
+  }
   return lines;
 }
 
-function toOrderItem({ product, quantity }) {
+/** The order's copy of a hamper line. Its price is the hamper's own, read from the database. */
+function toHamperOrderItem({ hamper, quantity }) {
+  const image = hamper.images?.[0];
+  return {
+    kind: 'hamper',
+    hamper: hamper._id,
+    name: hamper.name,
+    sku: hamper.code,
+    slug: hamper.slug,
+    packSize: { value: hamper.netWeightGrams, unit: 'g' },
+    image: image ? { url: image.url, alt: image.alt } : undefined,
+    price: hamper.price,
+    mrp: hamper.price,
+    quantity,
+    lineTotal: hamper.price * quantity,
+  };
+}
+
+function toOrderItem(line) {
+  if (line.kind === 'hamper') return toHamperOrderItem(line);
+  const { product, quantity } = line;
   const image = product.images?.[0];
   return {
+    kind: 'product',
     product: product._id,
     name: product.name,
     sku: product.sku,
@@ -159,6 +198,13 @@ async function releaseCouponOf(order) {
   if (order.couponId) await couponService.release(order.couponId);
 }
 
+/**
+ * An order's lines that hold stock, as `[{ productId, quantity }]`. Gift hampers are made to order, so
+ * their lines never take stock and never give any back.
+ */
+const stockLinesOf = (items) =>
+  items.filter((item) => !isHamperLine(item)).map((item) => ({ productId: item.product, quantity: item.quantity }));
+
 /** Puts stock back when a later line could not be reserved or checkout setup fails. */
 function releaseStock(lines) {
   return Promise.all(
@@ -182,11 +228,12 @@ async function stockError(productId, fallbackName) {
 /**
  * Takes the stock for every line, or none of it. Each decrement only matches while enough is left, so
  * two shoppers racing for the last pack cannot both get it, and no MongoDB transaction is needed: when
- * a line fails, the lines already taken are put back before the error is thrown.
+ * a line fails, the lines already taken are put back before the error is thrown. Hamper lines are
+ * skipped: they are made to order.
  */
 async function reserveStock(lines) {
   const reserved = [];
-  for (const { product, quantity } of lines) {
+  for (const { product, quantity } of lines.filter((line) => line.kind !== 'hamper')) {
     const { modifiedCount } = await Product.updateOne(
       { _id: product._id, isActive: true, stock: { $gte: quantity } },
       { $inc: { stock: -quantity } }
@@ -206,7 +253,7 @@ async function reserveStock(lines) {
  * logged for the shop to handle rather than refusing the paid order.
  */
 async function retakeReleasedStock(order) {
-  for (const { product, quantity, name } of order.items) {
+  for (const { product, quantity, name } of order.items.filter((item) => !isHamperLine(item))) {
     const { modifiedCount } = await Product.updateOne(
       { _id: product, stock: { $gte: quantity } },
       { $inc: { stock: -quantity } }
@@ -268,6 +315,26 @@ async function createOrder(lines, fields, { couponCode, customer } = {}) {
     throw couponService.customerLimitError();
   }
   return order;
+}
+
+/**
+ * The gift hamper fields for an order with a hamper line: the buyer must have accepted the hamper terms
+ * (made to order, no returns), and the gift message and recipient are kept. An order without a hamper
+ * gets none of them, so every other order is saved exactly as before.
+ */
+function giftFieldsFor(lines, { giftMessage, recipientName, termsAccepted }) {
+  if (!lines.some((line) => line.kind === 'hamper')) return {};
+  if (termsAccepted !== true) {
+    throw ApiError.badRequest('Please accept the gift hamper terms to place this order', {
+      code: 'TERMS_NOT_ACCEPTED',
+      details: [{ field: 'termsAccepted', message: 'Accept the gift hamper terms to continue' }],
+    });
+  }
+  return {
+    termsAcceptedAt: new Date(),
+    ...(giftMessage ? { giftMessage } : {}),
+    ...(recipientName ? { recipientName } : {}),
+  };
 }
 
 /** The order's copy of an address: editing or deleting the saved one later never changes it. */
@@ -343,7 +410,7 @@ export const orderService = {
    * takes the stock and saves a copy of the products and the address. Cart-order lines are removed
    * after payment is verified; a Buy Now order leaves the cart alone.
    */
-  async placeOrder(userId, { addressId, buyNow, checkoutKey, couponCode }, { deferCartRemoval = false } = {}) {
+  async placeOrder(userId, { addressId, buyNow, checkoutKey, couponCode, ...gift }, { deferCartRemoval = false } = {}) {
     const [address, user] = await Promise.all([
       Address.findOne({ _id: addressId, user: userId }).lean(),
       User.findById(userId).select('email').lean(),
@@ -358,6 +425,7 @@ export const orderService = {
       contact: { phone: address.phone, email: user.email ?? null },
       checkoutKey,
       checkoutUsesCart: !buyNow,
+      ...giftFieldsFor(lines, gift),
       history: [{ event: 'status', value: 'placed', by: userId, at: new Date() }],
     }, { couponCode, customer: { userId, phone: address.phone } });
 
@@ -375,7 +443,7 @@ export const orderService = {
    * `buyNow` it orders the guest cart named by the `cartId` cookie
    * (`guestCartToken` is the raw cookie value, or null). The cart lines are removed after payment.
    */
-  async placeGuestOrder({ address, email, buyNow, checkoutKey, couponCode }, guestCartToken) {
+  async placeGuestOrder({ address, email, buyNow, checkoutKey, couponCode, ...gift }, guestCartToken) {
     const guestCartHash = guestCartToken ? hashToken(guestCartToken) : null;
     const lines = await resolveLines(guestCartHash ? { guestToken: guestCartHash } : null, buyNow);
     const order = await createOrder(lines, {
@@ -384,6 +452,7 @@ export const orderService = {
       checkoutKey,
       checkoutUsesCart: !buyNow,
       ...(buyNow ? {} : { guestCartToken: guestCartHash }),
+      ...giftFieldsFor(lines, gift),
       history: [{ event: 'status', value: 'placed', at: new Date() }],
     }, { couponCode, customer: { phone: address.phone } });
     await recordGuestCustomerFor(order);
@@ -440,9 +509,19 @@ export const orderService = {
   /** Removes a paid cart order's lines from the cart they came from. Needs `user` / `guestCartToken` loaded. */
   async removeOrderedCartItems(order) {
     const cartFilter = cartFilterOf(order);
-    const productIds = order.items.map((item) => item.product);
-    if (cartFilter && productIds.length) {
-      await Cart.updateOne(cartFilter, { $pull: { items: { product: { $in: productIds } } } });
+    const productIds = order.items.filter((item) => !isHamperLine(item)).map((item) => item.product);
+    const hamperIds = order.items.filter(isHamperLine).map((item) => item.hamper);
+    if (cartFilter && (productIds.length || hamperIds.length)) {
+      await Cart.updateOne(cartFilter, {
+        $pull: {
+          items: {
+            $or: [
+              { kind: { $ne: 'hamper' }, product: { $in: productIds } },
+              { kind: 'hamper', hamper: { $in: hamperIds } },
+            ],
+          },
+        },
+      });
     }
   },
 
@@ -454,7 +533,7 @@ export const orderService = {
       paymentStatus: 'pending',
     }).select('+couponId');
     if (order) {
-      await releaseStock(order.items.map((item) => ({ productId: item.product, quantity: item.quantity })));
+      await releaseStock(stockLinesOf(order.items));
       await releaseCouponOf(order);
     }
     return Boolean(order);
@@ -478,7 +557,7 @@ export const orderService = {
       { $set: { stockReleased: true } }
     ).select('+couponId');
     if (released) {
-      await releaseStock(released.items.map((item) => ({ productId: item.product, quantity: item.quantity })));
+      await releaseStock(stockLinesOf(released.items));
       await releaseCouponOf(released);
     }
     return Boolean(released);
