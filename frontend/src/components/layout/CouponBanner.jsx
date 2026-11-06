@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { BadgePercent, X } from 'lucide-react'
+import { BadgePercent, Copy, X } from 'lucide-react'
 
 import { couponApi } from '../../api/couponApi.js'
 import { describeCouponOffer, pickCouponCode } from '../../utils/couponLink.js'
+import { formatOrderDate } from '../../utils/orderStatus.js'
 
 const DISMISSED_KEY = 'laadlibytes.couponBannerDismissed'
 
@@ -58,21 +59,45 @@ function CouponBanner() {
   }
 
   return (
-    <aside aria-label='Offer' className='bg-navy-800 text-white'>
-      <div className='relative flex min-h-11 items-center justify-center gap-x-3 gap-y-1 px-12 py-1.5 text-center text-sm max-sm:flex-wrap'>
-        <BadgePercent size={18} strokeWidth={1.75} aria-hidden='true' className='hidden shrink-0 text-caramel-500 sm:block' />
-        <p>
-          <span className='font-semibold'>{coupon.description || describeCouponOffer(coupon)}</span>
-          <span className='text-lightblue-200'> · Use code </span>
-          <span className='font-bold tracking-wide'>{coupon.code}</span>
-        </p>
-        <button
-          type='button'
-          onClick={handleUseCode}
-          className='inline-flex min-h-8 items-center rounded-full bg-surface px-3 text-xs font-bold text-navy-800 transition hover:bg-lightblue-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white'
+    <aside
+      aria-label='Offer'
+      className='relative overflow-hidden border-y border-caramel-500/40 bg-linear-to-r from-navy-950 via-navy-800 to-navy-950 text-white'
+    >
+      {/* A slow light sweep across the band; decorative only. */}
+      <span
+        aria-hidden='true'
+        className='pointer-events-none absolute inset-y-0 -left-1/3 w-1/5 -skew-x-20 bg-linear-to-r from-transparent via-caramel-500/20 to-transparent motion-safe:animate-[offerShine_6s_ease-in-out_infinite] motion-reduce:hidden'
+      />
+      <div className='relative flex min-h-12 flex-wrap items-center justify-center gap-x-4 gap-y-1.5 px-11 py-2 text-center text-xs sm:flex-nowrap sm:px-12 sm:text-sm'>
+        <span
+          aria-hidden='true'
+          className='hidden size-8 shrink-0 place-items-center rounded-full bg-caramel-500/15 text-caramel-500 ring-1 ring-caramel-500/50 sm:grid'
         >
-          Use code
-        </button>
+          <BadgePercent size={16} strokeWidth={1.75} />
+        </span>
+        <p className='flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 max-sm:w-full'>
+          <span className='hidden text-[0.65rem] font-bold tracking-[0.2em] text-caramel-500 uppercase sm:inline'>
+            Limited offer
+          </span>
+          <span className='font-semibold tracking-wide'>{coupon.description || describeCouponOffer(coupon)}</span>
+          {coupon.endsAt && (
+            <span className='text-xs text-lightblue-200'>· Ends {formatOrderDate(coupon.endsAt)}</span>
+          )}
+        </p>
+        {/* One ticket: the code on the left, the Use code half on the right, both the same height. */}
+        <span className='inline-flex h-9 max-w-full min-w-0 items-stretch overflow-hidden rounded-full border border-dashed border-caramel-500 bg-white/5 sm:h-8'>
+          <span className='flex min-w-0 items-center truncate pr-2.5 pl-3.5 font-mono text-xs leading-none font-bold tracking-[0.18em] text-cream-100'>
+            {coupon.code}
+          </span>
+          <button
+            type='button'
+            onClick={handleUseCode}
+            className='flex shrink-0 items-center gap-1.5 bg-caramel-500 pr-3.5 pl-3 text-xs leading-none font-bold whitespace-nowrap text-navy-950 transition hover:bg-cream-200 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-navy-950'
+          >
+            <Copy size={14} strokeWidth={2.25} aria-hidden='true' className='shrink-0' />
+            <span>Use code</span>
+          </button>
+        </span>
         <button
           type='button'
           onClick={handleDismiss}

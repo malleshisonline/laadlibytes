@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { toast } from 'react-hot-toast'
-import { Link2, Pencil, Plus, Search, Trash2 } from 'lucide-react'
+import { Link2, Pencil, Plus, RotateCcw, Search, Trash2 } from 'lucide-react'
 
 import { adminApi } from '../../api/adminApi.js'
 import AdminLoadState from '../../components/admin/AdminLoadState.jsx'
 import AdminPageHeader from '../../components/admin/AdminPageHeader.jsx'
 import AdminPagination from '../../components/admin/AdminPagination.jsx'
+import ReactivateCouponModal from '../../components/admin/ReactivateCouponModal.jsx'
 import {
   ADMIN_BADGE,
   ADMIN_BUTTON_PRIMARY,
@@ -38,6 +39,9 @@ function couponState(coupon) {
   if (coupon.maxUses && coupon.usedCount >= coupon.maxUses) return { label: 'Used up', classes: 'bg-cream-100 text-warning' }
   return { label: 'Live', classes: 'bg-leaf-600/10 text-success' }
 }
+
+/** Past its end date, whether or not it is also switched off: what Reactivate fixes. */
+const isExpired = (coupon) => Boolean(coupon.endsAt) && new Date(coupon.endsAt).getTime() <= Date.now()
 
 function validityText({ startsAt, endsAt }) {
   if (!startsAt && !endsAt) return 'Always'
@@ -72,6 +76,7 @@ function AdminCouponsPage() {
   const [searchText, setSearchText] = useState(params.search)
   const { items: coupons, meta, status, reload, replaceItem } = useAdminList(adminApi.coupons.list, params)
   const [busyId, setBusyId] = useState(null)
+  const [reactivating, setReactivating] = useState(null)
 
   function updateParams(changes) {
     const next = { ...params, page: 1, ...changes }
@@ -89,6 +94,17 @@ function AdminCouponsPage() {
       toast.error(error.message || 'Couldn’t save. Please try again.')
     } finally {
       setBusyId(null)
+    }
+  }
+
+  async function reactivate(coupon, { startsAt, endsAt }) {
+    try {
+      replaceItem(await adminApi.coupons.update(coupon.id, { startsAt, endsAt, isActive: true }))
+      toast.success(`${coupon.code} is active again until ${formatOrderDate(endsAt)}`)
+      setReactivating(null)
+    } catch (error) {
+      toast.error(error.message || 'Couldn’t reactivate. Please try again.')
+      throw error
     }
   }
 
@@ -242,6 +258,18 @@ function AdminCouponsPage() {
                         </td>
                         <td className={`${ADMIN_TD} text-right`}>
                           <div className="flex justify-end gap-1">
+                            {isExpired(coupon) && (
+                              <button
+                                type="button"
+                                onClick={() => setReactivating(coupon)}
+                                disabled={isBusy}
+                                className={`${ADMIN_BUTTON_SECONDARY} text-success`}
+                                title="Reactivate with new dates"
+                              >
+                                <RotateCcw size={16} strokeWidth={1.75} aria-hidden="true" />
+                                Reactivate
+                              </button>
+                            )}
                             <button
                               type="button"
                               onClick={() => copyShareLink(coupon)}
@@ -281,6 +309,14 @@ function AdminCouponsPage() {
           </>
         )}
       </div>
+
+      {reactivating && (
+        <ReactivateCouponModal
+          coupon={reactivating}
+          onClose={() => setReactivating(null)}
+          onSubmit={(dates) => reactivate(reactivating, dates)}
+        />
+      )}
     </>
   )
 }

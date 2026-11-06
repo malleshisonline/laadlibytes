@@ -9,6 +9,7 @@ import fluteRight from '../../assets/illustrations/flutetwo.avif'
 import { cloudinaryImageUrl } from '../../utils/cloudinaryImage.js'
 
 import BestSellersSection from './BestSellersSection.jsx'
+import CategoriesSection from './CategoriesSection.jsx'
 
 const PLACEHOLDER_COUNT = 6
 
@@ -177,9 +178,10 @@ function BhogCollectionSection() {
         </div>
         {/* Best sellers share this section's white background and width, as in the Home design. */}
         <BestSellersSection />
+        <CategoriesSection />
 
 
-        <header className='px-10 text-center sm:px-16 mt-20'>
+        <header className='text-center sm:px-16 mt-10 md:mt-15'>
           <h2 id='bhog-collection-heading' className='text-2xl font-semibold text-navy-800 md:text-3xl'>
             Chhappan Bhog – A Divine Collection
           </h2>
