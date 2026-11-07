@@ -5,6 +5,7 @@ import { Building2, CalendarClock, Gift, PackageSearch, RotateCw, Scale, Shoppin
 import GiftHamperTerms from '../components/giftHamper/GiftHamperTerms.jsx'
 import HamperFlavours from '../components/giftHamper/HamperFlavours.jsx'
 import { hamperAccentClasses } from '../components/giftHamper/hamperAccent.js'
+import DeliveryDateCheck from '../components/product/DeliveryDateCheck.jsx'
 import ImageZoomViewer from '../components/product/details/ImageZoomViewer.jsx'
 import ProductImageGallery from '../components/product/details/ProductImageGallery.jsx'
 import Breadcrumbs from '../components/ui/Breadcrumbs.jsx'
@@ -188,6 +189,8 @@ function GiftHamperDetailsPage() {
                   <HamperFact icon={Gift}>Comes with a {hamper.greetingCardLabel}; add your message at checkout</HamperFact>
                 )}
               </ul>
+
+              <DeliveryDateCheck leadTimeDays={hamper.leadTimeDays} className='mt-4' />
 
               <div className='mt-5 flex flex-col gap-3 sm:flex-row sm:items-center'>
                 {!inCart && (

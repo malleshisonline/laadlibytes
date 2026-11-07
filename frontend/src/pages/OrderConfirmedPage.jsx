@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router'
-import { CircleCheck, ShoppingBag } from 'lucide-react'
+import { CircleCheck, ShoppingBag, Truck } from 'lucide-react'
 
 import PriceDetailsBox from '../components/cart/PriceDetailsBox.jsx'
 import OrderGiftNote from '../components/checkout/OrderGiftNote.jsx'
@@ -9,6 +9,7 @@ import { APP_ROUTES } from '../constants/appRoutepoints.js'
 import { APP_SETTINGS } from '../constants/appSettings.js'
 import { useCart } from '../hooks/useCart.js'
 import { formatAddressLine, formatIndianMobile } from '../utils/addressValidation.js'
+import { formatDeliveryDate } from '../utils/deliveryEstimate.js'
 import { toSummaryItem } from '../utils/orderStatus.js'
 
 const PAGE_CLASSES = 'px-3 py-5 sm:px-4 md:py-8 lg:px-6 xl:px-16 2xl:px-24'
@@ -57,6 +58,12 @@ function OrderConfirmedPage() {
             ) : (
               <p className='mx-auto mt-2 max-w-prose text-body'>
                 Your order has been placed. We’ll contact you on your mobile number about delivery.
+              </p>
+            )}
+            {order?.estimatedDeliveryBy && (
+              <p className='mx-auto mt-4 inline-flex items-center gap-2 rounded-full bg-lightblue-100 px-4 py-2 text-sm font-semibold text-navy-800'>
+                <Truck size={18} strokeWidth={1.75} aria-hidden='true' />
+                Expected delivery by {formatDeliveryDate(order.estimatedDeliveryBy)}
               </p>
             )}
           </div>

@@ -16,6 +16,7 @@ import {
 import { orderApi } from '../../api/orderApi.js'
 import { APP_ROUTES } from '../../constants/appRoutepoints.js'
 import { formatAddressLine, formatIndianMobile } from '../../utils/addressValidation.js'
+import { orderDeliveryNote } from '../../utils/deliveryEstimate.js'
 import { openRazorpayCheckout } from '../../utils/razorpayCheckout.js'
 import {
   formatOrderDate,
@@ -326,6 +327,12 @@ function OrderDetailsSection() {
           <section>
             <SubHeading>Order status</SubHeading>
             <OrderTrackingSteps order={order} />
+            {orderDeliveryNote(order) && (
+              <p className='mt-4 flex items-center gap-2 text-sm font-semibold text-navy-800'>
+                <Truck size={16} strokeWidth={1.75} aria-hidden='true' />
+                {orderDeliveryNote(order)}
+              </p>
+            )}
           </section>
 
           <section>

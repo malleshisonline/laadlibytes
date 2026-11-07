@@ -456,6 +456,35 @@ describe('Razorpay checkout and verification', () => {
     expect((await Cart.findOne({ user: customer.userId }).lean()).items).toHaveLength(0);
   });
 
+  test('a paid order is promised by 2 days after payment in Hyderabad, and 7 elsewhere', async () => {
+    const istDay = (value) =>
+      new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).format(
+        new Date(value)
+      );
+    const addDays = (value, days) => new Date(new Date(value).getTime() + days * 24 * 60 * 60 * 1000);
+
+    const local = await makeCustomer();
+    const product = await makeProduct();
+    await fillCart(local.userId, [{ product, quantity: 1 }]);
+    const localCheckout = await asCustomer(local.userId, 'post').send({ addressId: local.addressId });
+    expect(localCheckout.body.data).toMatchObject({ deliveryDays: 2, estimatedDeliveryBy: null });
+
+    const localPaid = await verifyPayment(localCheckout.body.data, local.userId, 'pay_local');
+    expect(istDay(localPaid.body.data.estimatedDeliveryBy)).toBe(istDay(addDays(localPaid.body.data.paidAt, 2)));
+
+    const outstation = await makeCustomer();
+    await Address.updateOne({ _id: outstation.addressId }, { $set: { pincode: '560001', city: 'Bengaluru', state: 'Karnataka' } });
+    await fillCart(outstation.userId, [{ product, quantity: 1 }]);
+    const outstationCheckout = await asCustomer(outstation.userId, 'post').send({ addressId: outstation.addressId });
+    expect(outstationCheckout.body.data.deliveryDays).toBe(7);
+
+    const outstationPaid = await verifyPayment(outstationCheckout.body.data, outstation.userId, 'pay_outstation');
+    expect(istDay(outstationPaid.body.data.estimatedDeliveryBy)).toBe(istDay(addDays(outstationPaid.body.data.paidAt, 7)));
+
+    const listed = await asCustomer(outstation.userId, 'get');
+    expect(listed.body.data[0].estimatedDeliveryBy).toBe(outstationPaid.body.data.estimatedDeliveryBy);
+  });
+
   test('rejects an invalid checkout signature without contacting Razorpay', async () => {
     const customer = await makeCustomer();
     const checkout = await asCustomer(customer.userId, 'post').send({

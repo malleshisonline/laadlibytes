@@ -146,6 +146,10 @@ const orderSchema = new mongoose.Schema(
     giftMessage: { type: String, trim: true, maxlength: 300 },
     recipientName: { type: String, trim: true, maxlength: 80 },
     termsAcceptedAt: { type: Date },
+    // The shop's own estimate (src/utils/deliveryEstimate.js), not a courier promise: the days are set when
+    // checkout opens (pincode, plus a hamper's lead time), and the date is counted from the day it is paid.
+    deliveryDays: { type: Number, min: 0 },
+    estimatedDeliveryBy: { type: Date, default: null },
     status: { type: String, enum: ORDER_STATUSES, default: 'placed' },
     paymentStatus: { type: String, enum: PAYMENT_STATUSES, default: 'pending' },
     // UPI transaction id or gateway payment id, whichever confirmed the payment.

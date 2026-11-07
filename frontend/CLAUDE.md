@@ -362,6 +362,21 @@ Minimum touch target on mobile: 44 × 44 px for buttons and icons.
 | Contact Us | `/contact` | `POST /enquiries` | Ready. Saved, emailed to `ENQUIRY_NOTIFY_EMAIL`, auto-reply to the sender. Admin inbox API is `/admin/enquiries`; its UI waits for the admin panel |
 | Admin pages | `/admin/...` | `/admin/*` (see below) | Ready. See **Admin panel** below |
 
+### Estimated delivery date
+
+`utils/deliveryEstimate.js` mirrors `backend/src/utils/deliveryEstimate.js`. Change the two together.
+- **Rule:** pincodes starting `500` (Hyderabad) take 2 days, others 7, in calendar days. A gift hamper adds its `leadTimeDays` first.
+- **Previews (before payment), no API call:**
+  - the checkout "Delivery by …" line (`OrderSummaryView`'s `deliveryPincode` / `leadTimeDays` props)
+  - `DeliveryDateCheck`, the pincode box on the product buy box and the hamper page. The last pincode is kept in localStorage.
+- **Placed orders** show the backend's `order.estimatedDeliveryBy`, counted from payment:
+  - order detail (`orderDeliveryNote`)
+  - My Orders rows
+  - Order Confirmed
+  - the admin order page, as "Promised by", or "Late" in `text-warning` once the day has passed (`isDeliveryOverdue`)
+
+  Orders paid before this feature have no date and show none.
+
 ### Admin panel
 
 There was no approved design, so it uses the same tokens in a plain sidebar layout. Everything it calls lives in `api/adminApi.js`.

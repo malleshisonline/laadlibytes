@@ -5,6 +5,7 @@ import { logger } from '../../config/logger.js';
 import { sendEmail } from '../../integrations/email/index.js';
 import { orderReceivedEmail } from '../../templates/email/orderReceived.js';
 import { ApiError } from '../../utils/ApiError.js';
+import { deliveryDateFrom, deliveryDaysFor } from '../../utils/deliveryEstimate.js';
 import { buildMeta, getPagination } from '../../utils/pagination.js';
 import { Address } from '../address/address.model.js';
 import { addressService } from '../address/address.service.js';
@@ -289,6 +290,9 @@ async function createOrder(lines, fields, { couponCode, customer } = {}) {
   }
   const couponFields = applied ? { coupon: couponCopy(applied.coupon), couponId: applied.coupon._id } : {};
   const totals = totalsOf(items, applied?.discount ?? 0);
+  // A mixed order waits for its slowest made-to-order hamper.
+  const leadTimeDays = Math.max(0, ...lines.filter((line) => line.kind === 'hamper').map((line) => line.hamper.leadTimeDays ?? 0));
+  const deliveryDays = deliveryDaysFor(fields.address.pincode, leadTimeDays);
 
   let reserved;
   try {
@@ -300,7 +304,7 @@ async function createOrder(lines, fields, { couponCode, customer } = {}) {
 
   let order;
   try {
-    order = await createWithUniqueNumber({ ...fields, items, ...totals, ...couponFields });
+    order = await createWithUniqueNumber({ ...fields, items, ...totals, ...couponFields, deliveryDays });
   } catch (error) {
     await releaseStock(reserved);
     if (applied) await couponService.release(applied.coupon._id);
@@ -599,6 +603,8 @@ export const orderService = {
           paymentStatus: 'paid',
           paymentReference: paymentId,
           paidAt: now,
+          // Counted from payment. A checkout opened before deliveryDays existed falls back to the pincode alone.
+          estimatedDeliveryBy: deliveryDateFrom(now, order.deliveryDays ?? deliveryDaysFor(order.address?.pincode)),
         },
         $push: { history: { $each: history } },
       },

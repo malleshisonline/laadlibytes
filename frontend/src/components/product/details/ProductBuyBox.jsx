@@ -4,6 +4,7 @@ import { ArrowRight, Lock, Share2, ShoppingCart, Store, Truck, Zap } from 'lucid
 import { APP_ROUTES } from '../../../constants/appRoutepoints.js'
 import { LOW_STOCK_THRESHOLD, maxQuantityFor } from '../../../utils/productStock.js'
 import QuantityStepper from '../../ui/QuantityStepper.jsx'
+import DeliveryDateCheck from '../DeliveryDateCheck.jsx'
 import { ProductPrice } from './ProductSummary.jsx'
 
 /** Stock line: green in stock, amber when running low, red when out. */
@@ -83,6 +84,8 @@ function ProductBuyBox({ product, quantity, onQuantityChange, inCart, pending, o
           <span className='font-bold text-navy-800'>FREE delivery</span> on every order, no minimum.
         </span>
       </p>
+
+      <DeliveryDateCheck className='mt-3' />
 
       <div className='mt-3'>
         <StockStatus product={product} />

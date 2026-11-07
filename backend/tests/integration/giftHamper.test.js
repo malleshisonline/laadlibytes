@@ -452,6 +452,31 @@ describe('checkout and orders', () => {
     expect(email.text).toContain('Gift message: Shubh Deepavali');
   });
 
+  test('a hamper outside Hyderabad is promised by its lead time plus 7 days, and the shop email says so', async () => {
+    const hamper = await makeHamper({ leadTimeDays: 14 });
+    const product = await makeProduct();
+    const { userId, addressId } = await makeCustomer();
+    await Address.updateOne({ _id: addressId }, { $set: { pincode: '560001', city: 'Bengaluru', state: 'Karnataka' } });
+    await addProductAs(userId, { productId: product.id, quantity: 1 }).expect(200);
+    await addHamperAs(userId, { hamperId: hamper.id, quantity: 1 }).expect(200);
+
+    // The mixed order waits for the hamper: 14 + 7.
+    const { body } = await placeAs(userId, { addressId, termsAccepted: true }).expect(201);
+    expect(body.data.deliveryDays).toBe(21);
+
+    outbox.length = 0;
+    const paid = await asUser(request(app).post(api(`/orders/${body.data.id}/payment/verify`)), userId)
+      .send(paymentDetailsFor(body.data, 'pay_hamper_eta'))
+      .expect(200);
+    const days = Math.round((new Date(paid.body.data.estimatedDeliveryBy) - new Date(paid.body.data.paidAt)) / 86_400_000);
+    expect(days).toBeGreaterThanOrEqual(20);
+    expect(days).toBeLessThanOrEqual(21);
+
+    await new Promise((resolve) => setImmediate(resolve));
+    const email = outbox.find((message) => message.subject.startsWith('New order'));
+    expect(email.text).toMatch(/Promised delivery by: .+ \(Bengaluru 560001\)/);
+  });
+
   test('abandoning gives back product stock only, and a late payment takes only that again', async () => {
     const hamper = await makeHamper();
     const product = await makeProduct({ stock: 5 });

@@ -296,6 +296,8 @@ function CartOrderSummary() {
           </Link>
         }
         {...giftProps}
+        deliveryPincode={guest.details?.pincode}
+        leadTimeDays={giftInfo?.leadTimeDays}
         canPlaceOrder={Boolean(guest.details) && !termsMissing}
         placeOrderHint={guest.details ? termsHint : undefined}
       />
@@ -337,6 +339,8 @@ function CartOrderSummary() {
         </Link>
       }
       {...giftProps}
+      deliveryPincode={address.pincode}
+      leadTimeDays={giftInfo?.leadTimeDays}
       canPlaceOrder={!termsMissing}
       placeOrderHint={termsHint}
     />
@@ -457,6 +461,7 @@ function BuyNowOrderSummary({ slug, quantity }) {
       onQuantityChange={product.inStock ? handleQuantityChange : undefined}
       onRemoveItem={() => handleQuantityChange(0)}
       maxQuantity={maxQuantityFor(product)}
+      deliveryPincode={user ? selectedAddress?.pincode : guest.details?.pincode}
       canPlaceOrder={user ? Boolean(selectedAddress) : Boolean(guest.details)}
     />
   )

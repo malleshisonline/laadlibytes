@@ -2,6 +2,14 @@ import { escapeHtml } from '../../utils/escapeHtml.js';
 
 const formatRupees = (amount) => `₹${Number(amount).toLocaleString('en-IN')}`;
 
+const deliveryDateFormatter = new Intl.DateTimeFormat('en-IN', {
+  timeZone: 'Asia/Kolkata',
+  weekday: 'short',
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+
 /**
  * Sent to the shop (ORDER_NOTIFY_EMAIL, else ENQUIRY_NOTIFY_EMAIL) once an order's payment is verified.
  * The customer is the delivery address name, which every order has, signed-in or guest.
@@ -16,8 +24,12 @@ export const orderReceivedEmail = ({
   total,
   giftMessage,
   recipientName,
+  estimatedDeliveryBy,
 }) => {
   const customer = address.name;
+  const deliveryLine = estimatedDeliveryBy
+    ? `Promised delivery by: ${deliveryDateFormatter.format(new Date(estimatedDeliveryBy))} (${address.city} ${address.pincode})`
+    : null;
   // Only a coupon order shows the subtotal and the discount; any other email reads as before.
   const couponLines = coupon && discount > 0
     ? [`Subtotal: ${formatRupees(subtotal)}`, `Coupon ${coupon.code}: −${formatRupees(discount)}`]
@@ -33,6 +45,7 @@ export const orderReceivedEmail = ({
     text: [
       `You have received an order from ${customer}.`,
       `Order ID: ${orderNumber}`,
+      ...(deliveryLine ? [deliveryLine] : []),
       '',
       ...items.map((item) => `- ${item.name} x ${item.quantity}`),
       '',
@@ -45,6 +58,7 @@ export const orderReceivedEmail = ({
         <h2 style="color:#043B65;margin:0 0 16px">New order received</h2>
         <p style="margin:4px 0">You have received an order from <strong>${escapeHtml(customer)}</strong>.</p>
         <p style="margin:4px 0"><strong>Order ID:</strong> ${escapeHtml(orderNumber)}</p>
+        ${deliveryLine ? `<p style="margin:4px 0">${escapeHtml(deliveryLine)}</p>` : ''}
         <ul style="margin:16px 0;padding:12px 16px 12px 32px;background:#F4F8FB;border-radius:8px">
           ${items
             .map((item) => `<li style="margin:4px 0">${escapeHtml(item.name)} &times; ${item.quantity}</li>`)

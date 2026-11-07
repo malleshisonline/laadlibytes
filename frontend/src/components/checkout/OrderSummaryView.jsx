@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Gift, LoaderCircle, MapPin, Package, ShieldCheck } from 'lucide-react'
+import { Gift, LoaderCircle, MapPin, Package, ShieldCheck, Truck } from 'lucide-react'
 
+import { estimateDelivery, formatDeliveryDate } from '../../utils/deliveryEstimate.js'
 import { formatPrice } from '../../utils/productFormatters.js'
 import ApplyCouponBox from '../cart/ApplyCouponBox.jsx'
 import PriceDetailsBox from '../cart/PriceDetailsBox.jsx'
@@ -27,6 +28,24 @@ function SummarySection({ step, title, Icon, action, children }) {
   )
 }
 
+/** "Delivery by Mon, 9 Nov" for the chosen pincode, or nothing until there is one. */
+function DeliveryEstimateLine({ pincode, leadTimeDays }) {
+  const estimate = estimateDelivery(pincode, leadTimeDays)
+  if (!estimate) return null
+  return (
+    <p className='mt-3 flex items-start gap-2 rounded-lg bg-lightblue-50 px-3 py-2 text-sm text-body'>
+      <Truck size={18} strokeWidth={1.75} aria-hidden='true' className='mt-0.5 shrink-0 text-navy-800' />
+      <span>
+        Delivery by <span className='font-bold text-navy-800'>{formatDeliveryDate(estimate.date)}</span>
+        <span className='text-muted'>
+          {' '}
+          · {estimate.days} days{leadTimeDays > 0 ? ', gift hampers are made to order' : ''}
+        </span>
+      </span>
+    </p>
+  )
+}
+
 /**
  * The Order Summary layout shared by the whole-cart and Buy Now checkouts: delivery address, items, how payment
  * works and the price details with Pay / Place Order. `order` has the cart's shape
@@ -35,7 +54,8 @@ function SummarySection({ step, title, Icon, action, children }) {
  * meanwhile, so a double click never places two orders. `coupon` (from useCheckoutCoupon) adds the Apply Coupon
  * box; the button waits while a code is being priced, so it never shows an amount the backend has not confirmed.
  * `giftDetails` (an order with a gift hamper) adds a Gift details section; `placeOrderHint` replaces the line
- * under the button while the order cannot be placed.
+ * under the button while the order cannot be placed. `deliveryPincode` (plus a hamper's `leadTimeDays`) adds the
+ * estimated delivery date under the address; the date saved on the order is the backend's.
  */
 function OrderSummaryView({
   order,
@@ -50,6 +70,8 @@ function OrderSummaryView({
   coupon,
   giftDetails,
   placeOrderHint = 'Choose a delivery address to place the order.',
+  deliveryPincode,
+  leadTimeDays = 0,
 }) {
   const [isPlacing, setIsPlacing] = useState(false)
   const hasIssues = order.items.some((item) => item.issue)
@@ -71,6 +93,7 @@ function OrderSummaryView({
       <div className='space-y-4 lg:col-span-8'>
         <SummarySection step={1} title='Delivery address' Icon={MapPin} action={addressAction}>
           {address}
+          <DeliveryEstimateLine pincode={deliveryPincode} leadTimeDays={leadTimeDays} />
         </SummarySection>
 
         <SummarySection step={2} title={`Order items (${order.itemCount})`} Icon={Package} action={itemsAction}>

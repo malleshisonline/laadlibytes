@@ -20,6 +20,7 @@ import OrderItemsSummary from '../../components/checkout/OrderItemsSummary.jsx'
 import { APP_ROUTES } from '../../constants/appRoutepoints.js'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle.js'
 import { formatAddressLine, formatIndianMobile } from '../../utils/addressValidation.js'
+import { formatDeliveryDate, isDeliveryOverdue } from '../../utils/deliveryEstimate.js'
 import {
   formatOrderDateTime,
   ORDER_STEPS,
@@ -202,6 +203,18 @@ function AdminOrderDetailsPage() {
         <span className={`${ADMIN_BADGE} ${paymentStatusBadgeClasses(order.paymentStatus)} text-sm`}>
           {paymentStatusLabel(order.paymentStatus)}
         </span>
+        {order.estimatedDeliveryBy && order.status !== 'delivered' && (
+          <span
+            className={`${ADMIN_BADGE} text-sm ${
+              isDeliveryOverdue(order.estimatedDeliveryBy, order.status)
+                ? 'bg-cream-100 text-warning'
+                : 'bg-lightblue-100 text-navy-800'
+            }`}
+          >
+            {isDeliveryOverdue(order.estimatedDeliveryBy, order.status) ? 'Late · promised by ' : 'Promised by '}
+            {formatDeliveryDate(order.estimatedDeliveryBy)}
+          </span>
+        )}
       </div>
 
       <div className="grid gap-4 xl:grid-cols-12">

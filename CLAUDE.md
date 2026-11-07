@@ -136,6 +136,12 @@ The first admin is made with `npm run promote-admin -- <email|phone>`; the role 
 4. Saves copies of the lines (name, SKU, price, MRP, pack size, image) and of the address. Editing a product or address never changes a past order.
 5. Leaves cart lines in place while payment is pending. The cart order's lines are removed only after Razorpay confirms payment; Buy Now never changes the cart.
 
+**Estimated delivery** is the shop's own rule (`src/utils/deliveryEstimate.js`, mirrored in `frontend/src/utils/deliveryEstimate.js`), not a courier promise:
+- Pincodes starting `500` (Hyderabad) take 2 days, everywhere else 7. These are calendar days, Sundays included.
+- A gift hamper adds its `leadTimeDays` first, and a mixed order uses the longest.
+- `createOrder` saves `deliveryDays` when checkout opens. `markPaymentPaid` sets `estimatedDeliveryBy` (noon IST that day) counted from payment.
+- The shop email shows it as "Promised delivery by".
+
 Contact is the address phone plus the account email, if any. The order number is `LB-<IST YYYYMMDD>-<5 chars>`, unique by index, and retried on collision. There is no `shippingCharge`, and `total` = `subtotal` − `discount` (`discount` is 0 without a coupon, see *Coupons*).
 
 `status` (delivery) and `paymentStatus` are separate fields:

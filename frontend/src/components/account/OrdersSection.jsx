@@ -5,6 +5,7 @@ import { ChevronRight, LoaderCircle, Package, RotateCw, ShoppingBag } from 'luci
 import { orderApi } from '../../api/orderApi.js'
 import { APP_ROUTES, orderDetailsPath } from '../../constants/appRoutepoints.js'
 import { cloudinaryImageUrl } from '../../utils/cloudinaryImage.js'
+import { formatDeliveryDate } from '../../utils/deliveryEstimate.js'
 import {
   formatOrderDate,
   orderStatusBadgeClasses,
@@ -76,6 +77,11 @@ function OrderRow({ order }) {
             >
               {paymentStatusLabel(order.paymentStatus)}
             </span>
+            {order.status !== 'delivered' && order.estimatedDeliveryBy && (
+              <span className='rounded-full bg-cream-100 px-2.5 py-0.5 text-xs font-semibold text-caramel-700'>
+                Arriving by {formatDeliveryDate(order.estimatedDeliveryBy)}
+              </span>
+            )}
           </p>
         </div>
         <ChevronRight size={20} strokeWidth={1.75} aria-hidden='true' className='shrink-0 text-muted' />
