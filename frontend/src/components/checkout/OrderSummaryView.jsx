@@ -66,7 +66,8 @@ function OrderSummaryView({
   onPlaceOrder,
   onQuantityChange,
   onRemoveItem,
-  maxQuantity,
+  isLinePending,
+  maxQuantityFor,
   coupon,
   giftDetails,
   placeOrderHint = 'Choose a delivery address to place the order.',
@@ -106,7 +107,8 @@ function OrderSummaryView({
             items={order.items}
             onQuantityChange={onQuantityChange}
             onRemove={onRemoveItem}
-            maxQuantity={maxQuantity}
+            isLinePending={isLinePending}
+            maxQuantityFor={maxQuantityFor}
           />
         </SummarySection>
 

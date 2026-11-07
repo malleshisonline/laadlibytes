@@ -220,7 +220,16 @@ function buyNowOrder(product, requestedQuantity) {
 function CartOrderSummary() {
   const location = useLocation()
   const { user } = useAuth()
-  const { cart, status: cartStatus, reload } = useCart()
+  const {
+    cart,
+    status: cartStatus,
+    reload,
+    updateQuantity,
+    updateHamperQuantity,
+    removeFromCart,
+    removeHamperFromCart,
+    isPending,
+  } = useCart()
   const { addresses, status: addressStatus, retry } = useAddresses(Boolean(user))
   const guest = useGuestDeliveryDetails()
   const placeOrder = usePlaceOrder()
@@ -281,6 +290,20 @@ function CartOrderSummary() {
   const termsMissing = Boolean(giftInfo) && !giftDetails.termsAccepted
   const termsHint = 'Accept the gift hamper terms to place the order.'
 
+  // − / + and Remove on every line, product or gift hamper, as in the cart. Each change saves to the cart, which
+  // reprices the order (and the coupon); an emptied cart shows its notice.
+  const lineProps = {
+    onQuantityChange: (item, quantity) => {
+      const lineId = lineItemOf(item).id
+      return isHamperLine(item) ? updateHamperQuantity(lineId, quantity) : updateQuantity(lineId, quantity)
+    },
+    onRemoveItem: (item) => {
+      const lineId = lineItemOf(item).id
+      return isHamperLine(item) ? removeHamperFromCart(lineId) : removeFromCart(lineId)
+    },
+    isLinePending: (item) => isPending(lineItemOf(item).id),
+  }
+
   if (!user) {
     return (
       <OrderSummaryView
@@ -290,12 +313,8 @@ function CartOrderSummary() {
         }
         address={<GuestDeliveryDetails details={guest.details} onSave={guest.saveDetails} returnTo={APP_ROUTES.CHECKOUT} />}
         coupon={coupon}
-        itemsAction={
-          <Link to={APP_ROUTES.CART} className={HEADER_LINK_CLASSES}>
-            Edit
-          </Link>
-        }
         {...giftProps}
+        {...lineProps}
         deliveryPincode={guest.details?.pincode}
         leadTimeDays={giftInfo?.leadTimeDays}
         canPlaceOrder={Boolean(guest.details) && !termsMissing}
@@ -333,12 +352,8 @@ function CartOrderSummary() {
           Change
         </Link>
       }
-      itemsAction={
-        <Link to={APP_ROUTES.CART} className={HEADER_LINK_CLASSES}>
-          Edit
-        </Link>
-      }
       {...giftProps}
+      {...lineProps}
       deliveryPincode={address.pincode}
       leadTimeDays={giftInfo?.leadTimeDays}
       canPlaceOrder={!termsMissing}
@@ -458,9 +473,9 @@ function BuyNowOrderSummary({ slug, quantity }) {
           />
         )
       }
-      onQuantityChange={product.inStock ? handleQuantityChange : undefined}
+      onQuantityChange={(_item, nextQuantity) => handleQuantityChange(nextQuantity)}
       onRemoveItem={() => handleQuantityChange(0)}
-      maxQuantity={maxQuantityFor(product)}
+      maxQuantityFor={() => maxQuantityFor(product)}
       deliveryPincode={user ? selectedAddress?.pincode : guest.details?.pincode}
       canPlaceOrder={user ? Boolean(selectedAddress) : Boolean(guest.details)}
     />
